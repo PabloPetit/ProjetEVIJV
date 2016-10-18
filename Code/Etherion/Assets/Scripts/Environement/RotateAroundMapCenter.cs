@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AsteroidsScatteredRotation : MonoBehaviour {
+public class RotateAroundMapCenter : MonoBehaviour {
 
-	float speed = 0.8f;
+	public float speed = 0.8f;
 	// Use this for initialization
 	
 	// Update is called once per frame
