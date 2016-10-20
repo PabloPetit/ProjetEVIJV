@@ -3,15 +3,23 @@ using System.Collections;
 
 public class KeyMap {
 
-	public static KeyCode fireKey = KeyCode.Mouse0;
-	public static KeyCode lightKey = KeyCode.T;
-	public static KeyCode interactKey = KeyCode.E;
+	public static KeyCode fire = KeyCode.Mouse0;
+	public static KeyCode light = KeyCode.T;
+	public static KeyCode interact = KeyCode.E;
 
-	public static KeyCode buffLifeKey = KeyCode.Alpha1;
-	public static KeyCode buffSpeedKey = KeyCode.Alpha2;
-	public static KeyCode buffStrenghtKey = KeyCode.Alpha3;
-	public static KeyCode trapKey = KeyCode.Alpha4;
+	public static KeyCode buffLife = KeyCode.Alpha1;
+	public static KeyCode buffSpeed = KeyCode.Alpha2;
+	public static KeyCode buffStrenght = KeyCode.Alpha3;
+	public static KeyCode trap = KeyCode.Alpha4;
 
 	public static KeyCode ability1 = KeyCode.Mouse1;
 	public static KeyCode ability2 = KeyCode.Mouse2;
+
+	public static KeyCode forward = KeyCode.Z;
+	public static KeyCode backward = KeyCode.S;
+	public static KeyCode right = KeyCode.D;
+	public static KeyCode left = KeyCode.Q;
+
+	public static KeyCode run = KeyCode.LeftShift;
+	public static KeyCode jump = KeyCode.Space;
 }

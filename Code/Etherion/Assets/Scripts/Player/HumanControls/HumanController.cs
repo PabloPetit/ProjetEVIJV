@@ -1,45 +1,85 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityStandardAssets.Utility;
+using UnityStandardAssets.CrossPlatformInput;
+using UnityStandardAssets.Characters.FirstPerson;
 
-public class HumanController {
+public class HumanController : MonoBehaviour {
 
 
-	GameObject gameObject;
-	PlayerShoot shoot;
+
+	CharacterController characterController;
+	Camera camera;
+	MouseLook mouseLook;
+
+	PlayerWeapon weapon;
 	PlayerLight light;
 	PlayerInteract interact;
 	PlayerBuffs buffs;
 	PlayerTraps traps;
 	PlayerAbility1 ability1;
 
-	public HumanController(GameObject gameObject){
-		this.gameObject = gameObject;
-		shoot = gameObject.GetComponent<PlayerShoot> ();
+	public float walkSpeed;
+	public float runSpeed;
+	public float jumpForce;
+	public float jumpTime;
+	public float stickToGroundForce;
+
+
+	float jumpTimer;
+	bool IsWalking;
+	bool IsRunning;
+	bool IsJumping;
+
+	void Awake(){
+
+		characterController = GetComponent<CharacterController> ();
+		camera = Camera.main;
+		mouseLook = new MouseLook ();
+		mouseLook.Init(transform , camera.transform);
+
+		weapon = gameObject.GetComponent<PlayerWeapon> ();
 		light = gameObject.GetComponent<PlayerLight> ();
 		interact = gameObject.GetComponent<PlayerInteract> ();
 		buffs = gameObject.GetComponent<PlayerBuffs> ();
 		traps = gameObject.GetComponent<PlayerTraps> ();
 		ability1 = gameObject.GetComponent<PlayerAbility1> ();
+
+		IsWalking = false;
+		IsRunning = false;
+		IsJumping = false;
 	}
 
-	public void Update () {
-		if (Input.GetKey (KeyMap.fireKey)) {
-			shoot.Shoot ();
+	void Update () {
+		RotateView();
+		//Actions();
+	}
+
+	void FixedUpdate(){
+		jumpTimer += Time.fixedDeltaTime;
+		Movement ();
+	}
+		
+
+	void Actions(){
+
+		if (Input.GetKey (KeyMap.fire)) {
+			//Weapon.Shoot
 		}
-		if (Input.GetKey (KeyMap.lightKey)) {
+		if (Input.GetKey (KeyMap.light)) {
 			light.Toggle ();
 		}
-		if (Input.GetKeyDown (KeyMap.interactKey)) {
+		if (Input.GetKeyDown (KeyMap.interact)) {
 			/* Note : here we use GetKeyDown instead of GetKey */
 			interact.Interact ();
 		}
-		if (Input.GetKey (KeyMap.buffLifeKey)) {
+		if (Input.GetKey (KeyMap.buffLife)) {
 
 		}
-		if (Input.GetKey (KeyMap.buffSpeedKey)) {
+		if (Input.GetKey (KeyMap.buffSpeed)) {
 
 		}
-		if (Input.GetKey (KeyMap.buffStrenghtKey)) {
+		if (Input.GetKey (KeyMap.buffStrenght)) {
 
 		}
 		if (Input.GetKey (KeyMap.ability1)) {
@@ -48,5 +88,83 @@ public class HumanController {
 		if (Input.GetKey (KeyMap.ability2)) {
 
 		}
+			
 	}
+		
+
+	void Movement(){
+
+		Vector3 desiredMove = Vector3.zero;
+		Vector3 moveDir = Vector3.zero;
+
+		IsWalking = false;
+		IsRunning = false;
+		bool jump = false;
+
+		if (characterController.isGrounded || jumpTimer > jumpTime) {
+			IsJumping = false;
+		}
+
+		if (Input.GetKey (KeyMap.forward)) {
+			desiredMove += camera.transform.forward;
+			IsWalking = true;
+		}
+		if (Input.GetKey (KeyMap.backward)) {
+			desiredMove -= camera.transform.forward;
+			IsWalking = true;
+		}
+		if (Input.GetKey (KeyMap.right)) {
+			desiredMove += camera.transform.right;
+			IsWalking = true;
+		}
+		if (Input.GetKey (KeyMap.left)) {
+			desiredMove -= camera.transform.right;
+			IsWalking = true;
+		}
+
+		if (IsWalking) {
+			if (Input.GetKey(KeyMap.run)){
+				IsWalking = false;
+				IsRunning = true;
+			}
+		}
+
+		if (!IsJumping && Input.GetKey (KeyMap.jump) && characterController.isGrounded) {
+			IsJumping = true;
+			jumpTimer = 0;
+		}
+
+		RaycastHit hitInfo;
+		Physics.SphereCast(transform.position, characterController.radius, Vector3.down, out hitInfo,
+			characterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+		desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
+
+		if (IsWalking) {
+			moveDir.x = desiredMove.x * walkSpeed;
+			moveDir.z = desiredMove.z * walkSpeed;
+		}
+		if (IsRunning) {
+			moveDir.x = desiredMove.x * runSpeed;
+			moveDir.z = desiredMove.z * runSpeed;
+		}
+			
+		if (IsJumping) {
+			// Vector3.smoothDamp ?
+			moveDir.y = + jumpForce;
+		} else {
+			moveDir.y = - stickToGroundForce;
+		}
+
+
+			
+		characterController.Move(moveDir*Time.fixedDeltaTime);
+	}
+
+
+
+	private void RotateView()
+	{
+		mouseLook.LookRotation (transform, camera.transform);
+	}
+
 }
