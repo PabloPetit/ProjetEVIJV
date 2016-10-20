@@ -11,7 +11,7 @@ public class PlayerInteract : MonoBehaviour {
 	Camera camera;
 
 	void Start () {
-		camera = transform.Find("Head").gameObject.GetComponent <Camera> ();
+		camera = GetComponentInChildren <Camera> ();
 		interactiveMask = LayerMask.GetMask ("Interactive");
 	}
 	

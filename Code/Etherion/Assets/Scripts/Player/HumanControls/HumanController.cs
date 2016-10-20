@@ -25,11 +25,14 @@ public class HumanController : MonoBehaviour {
 	public float jumpTime;
 	public float stickToGroundForce;
 
+	Animator animator;
+
 
 	float jumpTimer;
 	bool IsWalking;
 	bool IsRunning;
 	bool IsJumping;
+	float verticalSpeed;
 
 	void Awake(){
 
@@ -45,6 +48,8 @@ public class HumanController : MonoBehaviour {
 		traps = gameObject.GetComponent<PlayerTraps> ();
 		ability1 = gameObject.GetComponent<PlayerAbility1> ();
 
+		animator = GetComponentInChildren<Animator> ();
+
 		IsWalking = false;
 		IsRunning = false;
 		IsJumping = false;
@@ -52,7 +57,7 @@ public class HumanController : MonoBehaviour {
 
 	void Update () {
 		RotateView();
-		//Actions();
+		Actions();
 	}
 
 	void FixedUpdate(){
@@ -62,6 +67,7 @@ public class HumanController : MonoBehaviour {
 		
 
 	void Actions(){
+
 
 		if (Input.GetKey (KeyMap.fire)) {
 			//Weapon.Shoot
@@ -123,10 +129,15 @@ public class HumanController : MonoBehaviour {
 		}
 
 		if (IsWalking) {
-			if (Input.GetKey(KeyMap.run)){
+			if (Input.GetKey (KeyMap.run)) {
 				IsWalking = false;
 				IsRunning = true;
+				animator.SetTrigger ("StartRun");
+			} else {
+				animator.SetTrigger ("StartWalk");
 			}
+		} else {
+			animator.SetTrigger ("Stopped");
 		}
 
 		if (!IsJumping && Input.GetKey (KeyMap.jump) && characterController.isGrounded) {
@@ -147,12 +158,14 @@ public class HumanController : MonoBehaviour {
 			moveDir.x = desiredMove.x * runSpeed;
 			moveDir.z = desiredMove.z * runSpeed;
 		}
+
+		verticalSpeed = Mathf.Max (jumpForce * (jumpTime - jumpTimer), stickToGroundForce);
 			
 		if (IsJumping) {
-			// Vector3.smoothDamp ?
-			moveDir.y = + jumpForce;
+			
+			moveDir.y = + verticalSpeed;
 		} else {
-			moveDir.y = - stickToGroundForce;
+			moveDir.y = - verticalSpeed;
 		}
 
 

@@ -14,7 +14,7 @@ public class PlayerLight : MonoBehaviour {
 	Light light;
 
 	void Awake () {
-		light = transform.Find("Head/BarrelEnd").gameObject.GetComponent<Light> ();
+		light = GetComponentInChildren<Light> ();
 		timer = 0f;
 	}
 

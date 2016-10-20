@@ -17,16 +17,16 @@ public class SkratWeapon : PlayerWeapon{
 		overloadTime = 0f;
 		overLoaded = false;
 		timer = 0f;
-		gunLine = transform.Find ("Head/BarrelEnd/VolumetricLinePrefab").gameObject;
-		gunShot = transform.Find ("Head/BarrelEnd").gameObject.GetComponent<AudioSource> ();
+		//gunLine = transform.Find ("Head/BarrelEnd/VolumetricLinePrefab").gameObject;
+		//gunShot = transform.Find ("Head/BarrelEnd").gameObject.GetComponent<AudioSource> ();
 	}
 
 
 	public override void EnableEffects(Vector3 start, Vector3 end){
-		gunLine.SetActive (true);
-		gunShot.Play ();
+		//gunLine.SetActive (true);
+		//gunShot.Play ();
 	}
 	public override void DisableEffects (){
-		gunLine.SetActive (false);
+		//gunLine.SetActive (false);
 	}
 }
