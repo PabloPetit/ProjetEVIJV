@@ -2,7 +2,7 @@
 
 
 function OnTriggerEnter (obj : Collider) {
-	var thedoor = gameObject.FindWithTag("SF_Door");
+	var thedoor = transform.parent.gameObject;
 	thedoor.GetComponent.<Animation>().Play("open");
 }
 
