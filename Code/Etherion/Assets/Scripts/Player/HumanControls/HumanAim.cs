@@ -4,7 +4,7 @@ using System.Collections;
 public class HumanAim : MonoBehaviour {
 
 
-	public float speed = .001f;
+	public float speed = .0015f;
 
 	GameObject sidePosition;
 	GameObject aimPosition;

@@ -24,12 +24,13 @@ public class SkratWeapon : PlayerWeapon{
 		GameObject proj = (GameObject) Instantiate (bulletPrefab, barrel.transform.position,barrel.transform.rotation);
 		Projectile p = proj.GetComponent<Projectile> ();
 		p.side = 1; // A changer
+		//gunShot.Play ();
 		//p.range = range;
 	}
 
 
 	public override void EnableEffects(Vector3 start, Vector3 end){
-		gunShot.Play ();
+		
 	}
 	public override void DisableEffects (){
 	}
