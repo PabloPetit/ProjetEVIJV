@@ -4,6 +4,7 @@ using System.Collections;
 public class KeyMap {
 
 	public static KeyCode fire = KeyCode.Mouse0;
+	public static KeyCode aim = KeyCode.A; //Mouse1
 	public static KeyCode light = KeyCode.T;
 	public static KeyCode interact = KeyCode.E;
 

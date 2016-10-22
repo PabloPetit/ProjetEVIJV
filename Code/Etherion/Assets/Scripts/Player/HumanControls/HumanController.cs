@@ -16,6 +16,7 @@ public class HumanController : MonoBehaviour {
 	PlayerBuffs buffs;
 	PlayerTraps traps;
 	PlayerAbility1 ability1;
+	HumanAim aim;
 
 	public float walkSpeed;
 	public float runSpeed;
@@ -45,6 +46,7 @@ public class HumanController : MonoBehaviour {
 		buffs = gameObject.GetComponent<PlayerBuffs> ();
 		traps = gameObject.GetComponent<PlayerTraps> ();
 		ability1 = gameObject.GetComponent<PlayerAbility1> ();
+		aim = gameObject.GetComponent<HumanAim> ();
 
 		animator = GetComponentInChildren<Animator> ();
 
@@ -70,6 +72,10 @@ public class HumanController : MonoBehaviour {
 		if (Input.GetKey (KeyMap.fire)) {
 			weapon.Shoot ();
 		}
+
+		aim.Aim (Input.GetKey (KeyMap.aim));
+
+
 		if (Input.GetKey (KeyMap.light)) {
 			light.Toggle ();
 		}

@@ -26,7 +26,7 @@ public class PlayerWeapon : MonoBehaviour {
 		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
-		barrel = transform.Find("Model/Head/RightHand").gameObject;
+		barrel = transform.Find("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 
 	}
 
