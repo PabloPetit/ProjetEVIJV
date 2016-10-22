@@ -12,7 +12,7 @@ public class SkratWeapon : PlayerWeapon{
 		damagePerShot = 2f;
 		timeBetweenBullets = 0.15f;
 		range = 1000f;
-		dispertion = .1f;
+		dispertion = .25f;
 		effectsDisplayTime = 0.30f;
 		overloadTime = 0f;
 		overLoaded = false;

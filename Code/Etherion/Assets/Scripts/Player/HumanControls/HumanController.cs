@@ -164,7 +164,8 @@ public class HumanController : MonoBehaviour {
 			moveDir.z = desiredMove.z * runSpeed;
 		}
 
-		verticalSpeed = Mathf.Max (jumpForce * (jumpTime - jumpTimer), stickToGroundForce);
+		verticalSpeed = -(3 * jumpTimer - 1) * (3 * jumpTimer - 1) + jumpForce;
+		verticalSpeed = Mathf.Max (verticalSpeed, stickToGroundForce);
 			
 		if (IsJumping) {
 			
