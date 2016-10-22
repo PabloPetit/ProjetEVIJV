@@ -9,6 +9,8 @@ public class PlayerWeapon : MonoBehaviour {
 	public float effectsDisplayTime;
 	public float overloadTime;
 
+	public float dispertion;
+
 	protected bool overLoaded;
 	protected float timer;
 	protected GameObject barrel;

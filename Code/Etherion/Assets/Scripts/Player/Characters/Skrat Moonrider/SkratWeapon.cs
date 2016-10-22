@@ -12,16 +12,20 @@ public class SkratWeapon : PlayerWeapon{
 		damagePerShot = 2f;
 		timeBetweenBullets = 0.15f;
 		range = 1000f;
+		dispertion = .1f;
 		effectsDisplayTime = 0.30f;
 		overloadTime = 0f;
 		overLoaded = false;
 		timer = 0f;
+
+
 		gunShot = barrel.GetComponent<AudioSource> ();
 	}
 
 	public override void Action(){
 
 		GameObject proj = (GameObject) Instantiate (bulletPrefab, barrel.transform.position,barrel.transform.rotation);
+		proj.transform.Rotate (new Vector3(Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion)));
 		Projectile p = proj.GetComponent<Projectile> ();
 		p.side = 1; // A changer
 		//p.range = range;
