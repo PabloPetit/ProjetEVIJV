@@ -16,16 +16,14 @@ public class PlayerWeapon : MonoBehaviour {
 	Ray shootRay;
 	RaycastHit shootHit;
 
-	int enemyMask;
+	int playerMask;
 	int creatureMask;
 	int environementMask;
 
 
-
-
 	void Awake () {
 
-		enemyMask = LayerMask.GetMask ("Enemies");
+		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
 		barrel = transform.Find("Model/Head/RightHand").gameObject;
@@ -49,6 +47,12 @@ public class PlayerWeapon : MonoBehaviour {
 
 			timer = 0f;
 
+			EnableEffects(barrel.transform.position,barrel.transform.forward);
+
+			Action ();
+
+			/*
+
 			shootRay.origin = barrel.transform.position;
 			shootRay.direction = barrel.transform.forward;
 
@@ -64,12 +68,15 @@ public class PlayerWeapon : MonoBehaviour {
 				// If it didn't hit anything
 				EnableEffects (shootRay.origin, shootRay.origin + shootRay.direction * range);
 			}
+			*/
 		}
 	}
 
+	public virtual void Action(){
+		
+	}
 
-
-	public virtual void EnableEffects(Vector3 start, Vector3 end){
+	public virtual void EnableEffects(Vector3 start, Vector3 direction){
 	}
 	public virtual void DisableEffects (){
 	}

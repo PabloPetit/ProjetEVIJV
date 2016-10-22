@@ -5,20 +5,25 @@ public class PlayerHealth : MonoBehaviour {
 
 	public float maxLife;
 	public float life;
-	public bool invincible;
 	public bool dead;
 
 	public float timeBeforeAutoCure;
 	public float autoCureValue;
 	float timer;
+	PlayerState state;
 
+
+	void Awake(){
+		state = GetComponent<PlayerState> ();
+
+	}
 
 	public void InitCommonFields(){
 		life = maxLife;
-		invincible = false;
 		dead = false;
-		timer = 0;
+		timer = 0f;
 	}
+		
 	
 	// Update is called once per frame
 	void Update () {
@@ -29,8 +34,8 @@ public class PlayerHealth : MonoBehaviour {
 		}
 	}
 
-	public void TakeDamage(float damage){
-		if (!invincible && !dead)
+	public void TakeDamage(float damage, int side){
+		if ((!state.indestructible && !dead) || (side == state.side ) )
 			return;
 		
 		life = Mathf.Max (0f, life - damage);

@@ -6,8 +6,6 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class HumanController : MonoBehaviour {
 
-
-
 	CharacterController characterController;
 	Camera camera;
 	MouseLook mouseLook;
@@ -70,7 +68,7 @@ public class HumanController : MonoBehaviour {
 
 
 		if (Input.GetKey (KeyMap.fire)) {
-			//Weapon.Shoot
+			weapon.Shoot ();
 		}
 		if (Input.GetKey (KeyMap.light)) {
 			light.Toggle ();
@@ -148,6 +146,7 @@ public class HumanController : MonoBehaviour {
 		RaycastHit hitInfo;
 		Physics.SphereCast(transform.position, characterController.radius, Vector3.down, out hitInfo,
 			characterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+		
 		desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
 		if (IsWalking) {
