@@ -17,16 +17,23 @@ public class Projectile : MonoBehaviour {
 
 	void Start () {
 		timer = 0f;
+		endStart ();
 	}
-	
+		
+	protected virtual void endStart(){}
+
 	// Update is called once per frame
 	void Update () {
 		timer += Time.deltaTime;
 		transform.position += transform.forward * speed * Time.deltaTime;
+		endUpdate ();
 		if ( Vector3.Distance (position, transform.position) > range){
 			Delete ();
 		}
 	}
+
+	protected virtual void endUpdate(){}
+		
 
 	void OnCollisionEnter(Collision collision) {
 
