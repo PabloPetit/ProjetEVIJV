@@ -16,7 +16,7 @@ public class SkratWeapon : PlayerWeapon{
 		overloadTime = 0f;
 		overLoaded = false;
 		timer = 0f;
-		//gunShot = transform.Find ("Head/BarrelEnd").gameObject.GetComponent<AudioSource> ();
+		gunShot = barrel.GetComponent<AudioSource> ();
 	}
 
 	public override void Action(){
@@ -24,11 +24,12 @@ public class SkratWeapon : PlayerWeapon{
 		GameObject proj = (GameObject) Instantiate (bulletPrefab, barrel.transform.position,barrel.transform.rotation);
 		Projectile p = proj.GetComponent<Projectile> ();
 		p.side = 1; // A changer
+		//p.range = range;
 	}
 
 
 	public override void EnableEffects(Vector3 start, Vector3 end){
-		//gunShot.Play ();
+		gunShot.Play ();
 	}
 	public override void DisableEffects (){
 	}
