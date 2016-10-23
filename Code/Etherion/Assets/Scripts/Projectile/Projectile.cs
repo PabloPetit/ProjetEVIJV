@@ -3,41 +3,45 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
-	public int side;
-	public  float initialDamage;
-	public float damageDecrease;
-	public float speed;
-	public float range;
+	protected int side;
+	protected float initialDamage;
+	protected float damageDecrease;
+	protected float speed;
+	protected float range;
 
-	protected Vector3 position;
-	protected Vector3 direction;
+	protected Vector3 initialPosition;
 
 	protected float timer;
 
-
 	void Start () {
 		timer = 0f;
-		endStart ();
 	}
-		
-	protected virtual void endStart(){}
 
-	// Update is called once per frame
+	public static void Create(GameObject prefab, Transform barrel, float dispertion, int side, float initialDamage, float damageDecrease, float speed, float range){
+		GameObject projectile = (GameObject) Instantiate (prefab, barrel.position,barrel.rotation);
+		projectile.transform.Rotate (new Vector3(Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion)));
+		Projectile p = projectile.GetComponent<Projectile> ();
+		p.side = side;
+		p.initialDamage = initialDamage;
+		p.damageDecrease = damageDecrease;
+		p.speed = speed;
+		p.range = range;
+		p.initialPosition = projectile.transform.position;
+	}
+
 	void Update () {
 		timer += Time.deltaTime;
 		transform.position += transform.forward * speed * Time.deltaTime;
-		endUpdate ();
-		if ( Vector3.Distance (position, transform.position) > range){
+		if ( Vector3.Distance (initialPosition, transform.position) > range){
 			Delete ();
 		}
 	}
-
-	protected virtual void endUpdate(){}
+		
 		
 
-	void OnCollisionEnter(Collision collision) {
+	protected void OnTriggerEnter(Collider other) {
+		Debug.Log ("HIT");
 
-		GameObject other = collision.collider.gameObject;
 		if (other.tag.Equals ("Shootable")) {
 			PlayerHealth health = other.GetComponent<PlayerHealth> ();
 
@@ -51,7 +55,7 @@ public class Projectile : MonoBehaviour {
 	}
 
 	void Delete(){
-
+		Debug.Log ("Deleted");
 		foreach (Transform child in transform){
 			Destroy (child.gameObject);
 		}

@@ -4,16 +4,20 @@ using System.Collections;
 public class PlayerWeapon : MonoBehaviour {
 
 	public float damagePerShot;
-	public float timeBetweenBullets;
 	public float range;
-	public float effectsDisplayTime;
-	public float overloadTime;
-
 	public float dispertion;
+	public float speed;
+	public float damageDecrease;
+	public float overloadTime;
+	public float timeBetweenBullets;
+	public float effectsDisplayTime;
+
 
 	protected bool overLoaded;
 	protected float timer;
 	protected GameObject barrel;
+
+	protected PlayerState playerState;
 
 	Ray shootRay;
 	RaycastHit shootHit;
@@ -29,7 +33,7 @@ public class PlayerWeapon : MonoBehaviour {
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
 		barrel = transform.Find("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
-
+		playerState = GetComponent<PlayerState> ();
 	}
 
 	void Update () {
@@ -74,12 +78,13 @@ public class PlayerWeapon : MonoBehaviour {
 		}
 	}
 
-	public virtual void Action(){
+	protected virtual void Action(){
 		
 	}
 
 	public virtual void EnableEffects(Vector3 start, Vector3 direction){
 	}
+
 	public virtual void DisableEffects (){
 	}
 
