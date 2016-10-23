@@ -26,6 +26,27 @@ public class PlayerWeapon : MonoBehaviour {
 	int creatureMask;
 	int environementMask;
 
+	/*
+	 * 
+	 * TEST ZONE
+	 * 
+	 */
+
+	float recoilForce = .1f;
+	float recoilTime = .1f;
+	float maxDeviation = 10f;
+
+	void Recoil(){
+
+		if (timer >= recoilTime) {
+
+
+		} else {
+
+
+		}
+
+	}
 
 	void Awake () {
 
@@ -57,6 +78,8 @@ public class PlayerWeapon : MonoBehaviour {
 
 			Action ();
 
+			Recoil ();
+
 			/*
 
 			shootRay.origin = barrel.transform.position;
@@ -77,6 +100,8 @@ public class PlayerWeapon : MonoBehaviour {
 			*/
 		}
 	}
+
+
 
 	protected virtual void Action(){
 		
