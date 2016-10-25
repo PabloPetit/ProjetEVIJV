@@ -8,7 +8,7 @@ public class RotateAroundMapCenter : MonoBehaviour {
 	// Use this for initialization
 	
 	// Update is called once per frame
-	void Update () {
-		gameObject.transform.RotateAround (Vector3.zero, axis, speed * Time.deltaTime);
+	void FixedUpdate () {
+		gameObject.transform.RotateAround (Vector3.zero, axis, speed * Time.fixedDeltaTime);
 	}
 }
