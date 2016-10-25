@@ -113,7 +113,7 @@ public class HumanController : MonoBehaviour {
 		IsRunning = false;
 		bool jump = false;
 
-		if (/*characterController.isGrounded ||*/ jumpTimer > jumpTime) {
+		if (jumpTimer > jumpTime) {
 			IsJumping = false;
 		}
 
@@ -165,45 +165,20 @@ public class HumanController : MonoBehaviour {
 			moveDir.x = desiredMove.x * runSpeed;
 			moveDir.z = desiredMove.z * runSpeed;
 		}
-
-		/*
-
-		verticalSpeed = -(3 * jumpTimer - 1) * (3 * jumpTimer - 1) + jumpForce;
-		verticalSpeed = Mathf.Max (verticalSpeed, stickToGroundForce);
-			
-		if (IsJumping) {
-			
-			moveDir.y = + verticalSpeed;
-		} else {
-			moveDir.y = - verticalSpeed;
-		}
-			
-		characterController.Move(moveDir*Time.fixedDeltaTime);
-
-		*/
-
-
+	
 		if (IsJumping){
-			//verticalSpeed += jumpForce * Time.fixedDeltaTime;
 			verticalSpeed = jumpForce;
 		}else if (!characterController.isGrounded){
 			verticalSpeed -= stickToGroundForce * Time.fixedDeltaTime;
 		}else{
 			verticalSpeed = 0f;
 		}
-			
 
 		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce);
 		moveDir.y = verticalSpeed;
 
-		Debug.Log ("----");
-		Debug.Log (verticalSpeed);
-		Debug.Log (IsJumping);
-
 		characterController.Move(moveDir*Time.fixedDeltaTime);
 	}
-
-
 
 	private void RotateView()
 	{

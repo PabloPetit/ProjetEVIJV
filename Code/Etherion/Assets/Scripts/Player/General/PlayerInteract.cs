@@ -14,12 +14,7 @@ public class PlayerInteract : MonoBehaviour {
 		camera = GetComponentInChildren <Camera> ();
 		interactiveMask = LayerMask.GetMask ("Interactive");
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
+		
 	public void Interact(){
 		shootRay.origin = camera.transform.position;
 		shootRay.direction = camera.transform.forward;

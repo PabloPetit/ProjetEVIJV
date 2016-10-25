@@ -16,7 +16,6 @@ public class PlayerWeapon : MonoBehaviour {
 	protected bool overLoaded;
 	protected float timer;
 	protected GameObject barrel;
-
 	protected PlayerState playerState;
 
 	Ray shootRay;
@@ -33,32 +32,40 @@ public class PlayerWeapon : MonoBehaviour {
 	 */
 
 	float recoilForce = .1f;
-	float recoilTime = .1f;
-	float maxDeviation = 10f;
+	float recoilTime = 0.4f;
+	float maxDeviation = 01f;
+
+	Vector3 recoilTarget;
+
+	Camera camera;
+
+	GameObject rightHand;
 
 	void Recoil(){
 
-		if (timer >= recoilTime) {
-
-
+		if (timer < recoilTime) {
+			
 		} else {
-
-
+			
 		}
 
 	}
 
 	void Awake () {
-
+		recoilTarget  = new Vector3(-maxDeviation,0f,0f);
 		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
 		barrel = transform.Find("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 		playerState = GetComponent<PlayerState> ();
+		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
+		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 	}
 
 	void Update () {
 		timer += Time.deltaTime;
+
+		Recoil ();
 
 		if(timer >= timeBetweenBullets * effectsDisplayTime)
 		{
@@ -78,7 +85,6 @@ public class PlayerWeapon : MonoBehaviour {
 
 			Action ();
 
-			Recoil ();
 
 			/*
 
