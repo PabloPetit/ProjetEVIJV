@@ -11,7 +11,6 @@ public class HumanAim : MonoBehaviour {
 	GameObject sidePosition;
 	GameObject aimPosition;
 
-
 	bool aiming;
 
 	Vector3 velocity = Vector3.zero;
@@ -22,6 +21,7 @@ public class HumanAim : MonoBehaviour {
 	GameObject rightHand;
 
 	void Awake () {
+		
 		aiming = false;
 		rightHand = transform.Find("Model/Head/RightHand").gameObject;
 		sidePosition = transform.Find("Model/Head/SidePosition").gameObject;

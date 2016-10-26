@@ -35,7 +35,7 @@ public class PlayerWeapon : MonoBehaviour {
 	GameObject rightHand;
 
 	// Force and time parameters
-	float recoilForce = 5f;
+	float recoilForce = 2f;
 	float counterRecoilForce = 5f;
 	float recoilTime = 0.1f;
 	float downwardTime = .3f;
@@ -44,8 +44,8 @@ public class PlayerWeapon : MonoBehaviour {
 
 	// Recoil on Hand rotation
 	float maxDeviationX = 5f;
-	float maxDeviationY = 2f;
-	float maxDeviationZ = 1.5f;
+	float maxDeviationY = 1f;
+	float maxDeviationZ = 0f;
 	Vector3 recoilTarget;
 
 	// Recoil on Hand position

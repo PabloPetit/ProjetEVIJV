@@ -26,12 +26,11 @@ public class HumanController : MonoBehaviour {
 
 	Animator animator;
 
-
-	float jumpTimer;
-	bool IsWalking;
-	bool IsRunning;
-	bool IsJumping;
+	public bool IsWalking;
+	public bool IsRunning;
+	public bool IsJumping;
 	float verticalSpeed;
+	float jumpTimer;
 
 	void Awake(){
 
@@ -135,7 +134,7 @@ public class HumanController : MonoBehaviour {
 		}
 
 		if (IsWalking) {
-			if (Input.GetKey (KeyMap.run)) {
+			if (Input.GetKey (KeyMap.run) && !Input.GetKey (KeyMap.aim)) {
 				IsWalking = false;
 				IsRunning = true;
 				animator.SetTrigger ("StartRun");
