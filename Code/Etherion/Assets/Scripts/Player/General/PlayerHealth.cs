@@ -35,7 +35,8 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	public void TakeDamage(float damage, int side){
-		if ((!state.indestructible && !dead) || (side == state.side ) )
+		//TODO : anim when side == side
+		if ((!state.indestructible && !dead) )
 			return;
 		
 		life = Mathf.Max (0f, life - damage);

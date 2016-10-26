@@ -3,21 +3,23 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
-	protected int side;
-	protected float initialDamage;
-	protected float damageDecrease;
-	protected float speed;
-	protected float range;
+	int side;
+	float initialDamage;
+	float damageDecrease;
+	float speed;
+	float range;
+	GameObject owner;
 
-	protected Vector3 initialPosition;
+	Vector3 initialPosition;
 
-	protected float timer;
+	float timer;
+
 
 	void Start () {
 		timer = 0f;
 	}
 
-	public static void Create(GameObject prefab, Transform barrel, float dispertion, int side, float initialDamage, float damageDecrease, float speed, float range){
+	public static void Create(GameObject owner, GameObject prefab, Transform barrel, float dispertion, int side, float initialDamage, float damageDecrease, float speed, float range){
 		GameObject projectile = (GameObject) Instantiate (prefab, barrel.position,barrel.rotation);
 		projectile.transform.Rotate (new Vector3(Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion)));
 		Projectile p = projectile.GetComponent<Projectile> ();
@@ -26,6 +28,7 @@ public class Projectile : MonoBehaviour {
 		p.damageDecrease = damageDecrease;
 		p.speed = speed;
 		p.range = range;
+		p.owner = owner;
 		p.initialPosition = projectile.transform.position;
 	}
 
@@ -40,22 +43,25 @@ public class Projectile : MonoBehaviour {
 		
 
 	protected void OnTriggerEnter(Collider other) {
-		Debug.Log ("HIT");
-
-		if (other.tag.Equals ("Shootable")) {
-			PlayerHealth health = other.GetComponent<PlayerHealth> ();
-
-			if (health != null) {
-				float damage = Mathf.Max (initialDamage - (damageDecrease * timer)); 
-				health.TakeDamage (damage,side);
+		if (other.tag.Equals ("Player")) {
+			PlayerState state = other.GetComponent<PlayerState> ();
+			if (state.side != side){
+				PlayerHealth health = other.GetComponent<PlayerHealth> ();
+				if (health != null) {
+					float damage = Mathf.Max (initialDamage - (damageDecrease * timer),0f); 
+					health.TakeDamage (damage,side);
+				}
 			}
+		}else if (other.tag.Equals ("Creature")){
+			CreatureHealth health = other.GetComponent<CreatureHealth> ();
+			float damage = Mathf.Max (initialDamage - (damageDecrease * timer),0f); 
+			health.TakeDamage (damage, owner);
 		}
 
 		Delete ();
 	}
 
 	void Delete(){
-		Debug.Log ("Deleted");
 		foreach (Transform child in transform){
 			Destroy (child.gameObject);
 		}

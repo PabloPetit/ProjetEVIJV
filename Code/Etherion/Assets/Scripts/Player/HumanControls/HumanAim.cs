@@ -12,10 +12,11 @@ public class HumanAim : MonoBehaviour {
 	GameObject aimPosition;
 
 
-
 	bool aiming;
 
 	Vector3 velocity = Vector3.zero;
+	Vector3 aim;
+	Vector3 side;
 
 	Camera cam;
 	GameObject rightHand;
@@ -26,14 +27,16 @@ public class HumanAim : MonoBehaviour {
 		sidePosition = transform.Find("Model/Head/SidePosition").gameObject;
 		aimPosition = transform.Find("Model/Head/AimPosition").gameObject;
 		cam = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
+
+		aim = aimPosition.transform.position ;
+		side = sidePosition.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-
-		Vector3 aim = aimPosition.transform.position;
-		Vector3 side = sidePosition.transform.position;
+		aim = aimPosition.transform.position ;
+		side = sidePosition.transform.position;
 
 		if (aiming){
 			rightHand.transform.position = Vector3.Lerp(rightHand.transform.position, aim,  speed);

@@ -27,7 +27,7 @@ public class PlayerWeapon : MonoBehaviour {
 
 	/*
 	 * 
-	 * TEST ZONE
+	 * RECOIL
 	 * 
 	 */
 
@@ -57,22 +57,6 @@ public class PlayerWeapon : MonoBehaviour {
 	float downwardDeviationX = -1.5f;
 
 
-	void Recoil(){
-
-		if (timer < recoilTime) {
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (recoilTarget), recoilForce*Time.deltaTime);
-			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation, backWardForce * Time.deltaTime);
-
-		}else if(timer < recoilTime + downwardTime){
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition), counterRecoilForce*Time.deltaTime);
-			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
-		}
-		else {
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (Vector3.zero), downwardRecoverForce*Time.deltaTime);
-			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
-		}
-
-	}
 
 	void Awake () {
 		playerMask = LayerMask.GetMask ("Player");
@@ -96,6 +80,23 @@ public class PlayerWeapon : MonoBehaviour {
 		{
 			DisableEffects ();
 		}
+	}
+
+	void Recoil(){
+
+		if (timer < recoilTime) {
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (recoilTarget), recoilForce*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation, backWardForce * Time.deltaTime);
+
+		}else if(timer < recoilTime + downwardTime){
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition), counterRecoilForce*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
+		}
+		else {
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (Vector3.zero), downwardRecoverForce*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
+		}
+
 	}
 
 
