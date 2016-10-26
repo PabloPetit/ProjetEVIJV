@@ -45,7 +45,7 @@ public class PlayerWeapon : MonoBehaviour {
 	// Recoil on Hand rotation
 	float maxDeviationX = 5f;
 	float maxDeviationY = 2f;
-	float maxDeviationZ = 0f;
+	float maxDeviationZ = 1.5f;
 	Vector3 recoilTarget;
 
 	// Recoil on Hand position
@@ -60,9 +60,6 @@ public class PlayerWeapon : MonoBehaviour {
 	void Recoil(){
 
 		if (timer < recoilTime) {
-			if (timer < recoilTime / 4) {
-				recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
-			}
 			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (recoilTarget), recoilForce*Time.deltaTime);
 			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation, backWardForce * Time.deltaTime);
 
@@ -113,6 +110,7 @@ public class PlayerWeapon : MonoBehaviour {
 
 			Action ();
 
+			recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
 
 			/*
 
