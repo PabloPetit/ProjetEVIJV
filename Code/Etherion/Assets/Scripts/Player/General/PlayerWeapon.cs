@@ -31,28 +31,53 @@ public class PlayerWeapon : MonoBehaviour {
 	 * 
 	 */
 
-	float recoilForce = .1f;
-	float recoilTime = 0.4f;
-	float maxDeviation = 01f;
+	Camera camera;
+	GameObject rightHand;
 
+	// Force and time parameters
+	float recoilForce = 5f;
+	float counterRecoilForce = 5f;
+	float recoilTime = 0.1f;
+	float downwardTime = .3f;
+	float downwardRecoverForce = 3.8f;
+
+
+	// Recoil on Hand rotation
+	float maxDeviationX = 5f;
+	float maxDeviationY = 2f;
+	float maxDeviationZ = 0f;
 	Vector3 recoilTarget;
 
-	Camera camera;
+	// Recoil on Hand position
+	float backWardForce = .35f;
+	float maxBackWardDeviation = 2f;
 
-	GameObject rightHand;
+	// Downward position
+	Vector3 downwardPosition;
+	float downwardDeviationX = -1.5f;
+
 
 	void Recoil(){
 
 		if (timer < recoilTime) {
-			
-		} else {
-			
+			if (timer < recoilTime / 4) {
+				recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
+			}
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (recoilTarget), recoilForce*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation, backWardForce * Time.deltaTime);
+
+		}else if(timer < recoilTime + downwardTime){
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition), counterRecoilForce*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
+		}
+		else {
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (Vector3.zero), downwardRecoverForce*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
 		}
 
 	}
 
 	void Awake () {
-		recoilTarget  = new Vector3(-maxDeviation,0f,0f);
 		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
@@ -60,6 +85,9 @@ public class PlayerWeapon : MonoBehaviour {
 		playerState = GetComponent<PlayerState> ();
 		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
+
+		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
+		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
 	}
 
 	void Update () {
