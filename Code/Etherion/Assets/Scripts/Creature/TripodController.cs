@@ -14,8 +14,13 @@ public class TripodController : MonoBehaviour {
 	NavMeshAgent nav;
 	TripodHealth health;
 	Animator anim;
+	AudioSource audio;
 
 	int playerMask;
+
+	// Movement : 
+	public float speed;
+	public float angularSpeed;
 
 	// Aiming and Firing
 
@@ -40,7 +45,7 @@ public class TripodController : MonoBehaviour {
 
 	public float damage;
 	public float damageDecrease;
-	public float speed;
+	public float bulletSpeed;
 	public float maxDeviation;
 	public float range;
 	public float autoGuidanceStart;
@@ -52,6 +57,7 @@ public class TripodController : MonoBehaviour {
 		health = transform.Find ("hips").GetComponent<TripodHealth> ();
 		barrel = transform.Find ("hips/spine/head/Barrel").gameObject;
 		anim = transform.GetComponent<Animator> ();
+		audio = GetComponent<AudioSource> ();
 		target = null;
 		timer = 0f;
 		acquiring = false;
@@ -62,7 +68,9 @@ public class TripodController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		timer += Time.deltaTime;
-		stateSwitch ();
+		if (!health.dead) {
+			stateSwitch ();
+		}
 	}
 
 	void stateSwitch(){
@@ -94,21 +102,39 @@ public class TripodController : MonoBehaviour {
 	}
 
 	void aiming(){
-		if (timer > 3f) {
+
+		Aim ();
 		
+		if (timer > 3f) {
+			
 			state = FIRING;
 			anim.SetTrigger ("Fire");
 			timer = 0f;
 		}
 	}
 
+	void Aim(){
+		// Model Aim
+		Vector3 direction = (target.transform.position - transform.position);//.normalized;
+		direction = Vector3.RotateTowards (transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
+		direction.y = 0f;
+		transform.rotation = Quaternion.LookRotation (direction);
+		//Barrel Aim
+		direction = (target.transform.position - barrel.transform.position);//.normalized;
+		direction = Vector3.RotateTowards (barrel.transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
+		barrel.transform.rotation = Quaternion.LookRotation (direction);
+
+	}
+
 	void firing(){
 		
 		if (timer > firstFire && shots == 0) {
-			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, speed, range,true,maxDeviation,target,autoGuidanceStart); 
+			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range,true,maxDeviation,target,autoGuidanceStart); 
+			audio.Play ();
 			shots++;
 		} else if (timer > secondFire && shots == 1) {
-			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, speed, range,true,maxDeviation,target,autoGuidanceStart); 
+			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range,true,maxDeviation,target,autoGuidanceStart); 
+			audio.Play ();
 			shots++;
 		} else if (shots == 2) {
 			shots = 0;

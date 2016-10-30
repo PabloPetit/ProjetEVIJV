@@ -3,34 +3,42 @@ using System.Collections;
 
 public class PlayerWeapon : MonoBehaviour {
 
+
+	// Weapon Specs
 	public float damagePerShot;
 	public float range;
 	public float dispertion;
 	public float speed;
 	public float damageDecrease;
-	public float overloadTime;
+
+	//Effetcs
+
 	public float timeBetweenBullets;
 	public float effectsDisplayTime;
 
-
-	protected bool overLoaded;
+	// Misc Data
 	protected float timer;
 	protected GameObject barrel;
 	protected PlayerState playerState;
 	protected HumanAim humanAim;
 
-	Ray shootRay;
-	RaycastHit shootHit;
-
 	int playerMask;
 	int creatureMask;
 	int environementMask;
 
-	/*
-	 * 
-	 * RECOIL
-	 * 
-	 */
+	//OverLoad
+	protected bool overLoaded;
+	public float overloadIncrement;
+	public float overloadThreshold;
+	public float overloadVal;
+	public float overloadCoolSpeed;
+
+	Ray shootRay;
+	RaycastHit shootHit;
+
+
+
+	// Recoil
 
 	Camera camera;
 	GameObject rightHand;
@@ -72,12 +80,17 @@ public class PlayerWeapon : MonoBehaviour {
 
 		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
 		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
+
+		overloadVal = 0f;
+		overLoaded = false;
 	}
 
 	void Update () {
 		timer += Time.deltaTime;
 
 		Recoil ();
+
+		DecreaseOverload ();
 
 		if(timer >= timeBetweenBullets * effectsDisplayTime)
 		{
@@ -109,7 +122,7 @@ public class PlayerWeapon : MonoBehaviour {
 	public void Shoot (){
 
 		// TODO: Overload
-		if (timer >= timeBetweenBullets && Time.timeScale != 0) { 
+		if (timer >= timeBetweenBullets && Time.timeScale != 0  && !overLoaded) { 
 
 			timer = 0f;
 
@@ -118,6 +131,8 @@ public class PlayerWeapon : MonoBehaviour {
 			Action ();
 
 			recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
+
+			IncreaseOverload ();
 
 			/*
 
@@ -140,6 +155,20 @@ public class PlayerWeapon : MonoBehaviour {
 		}
 	}
 
+	protected void DecreaseOverload(){
+		overloadVal = Mathf.Max (0f, overloadVal - overloadCoolSpeed * Time.deltaTime);
+		if (overLoaded && overloadVal == 0f) {
+			overLoaded = false;
+		}
+
+	}
+
+	protected void IncreaseOverload(){
+		overloadVal += overloadIncrement;
+		if (overloadVal > overloadThreshold) {
+			overLoaded = true;
+		}
+	}
 
 
 	protected virtual void Action(){

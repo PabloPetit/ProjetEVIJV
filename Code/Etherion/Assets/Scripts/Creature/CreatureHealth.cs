@@ -5,7 +5,7 @@ public class CreatureHealth : MonoBehaviour {
 
 	public float maxLife;
 	protected float life;
-	protected bool dead;
+	public bool dead;
 
 	public float timeBeforeAutoCure;
 	public float autoCureValue;
