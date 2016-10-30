@@ -17,6 +17,7 @@ public class PlayerWeapon : MonoBehaviour {
 	protected float timer;
 	protected GameObject barrel;
 	protected PlayerState playerState;
+	protected HumanAim humanAim;
 
 	Ray shootRay;
 	RaycastHit shootHit;
@@ -41,6 +42,8 @@ public class PlayerWeapon : MonoBehaviour {
 	float downwardTime = .3f;
 	float downwardRecoverForce = 3.8f;
 
+	float aimReducer = 1.5f;
+
 
 	// Recoil on Hand rotation
 	float maxDeviationX = 5f;
@@ -57,13 +60,13 @@ public class PlayerWeapon : MonoBehaviour {
 	float downwardDeviationX = -1.5f;
 
 
-
 	void Awake () {
 		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
 		barrel = transform.Find("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 		playerState = GetComponent<PlayerState> ();
+		humanAim = GetComponent<HumanAim> ();
 		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 
@@ -85,11 +88,14 @@ public class PlayerWeapon : MonoBehaviour {
 	void Recoil(){
 
 		if (timer < recoilTime) {
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (recoilTarget), recoilForce*Time.deltaTime);
-			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation, backWardForce * Time.deltaTime);
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation,
+				Quaternion.Euler (recoilTarget), (humanAim.aiming ? recoilForce / aimReducer : recoilForce)*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation,
+				(humanAim.aiming ? backWardForce / aimReducer : recoilForce) * Time.deltaTime);
 
 		}else if(timer < recoilTime + downwardTime){
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition), counterRecoilForce*Time.deltaTime);
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition),
+				(humanAim.aiming ? counterRecoilForce / aimReducer : counterRecoilForce)*Time.deltaTime);
 			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
 		}
 		else {

@@ -6,6 +6,15 @@ public class SkratWeapon : PlayerWeapon{
 	public GameObject bulletPrefab;
 	AudioSource gunShot;
 
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+
+
 	void Start () {
 		gunShot = barrel.GetComponent<AudioSource> ();
 	}
