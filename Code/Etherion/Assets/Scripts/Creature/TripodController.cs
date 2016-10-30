@@ -6,8 +6,8 @@ public class TripodController : MonoBehaviour {
 	// Tripod States
 
 	public const int EXPLORATION = 1;
-	public const int AIMING = 2;
-	public const int FIRING = 3;
+	public const int AQUISITION = 2;
+	public const int FIRE = 3;
 
 	// Misc data
 
@@ -21,21 +21,28 @@ public class TripodController : MonoBehaviour {
 	// Movement : 
 	public float speed;
 	public float angularSpeed;
+	public float destinationRadius;
+	Vector3 navDestination;
 
 	// Aiming and Firing
 
 	public GameObject target;
 	public float detectionRadius;
+	public float visionAngle;
 	public float maxAimingDistance;
 	public float aquisitionTime;
 	public float loseTargetTime;
+
+	Light chargingLight;
 
 	float timer;
 	bool acquiring;
 	int state;
 
-	float firstFire = 0.1f;
-	float secondFire = 0.2f;
+
+	float firstFire = 0.6f;
+	float secondFire = 0.75f;
+	float fireAnimationDuration = 1.75f;
 	int shots;
 
 	// Weapon Specs
@@ -58,15 +65,16 @@ public class TripodController : MonoBehaviour {
 		barrel = transform.Find ("hips/spine/head/Barrel").gameObject;
 		anim = transform.GetComponent<Animator> ();
 		audio = GetComponent<AudioSource> ();
+		chargingLight = transform.Find ("hips/ChargingLight").gameObject.GetComponent<Light> ();
 		target = null;
-		timer = 0f;
 		acquiring = false;
-		state = EXPLORATION;
-		shots = 0;
+		navDestination = Vector3.zero;
+		GoToExploration ();
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
+		Debug.Log (state);
 		timer += Time.deltaTime;
 		if (!health.dead) {
 			stateSwitch ();
@@ -77,43 +85,108 @@ public class TripodController : MonoBehaviour {
 
 		switch (state) {
 		case EXPLORATION:
-			exploration ();
+			Exploration ();
 			break;
-		case AIMING:
-			aiming ();
+		case AQUISITION:
+			Aquisition ();
 			break;
-		case FIRING: 
-			firing ();
+		case FIRE: 
+			Fire ();
 			break;
 		}
 	}
 
-	void exploration(){
+	void Exploration(){
+		
 		setTarget ();
+
 		if (target != null) {
-			state = AIMING;
-			timer = 0f;
-			anim.SetTrigger ("Idle");
-			//Il vas falloir trouver un moyen de montrer au joueur que le robot vise
-			//change material to redMat
+			GoToAquisition ();
 			return;
 		}
-		//random exploration
+
+		if (Vector3.Distance (nav.transform.position, navDestination) < 1) {
+			navDestination = Vector3.zero;
+		}
+
+		if ( navDestination == Vector3.zero ){
+			SetNewDestination ();
+			nav.SetDestination (navDestination);
+		}
+
+		Vector3 direction = (nav.destination - transform.position);//.normalized;
+		direction = Vector3.RotateTowards (transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
+		direction.y = 0f;
+		transform.rotation = Quaternion.LookRotation (direction);
 	}
 
-	void aiming(){
+	void GoToExploration(){
+		shots = 0;
+		state = EXPLORATION;
+		anim.SetTrigger ("Walking");
+		timer = 0f;
+	}
+
+	void SetNewDestination(){
+		navDestination = Random.insideUnitSphere * destinationRadius;
+		navDestination += transform.position;
+		NavMeshHit hit;
+		NavMesh.SamplePosition (navDestination,out hit, destinationRadius,1);
+		navDestination = hit.position;
+	}
+
+	void GoToAquisition(){
+		state = AQUISITION;
+		timer = 0f;
+		anim.SetTrigger ("Idle");
+	}
+
+	void Aquisition(){
+		
+		checkTargetDistance ();
+
+		if (target == null) {
+			chargingLight.intensity = 0f;
+			GoToExploration ();
+			return;
+		}
 
 		Aim ();
-		
-		if (timer > 3f) {
-			
-			state = FIRING;
-			anim.SetTrigger ("Fire");
-			timer = 0f;
+
+		chargingLight.intensity += 8f / aquisitionTime * Time.deltaTime;
+
+		if (timer > aquisitionTime) {
+			GoToFire ();
+			return;
 		}
+	}
+
+	void GoToFire(){
+		state = FIRE;
+		anim.SetTrigger ("Fire");
+		timer = 0f;
+	}
+		
+	void Fire(){
+		Aim ();
+		if (timer > firstFire && shots == 0) {
+			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range, true, maxDeviation, target, autoGuidanceStart); 
+			audio.Play ();
+			shots++;
+		} else if (timer > secondFire && shots == 1) {
+			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range, true, maxDeviation, target, autoGuidanceStart); 
+			audio.Play ();
+			chargingLight.intensity = 0f;
+			shots++;
+		} else if (shots == 2 && timer > fireAnimationDuration) {
+			GoToExploration ();
+		} 
 	}
 
 	void Aim(){
+		//TODO : Remonter la viser si raycast echoue
+		// Si on est orienter vers la cible avec un delta < seuil mais que pas Raycast, tire en cloche
+
 		// Model Aim
 		Vector3 direction = (target.transform.position - transform.position);//.normalized;
 		direction = Vector3.RotateTowards (transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
@@ -124,24 +197,6 @@ public class TripodController : MonoBehaviour {
 		direction = Vector3.RotateTowards (barrel.transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
 		barrel.transform.rotation = Quaternion.LookRotation (direction);
 
-	}
-
-	void firing(){
-		
-		if (timer > firstFire && shots == 0) {
-			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range,true,maxDeviation,target,autoGuidanceStart); 
-			audio.Play ();
-			shots++;
-		} else if (timer > secondFire && shots == 1) {
-			Projectile.Create (gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range,true,maxDeviation,target,autoGuidanceStart); 
-			audio.Play ();
-			shots++;
-		} else if (shots == 2) {
-			shots = 0;
-			state = AIMING;
-			anim.SetTrigger ("Idle");
-			timer = 0f;
-		}
 	}
 
 	void checkTargetDistance(){
@@ -157,10 +212,12 @@ public class TripodController : MonoBehaviour {
 		GameObject closest = null;
 		float minDistance = detectionRadius + 1f;
 		foreach (Collider col in hitColliders) {
-			float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
-			if (dist < minDistance) {
-				closest = col.gameObject;
-				minDistance = dist;
+			if (Vector3.Angle ( col.gameObject.transform.position - transform.position, transform.forward) < visionAngle) {
+				float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
+				if (dist < minDistance) {
+					closest = col.gameObject;
+					minDistance = dist;
+				}
 			}
 		}
 		if (closest != null) {
