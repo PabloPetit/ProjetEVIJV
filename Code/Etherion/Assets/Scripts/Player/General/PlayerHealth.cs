@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerHealth : MonoBehaviour {
@@ -12,22 +13,30 @@ public class PlayerHealth : MonoBehaviour {
 	float timer;
 	PlayerState state;
 
+	Slider lifeSlide;
+	RawImage bloodCanvas;
 
-	void Awake(){
+
+	void Start(){
 		state = GetComponent<PlayerState> ();
-
-	}
-
-	public void InitCommonFields(){
+		lifeSlide = GameObject.Find ("LifeSlider").GetComponent<Slider> ();
+		bloodCanvas = GameObject.Find ("BloodCanvas").GetComponent<RawImage> ();
 		life = maxLife;
 		dead = false;
 		timer = 0f;
 	}
 		
+		
 	
 	// Update is called once per frame
 	void Update () {
 		timer += Time.deltaTime;
+
+		lifeSlide.value = life / maxLife;
+
+		Color c = bloodCanvas.color;
+		c.a = 1f - life / maxLife;
+		bloodCanvas.color = c;
 
 		if (timer >= timeBeforeAutoCure && !dead && life != maxLife) {
 			life += Time.deltaTime * autoCureValue;
@@ -35,9 +44,10 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
 	public void TakeDamage(float damage, int side){
-		//TODO : anim when side == side
-		if ((!state.indestructible && !dead) )
+		if (state.indestructible || dead) {
 			return;
+		}
+			
 		
 		life = Mathf.Max (0f, life - damage);
 
