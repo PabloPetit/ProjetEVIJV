@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerWeapon : MonoBehaviour {
 
@@ -21,6 +22,9 @@ public class PlayerWeapon : MonoBehaviour {
 	protected GameObject barrel;
 	protected PlayerState playerState;
 	protected HumanAim humanAim;
+	protected Image overloadBar;
+	protected float overloadBarMax = .1f;
+	protected float overloadBarMin = .9f;
 
 	int playerMask;
 	int creatureMask;
@@ -78,6 +82,8 @@ public class PlayerWeapon : MonoBehaviour {
 		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 
+		overloadBar = GameObject.Find ("OverloadBar").GetComponent<Image> ();
+
 		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
 		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
 
@@ -92,10 +98,20 @@ public class PlayerWeapon : MonoBehaviour {
 
 		DecreaseOverload ();
 
+		setOverloadBarValue ();
+
 		if(timer >= timeBetweenBullets * effectsDisplayTime)
 		{
 			DisableEffects ();
 		}
+	}
+
+	void setOverloadBarValue(){
+
+		float val = overloadVal / overloadThreshold;
+		val *= (overloadBarMax - overloadBarMin);
+		val += overloadBarMin;
+		overloadBar.fillAmount = 1f - val;
 	}
 
 	void Recoil(){
