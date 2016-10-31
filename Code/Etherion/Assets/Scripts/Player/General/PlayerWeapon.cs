@@ -112,6 +112,12 @@ public class PlayerWeapon : MonoBehaviour {
 		val *= (overloadBarMax - overloadBarMin);
 		val += overloadBarMin;
 		overloadBar.fillAmount = 1f - val;
+
+		if (overLoaded) {
+			overloadBar.color = Color.red;
+		} else {
+			overloadBar.color = Color.white;
+		}
 	}
 
 	void Recoil(){

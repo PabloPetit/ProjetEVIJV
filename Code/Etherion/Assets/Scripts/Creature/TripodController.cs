@@ -16,6 +16,7 @@ public class TripodController : MonoBehaviour {
 	Animator anim;
 	AudioSource audio;
 
+
 	int playerMask;
 	int environnementMask;
 
@@ -24,6 +25,11 @@ public class TripodController : MonoBehaviour {
 	public float angularSpeed;
 	public float destinationRadius;
 	Vector3 navDestination;
+
+	// FootSteps
+	public AudioClip[] footsteps;
+	int lastFootstep;
+	float footstepsInterval = 1f;
 
 	// Aiming and Firing
 
@@ -48,6 +54,9 @@ public class TripodController : MonoBehaviour {
 	float secondFire = 0.75f;
 	float fireAnimationDuration = 1.75f;
 	int shots;
+
+	public float balisticShotAngle;
+	public float balisticShotMinDistance;
 
 	// Weapon Specs
 
@@ -75,9 +84,10 @@ public class TripodController : MonoBehaviour {
 		acquiring = false;
 		navDestination = Vector3.zero;
 		GoToExploration ();
+		lastFootstep = 0;
 	}
 	
-	// Update is called once per frame
+
 	void Update () {
 		//Debug.Log (state);
 		timer += Time.deltaTime;
@@ -119,10 +129,23 @@ public class TripodController : MonoBehaviour {
 			nav.SetDestination (navDestination);
 		}
 
+		footStepSound ();
+
 		Vector3 direction = (nav.destination - transform.position);//.normalized;
 		direction = Vector3.RotateTowards (transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
 		direction.y = 0f;
 		transform.rotation = Quaternion.LookRotation (direction);
+	}
+
+	void footStepSound(){
+		if (timer > footstepsInterval && footsteps.Length > 0) {
+			audio.PlayOneShot (footsteps[lastFootstep]);
+			lastFootstep++;
+			timer = 0f;
+			if (lastFootstep == footsteps.Length) {
+				lastFootstep = 0;
+			}
+		}
 	}
 
 	void GoToExploration(){
@@ -188,10 +211,10 @@ public class TripodController : MonoBehaviour {
 	}
 
 	void ShootTarget(){
-		if (!isTargetVisible (target,maxAimingDistance)) {
-			barrel.transform.Rotate (new Vector3 (-25f, 0f, 0f));
+		if ( Vector3.Distance (transform.position,target.transform.position) > balisticShotMinDistance && !isTargetVisible (target,maxAimingDistance)) {
+			barrel.transform.Rotate (new Vector3 (-balisticShotAngle, 0f, 0f));
 			Projectile.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range, true, maxDeviation, target, autoGuidanceStart); 
-			barrel.transform.Rotate (new Vector3 (25f, 0f, 0f));
+			barrel.transform.Rotate (new Vector3 (balisticShotAngle, 0f, 0f));
 		} else {
 			Projectile.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range, true, maxDeviation, target, autoGuidanceStart); 
 		}
@@ -247,8 +270,8 @@ public class TripodController : MonoBehaviour {
 
 	bool isTargetVisible(GameObject rayTarget, float range){
 		bool res = false;
-		shootRay.origin = barrel.transform.position;
-		shootRay.direction = (rayTarget.transform.position - barrel.transform.position).normalized;
+		shootRay.origin = transform.position;
+		shootRay.direction = (rayTarget.transform.position - transform.position).normalized;
 
 		if (Physics.Raycast (shootRay, out shootHit, maxAimingDistance,playerMask | environnementMask)){
 			if (shootHit.transform.gameObject == rayTarget){
