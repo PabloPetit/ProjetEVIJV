@@ -43,10 +43,10 @@ public class Projectile : MonoBehaviour {
 		Delete ();
 	}
 
-	protected virtual void Delete(){
+	protected void Delete(float delay=0f){
 		foreach (Transform child in transform){
-			Destroy (child.gameObject);
+			Destroy (child.gameObject,delay);
 		}
-		Destroy (gameObject);
+		Destroy (gameObject,delay);
 	}
 }

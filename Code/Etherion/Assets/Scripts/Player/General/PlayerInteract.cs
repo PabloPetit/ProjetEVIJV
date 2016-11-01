@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerInteract : MonoBehaviour {
 
-	public static float RANGE = 2f;
+	public static float RANGE = 4f;
 
 	Ray shootRay;
 	RaycastHit shootHit;

@@ -11,16 +11,14 @@ public class FlareShot : Projectile {
 	protected float descendingSpeed;
 	protected float intensity;
 	protected float lightRange;
-
+	protected float deathDelay;
 	protected Light flareLight;
-
 	protected Flare flare;
-
 	protected bool descentTrigger;
+	protected bool dead;
 
 
-
-	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, float acceleration, float ascendingTime, float descendingSpeed,float intensity, float lightRange){
+	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, float acceleration, float ascendingTime, float descendingSpeed,float intensity, float lightRange,float deathDelay){
 		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed,range);
 		FlareShot flareShot = projectile.GetComponent<FlareShot> ();
 		flareShot.acceleration = acceleration;
@@ -28,16 +26,21 @@ public class FlareShot : Projectile {
 		flareShot.descendingSpeed = descendingSpeed;
 		flareShot.intensity = intensity;
 		flareShot.lightRange = lightRange;
+		flareShot.deathDelay = deathDelay;
 		flareShot.flareLight = projectile.GetComponent<Light> ();
 		flareShot.flare = flareShot.flareLight.flare;
 		flareShot.flareLight.flare = null;
 		flareShot.descentTrigger = false;
+		flareShot.dead = false;
 		flareShot.targetRotation = Quaternion.Euler (90f, 0f, 0f);
 		return projectile;
 	}
 
 
 	void FixedUpdate () {
+		if (dead)
+			return;
+
 		if (timer < ascendingTime) {
 			speed += acceleration * Time.fixedDeltaTime;
 		} else {
@@ -53,5 +56,10 @@ public class FlareShot : Projectile {
 		}
 
 		base.FixedUpdate ();
+	}
+
+	protected override void OnTriggerEnter(Collider other) {
+		Delete (deathDelay);
+		dead = true;
 	}
 }
