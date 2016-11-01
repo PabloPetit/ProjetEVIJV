@@ -7,6 +7,7 @@ public class CreatureHealth : MonoBehaviour {
 	protected float life;
 	public bool dead;
 
+
 	public float timeBeforeAutoCure;
 	public float autoCureValue;
 	protected float timer;
@@ -28,7 +29,6 @@ public class CreatureHealth : MonoBehaviour {
 	}
 
 	public void TakeDamage(float damage, GameObject assailant){
-
 		life -= damage / defense;
 		if (life <= 0 && !dead) {
 			dead = true;

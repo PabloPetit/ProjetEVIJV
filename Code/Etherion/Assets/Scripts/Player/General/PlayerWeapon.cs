@@ -11,6 +11,7 @@ public class PlayerWeapon : MonoBehaviour {
 	public float dispertion;
 	public float speed;
 	public float damageDecrease;
+	public float minDamage;
 
 	//Effetcs
 

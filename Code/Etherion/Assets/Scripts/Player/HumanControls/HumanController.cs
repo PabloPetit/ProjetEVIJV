@@ -16,6 +16,7 @@ public class HumanController : MonoBehaviour {
 	PlayerBuffs buffs;
 	PlayerTraps traps;
 	PlayerAbility1 ability1;
+	PlayerHealth health;
 	HumanAim aim;
 
 	public float walkSpeed;
@@ -45,6 +46,7 @@ public class HumanController : MonoBehaviour {
 		buffs = gameObject.GetComponent<PlayerBuffs> ();
 		traps = gameObject.GetComponent<PlayerTraps> ();
 		ability1 = gameObject.GetComponent<PlayerAbility1> ();
+		health = gameObject.GetComponent<PlayerHealth> ();
 		aim = gameObject.GetComponent<HumanAim> ();
 
 		animator = GetComponentInChildren<Animator> ();
@@ -57,11 +59,17 @@ public class HumanController : MonoBehaviour {
 	}
 
 	void Update () {
+		if (health.dead) {
+			//return;
+		}
 		RotateView();
 		Actions();
 	}
 
 	void FixedUpdate(){
+		if (health.dead) {
+			//return;
+		}
 		jumpTimer += Time.fixedDeltaTime;
 		Movement ();
 	}

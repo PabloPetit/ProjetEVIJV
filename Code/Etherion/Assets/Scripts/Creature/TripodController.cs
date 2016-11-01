@@ -65,6 +65,7 @@ public class TripodController : MonoBehaviour {
 
 	public float damage;
 	public float damageDecrease;
+	public float minDamage;
 	public float bulletSpeed;
 	public float maxDeviation;
 	public float range;
@@ -165,15 +166,18 @@ public class TripodController : MonoBehaviour {
 	}
 
 	void GoToAquisition(){
+		nav.Resume ();
 		state = AQUISITION;
 		timer = 0f;
-		anim.SetTrigger ("Idle");
+		// anim.SetTrigger ("Idle");
+		nav.SetDestination (target.transform.position);
 	}
 
 	void Aquisition(){
 
-		nav.Stop ();
-		
+		//nav.Stop ();
+
+
 		checkTargetDistance ();
 
 		if (target == null) {
@@ -193,6 +197,7 @@ public class TripodController : MonoBehaviour {
 	}
 
 	void GoToFire(){
+		nav.Stop ();
 		state = FIRE;
 		anim.SetTrigger ("Fire");
 		timer = 0f;
@@ -213,13 +218,11 @@ public class TripodController : MonoBehaviour {
 	void ShootTarget(){
 		if ( Vector3.Distance (transform.position,target.transform.position) > balisticShotMinDistance && !isTargetVisible (target,maxAimingDistance)) {
 			barrel.transform.Rotate (new Vector3 (-balisticShotAngle, 0f, 0f));
-			Projectile.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range, true, maxDeviation, target, autoGuidanceStart); 
+			AutoGuidedBullet.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, bulletSpeed, range, 0, 0, damage, damageDecrease, minDamage, target, autoGuidanceStart, maxDeviation);
 			barrel.transform.Rotate (new Vector3 (balisticShotAngle, 0f, 0f));
 		} else {
-			Projectile.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, 0f, 0, damage, damageDecrease, bulletSpeed, range, true, maxDeviation, target, autoGuidanceStart); 
+			AutoGuidedBullet.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, bulletSpeed, range, 0, 0, damage, damageDecrease, minDamage, target, autoGuidanceStart, maxDeviation);
 		}
-
-
 		audio.Play ();
 		shots++;
 	}
@@ -270,14 +273,15 @@ public class TripodController : MonoBehaviour {
 
 	bool isTargetVisible(GameObject rayTarget, float range){
 		bool res = false;
-		shootRay.origin = transform.position;
-		shootRay.direction = (rayTarget.transform.position - transform.position).normalized;
+		shootRay.origin = barrel.transform.position;
+		shootRay.direction = (rayTarget.transform.position - barrel.transform.position).normalized;
 
 		if (Physics.Raycast (shootRay, out shootHit, maxAimingDistance,playerMask | environnementMask)){
 			if (shootHit.transform.gameObject == rayTarget){
 				res = true;
 			}
 		}
+		Debug.DrawRay (shootRay.origin,shootRay.direction * maxAimingDistance,Color.red,.5f);
 
 		return res;
 	}
