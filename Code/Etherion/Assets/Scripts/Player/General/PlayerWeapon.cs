@@ -31,6 +31,8 @@ public class PlayerWeapon : MonoBehaviour {
 	int creatureMask;
 	int environementMask;
 
+	HitMarker hitMarker;
+
 	//OverLoad
 	protected bool overLoaded;
 	public float overloadIncrement;
@@ -84,6 +86,7 @@ public class PlayerWeapon : MonoBehaviour {
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 
 		overloadBar = GameObject.Find ("OverloadBar").GetComponent<Image> ();
+		hitMarker = GameObject.Find ("HitMarker").GetComponent<HitMarker> ();
 
 		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
 		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
