@@ -181,7 +181,7 @@ public class HumanController : MonoBehaviour {
 			verticalSpeed = 0f;
 		}
 
-		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce);
+		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce*3f);
 		moveDir.y = verticalSpeed;
 
 		characterController.Move(moveDir*Time.fixedDeltaTime);

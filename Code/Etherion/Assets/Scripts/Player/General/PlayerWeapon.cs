@@ -86,7 +86,6 @@ public class PlayerWeapon : MonoBehaviour {
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 
 		overloadBar = GameObject.Find ("OverloadBar").GetComponent<Image> ();
-		hitMarker = GameObject.Find ("HitMarker").GetComponent<HitMarker> ();
 
 		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
 		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
@@ -159,6 +158,8 @@ public class PlayerWeapon : MonoBehaviour {
 			recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
 
 			IncreaseOverload ();
+
+			camera.fieldOfView += .5f;
 
 			/*
 

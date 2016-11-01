@@ -18,10 +18,12 @@ public class FlareLauncherScript : Interaction {
 
 	public GameObject barrel;
 	public GameObject prefab;
+	AudioSource audio;
 	float timer;
 
 	void Start () {
 		timer = interval;
+		audio = GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
@@ -33,6 +35,7 @@ public class FlareLauncherScript : Interaction {
 		if (timer > interval) {
 			FlareShot.Create (gameObject,prefab,barrel.transform,speed,range,acceleration,ascendingTime,descendingSpeed,intensity,lightRange,deathDelay);
 			timer = 0f;
+			audio.Play ();
 		}
 	}
 }
