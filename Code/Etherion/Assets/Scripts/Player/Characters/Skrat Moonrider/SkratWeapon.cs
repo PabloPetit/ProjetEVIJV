@@ -11,7 +11,7 @@ public class SkratWeapon : PlayerWeapon{
 	}
 
 	protected override void Action(){
-		Projectile.Create (gameObject, bulletPrefab, barrel.transform, dispertion, playerState.side, damagePerShot, damageDecrease, speed, range); 
+		SimpleBullet.Create (gameObject, bulletPrefab, barrel.transform, speed, range, dispertion, playerState.side, damagePerShot, damageDecrease, minDamage,hitMarker:true);
 		gunShot.Play ();
 	}
 		

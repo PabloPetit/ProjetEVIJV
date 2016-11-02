@@ -16,6 +16,7 @@ public class HumanController : MonoBehaviour {
 	PlayerBuffs buffs;
 	PlayerTraps traps;
 	PlayerAbility1 ability1;
+	PlayerHealth health;
 	HumanAim aim;
 
 	public float walkSpeed;
@@ -32,6 +33,11 @@ public class HumanController : MonoBehaviour {
 	float verticalSpeed;
 	float jumpTimer;
 
+	public AudioClip[] footsteps;
+	AudioSource audio;
+	float footstepsInterval = .5f;
+	float timer;
+
 	void Awake(){
 
 		characterController = GetComponent<CharacterController> ();
@@ -45,27 +51,47 @@ public class HumanController : MonoBehaviour {
 		buffs = gameObject.GetComponent<PlayerBuffs> ();
 		traps = gameObject.GetComponent<PlayerTraps> ();
 		ability1 = gameObject.GetComponent<PlayerAbility1> ();
+		health = gameObject.GetComponent<PlayerHealth> ();
 		aim = gameObject.GetComponent<HumanAim> ();
 
 		animator = GetComponentInChildren<Animator> ();
+		audio =  GetComponentInChildren<AudioSource> ();
 
 		IsWalking = false;
 		IsRunning = false;
 		IsJumping = false;
 
 		verticalSpeed = 0f;
+		timer = 0f;
 	}
 
 	void Update () {
+		if (health.dead) {
+			//return;
+		}
+		timer += Time.deltaTime;
 		RotateView();
 		Actions();
+		FootSteps ();
 	}
 
 	void FixedUpdate(){
+		if (health.dead) {
+			//return;
+		}
 		jumpTimer += Time.fixedDeltaTime;
 		Movement ();
 	}
 		
+
+	void FootSteps(){
+		if (footsteps.Length == 0 || IsJumping || !characterController.isGrounded)
+			return;
+		if ( (IsWalking && timer > footstepsInterval) || (IsRunning && timer > footstepsInterval / 2f) ){
+			audio.PlayOneShot (footsteps [(int)Random.Range (0, footsteps.Length)]);
+			timer = 0f;
+		}
+	}
 
 	void Actions(){
 
@@ -173,7 +199,7 @@ public class HumanController : MonoBehaviour {
 			verticalSpeed = 0f;
 		}
 
-		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce);
+		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce*3f);
 		moveDir.y = verticalSpeed;
 
 		characterController.Move(moveDir*Time.fixedDeltaTime);

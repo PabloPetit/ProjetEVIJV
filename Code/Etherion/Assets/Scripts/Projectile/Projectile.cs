@@ -3,68 +3,78 @@ using System.Collections;
 
 public class Projectile : MonoBehaviour {
 
-	int side;
-	float initialDamage;
-	float damageDecrease;
-	float speed;
-	float range;
-	GameObject owner;
+	protected float speed;
+	protected float range;
 
-	Vector3 initialPosition;
+	protected GameObject owner;
 
-	float timer;
+	protected Vector3 initialPosition;
+	protected float timer;
 
+	protected HitMarker hitMarkerUI;
+	protected bool hitMarker;
 
-	void Start () {
+	//protected Transform barrel;
+
+	public int playerMask;
+	public int creatureMask;
+
+	public void Awake(){
+		playerMask = LayerMask.GetMask ("Player");
+		creatureMask = LayerMask.GetMask ("Creature");
+		hitMarkerUI = GameObject.Find ("HitMarker").GetComponent<HitMarker> ();
+	}
+
+	public virtual void Start () {
 		timer = 0f;
 	}
 
-	public static void Create(GameObject owner, GameObject prefab, Transform barrel, float dispertion, int side, float initialDamage, float damageDecrease, float speed, float range){
+
+	public static GameObject Create(GameObject owner, GameObject prefab ,Transform barrel, float speed, float range,bool hitMarker){
 		GameObject projectile = (GameObject) Instantiate (prefab, barrel.position,barrel.rotation);
-		projectile.transform.Rotate (new Vector3(Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion)));
 		Projectile p = projectile.GetComponent<Projectile> ();
-		p.side = side;
-		p.initialDamage = initialDamage;
-		p.damageDecrease = damageDecrease;
 		p.speed = speed;
 		p.range = range;
 		p.owner = owner;
+		p.hitMarker = hitMarker;
 		p.initialPosition = projectile.transform.position;
+		return projectile;
 	}
 
+<<<<<<< HEAD
 	void FixedUpdate () {
 		timer += Time.deltaTime;
+=======
+	protected virtual void FixedUpdate () {
+		timer += Time.fixedDeltaTime;
+>>>>>>> origin/master
 		transform.position += transform.forward * speed * Time.deltaTime;
+
 		if ( Vector3.Distance (initialPosition, transform.position) > range){
 			Delete ();
 		}
+			
 	}
 		
-		
 
-	protected void OnTriggerEnter(Collider other) {
-		if (other.tag.Equals ("Player")) {
-			PlayerState state = other.GetComponent<PlayerState> ();
-			if (state.side != side){
-				PlayerHealth health = other.GetComponent<PlayerHealth> ();
-				if (health != null) {
-					float damage = Mathf.Max (initialDamage - (damageDecrease * timer),0f); 
-					health.TakeDamage (damage,side);
-				}
-			}
-		}else if (other.tag.Equals ("Creature")){
-			CreatureHealth health = other.GetComponent<CreatureHealth> ();
-			float damage = Mathf.Max (initialDamage - (damageDecrease * timer),0f); 
-			health.TakeDamage (damage, owner);
-		}
-
+	protected virtual void OnTriggerEnter(Collider other) {
 		Delete ();
 	}
 
-	void Delete(){
+	protected void Delete(float delay=0f){
+		//TODO : Delay not working
 		foreach (Transform child in transform){
-			Destroy (child.gameObject);
+			Destroy (child.gameObject,t:delay);
 		}
-		Destroy (gameObject);
+		Destroy (gameObject,t:delay);
 	}
+
+	public bool IsCreatureLayer(int layer){
+		return ((1 << layer) & creatureMask) != 0;
+	}
+
+	public bool IsPlayerLayer(int layer){
+		return ((1 << layer) & playerMask) != 0;
+	}
+
 }

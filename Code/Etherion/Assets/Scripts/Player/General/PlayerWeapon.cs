@@ -1,35 +1,51 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerWeapon : MonoBehaviour {
 
+
+	// Weapon Specs
 	public float damagePerShot;
 	public float range;
 	public float dispertion;
 	public float speed;
 	public float damageDecrease;
-	public float overloadTime;
+	public float minDamage;
+
+	//Effetcs
+
 	public float timeBetweenBullets;
 	public float effectsDisplayTime;
 
-
-	protected bool overLoaded;
+	// Misc Data
 	protected float timer;
 	protected GameObject barrel;
 	protected PlayerState playerState;
-
-	Ray shootRay;
-	RaycastHit shootHit;
+	protected HumanAim humanAim;
+	protected Image overloadBar;
+	protected float overloadBarMax = .1f;
+	protected float overloadBarMin = .9f;
 
 	int playerMask;
 	int creatureMask;
 	int environementMask;
 
-	/*
-	 * 
-	 * RECOIL
-	 * 
-	 */
+	HitMarker hitMarker;
+
+	//OverLoad
+	protected bool overLoaded;
+	public float overloadIncrement;
+	public float overloadThreshold;
+	public float overloadVal;
+	public float overloadCoolSpeed;
+
+	Ray shootRay;
+	RaycastHit shootHit;
+
+
+
+	// Recoil
 
 	Camera camera;
 	GameObject rightHand;
@@ -40,6 +56,8 @@ public class PlayerWeapon : MonoBehaviour {
 	float recoilTime = 0.1f;
 	float downwardTime = .3f;
 	float downwardRecoverForce = 3.8f;
+
+	float aimReducer = 1.5f;
 
 
 	// Recoil on Hand rotation
@@ -57,18 +75,23 @@ public class PlayerWeapon : MonoBehaviour {
 	float downwardDeviationX = -1.5f;
 
 
-
 	void Awake () {
 		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
 		barrel = transform.Find("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 		playerState = GetComponent<PlayerState> ();
+		humanAim = GetComponent<HumanAim> ();
 		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 
+		overloadBar = GameObject.Find ("OverloadBar").GetComponent<Image> ();
+
 		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
 		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
+
+		overloadVal = 0f;
+		overLoaded = false;
 	}
 
 	void Update () {
@@ -76,20 +99,41 @@ public class PlayerWeapon : MonoBehaviour {
 
 		Recoil ();
 
+		DecreaseOverload ();
+
+		setOverloadBarValue ();
+
 		if(timer >= timeBetweenBullets * effectsDisplayTime)
 		{
 			DisableEffects ();
 		}
 	}
 
+	void setOverloadBarValue(){
+
+		float val = overloadVal / overloadThreshold;
+		val *= (overloadBarMax - overloadBarMin);
+		val += overloadBarMin;
+		overloadBar.fillAmount = 1f - val;
+
+		if (overLoaded) {
+			overloadBar.color = Color.red;
+		} else {
+			overloadBar.color = Color.white;
+		}
+	}
+
 	void Recoil(){
 
 		if (timer < recoilTime) {
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (recoilTarget), recoilForce*Time.deltaTime);
-			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation, backWardForce * Time.deltaTime);
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation,
+				Quaternion.Euler (recoilTarget), (humanAim.aiming ? recoilForce / aimReducer : recoilForce)*Time.deltaTime);
+			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation,
+				(humanAim.aiming ? backWardForce / aimReducer : recoilForce) * Time.deltaTime);
 
 		}else if(timer < recoilTime + downwardTime){
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition), counterRecoilForce*Time.deltaTime);
+			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition),
+				(humanAim.aiming ? counterRecoilForce / aimReducer : counterRecoilForce)*Time.deltaTime);
 			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
 		}
 		else {
@@ -103,7 +147,7 @@ public class PlayerWeapon : MonoBehaviour {
 	public void Shoot (){
 
 		// TODO: Overload
-		if (timer >= timeBetweenBullets && Time.timeScale != 0) { 
+		if (timer >= timeBetweenBullets && Time.timeScale != 0  && !overLoaded) { 
 
 			timer = 0f;
 
@@ -112,6 +156,10 @@ public class PlayerWeapon : MonoBehaviour {
 			Action ();
 
 			recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
+
+			IncreaseOverload ();
+
+			camera.fieldOfView += .5f;
 
 			/*
 
@@ -134,6 +182,20 @@ public class PlayerWeapon : MonoBehaviour {
 		}
 	}
 
+	protected void DecreaseOverload(){
+		overloadVal = Mathf.Max (0f, overloadVal - overloadCoolSpeed * Time.deltaTime);
+		if (overLoaded && overloadVal == 0f) {
+			overLoaded = false;
+		}
+
+	}
+
+	protected void IncreaseOverload(){
+		overloadVal += overloadIncrement;
+		if (overloadVal > overloadThreshold) {
+			overLoaded = true;
+		}
+	}
 
 
 	protected virtual void Action(){

@@ -7,11 +7,12 @@ public class HumanAim : MonoBehaviour {
 	public float speed = .0015f;
 	public float sideFOV = 60f;
 	public float aimFOV = 45f;
+	public bool aiming;
 
 	GameObject sidePosition;
 	GameObject aimPosition;
 
-	bool aiming;
+
 
 	Vector3 velocity = Vector3.zero;
 	Vector3 aim;
