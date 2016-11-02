@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour {
 		p.initialPosition = projectile.transform.position;
 	}
 
-	void Update () {
+	void FixedUpdate () {
 		timer += Time.deltaTime;
 		transform.position += transform.forward * speed * Time.deltaTime;
 		if ( Vector3.Distance (initialPosition, transform.position) > range){
