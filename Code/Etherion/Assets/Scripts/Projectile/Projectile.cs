@@ -30,12 +30,13 @@ public class Projectile : MonoBehaviour {
 	}
 
 
-	public static GameObject Create(GameObject owner, GameObject prefab ,Transform barrel, float speed, float range){
+	public static GameObject Create(GameObject owner, GameObject prefab ,Transform barrel, float speed, float range,bool hitMarker){
 		GameObject projectile = (GameObject) Instantiate (prefab, barrel.position,barrel.rotation);
 		Projectile p = projectile.GetComponent<Projectile> ();
 		p.speed = speed;
 		p.range = range;
 		p.owner = owner;
+		p.hitMarker = hitMarker;
 		p.initialPosition = projectile.transform.position;
 		return projectile;
 	}

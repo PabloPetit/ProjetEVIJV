@@ -38,8 +38,8 @@ public class Mortar : Projectile {
 		targetRotation =  Quaternion.Euler (90f, 0f, 0f);
 	}
 
-	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, int side, float acceleration, float ascendingTime, float damage, float damageRadius, float damageDecrease, bool friendFire){
-		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed,range);
+	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, int side, float acceleration, float ascendingTime, float damage, float damageRadius, float damageDecrease, bool friendFire, bool hitMarker){
+		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed,range,hitMarker);
 		Mortar mortar = projectile.GetComponent<Mortar> ();
 		mortar.acceleration = acceleration;
 		mortar.ascendingTime = ascendingTime;
@@ -99,7 +99,7 @@ public class Mortar : Projectile {
 
 	protected void DoDamage(){
 
-		bool shot;
+		bool shot = false;
 
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, damageRadius, playerMask | creatureMask);
 		foreach (Collider col in hitColliders) {
@@ -123,7 +123,9 @@ public class Mortar : Projectile {
 					shot = true;
 				}
 			}
-
+		}
+		if (shot && hitMarker) {
+			hitMarkerUI.hit ();
 		}
 	}
 		

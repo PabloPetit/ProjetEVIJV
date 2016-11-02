@@ -34,7 +34,7 @@ public class MortarLauncherScript : Interaction {
 		if (timer > interval) {
 			PlayerState state = initiator.GetComponent<PlayerState> ();
 			if (state != null) {
-				Mortar.Create (gameObject, prefab, barrel.transform, speed, range, state.side, acceleration, ascendingTime, damage, damageRadius, damageDecrease, true);
+				Mortar.Create (gameObject, prefab, barrel.transform, speed, range, state.side, acceleration, ascendingTime, damage, damageRadius, damageDecrease, true, initiator.tag.Equals ("Player"));
 				timer = 0f;
 				audio.Play ();
 			}
