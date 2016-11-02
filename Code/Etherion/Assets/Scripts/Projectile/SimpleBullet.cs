@@ -8,9 +8,6 @@ public class SimpleBullet : Projectile {
 	protected float damageDecrease;
 	protected float minDamage;
 
-	protected HitMarker hitMarkerUI;
-	protected bool hitMarker;
-
 
 	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, float dispertion, int side, float initialDamage, float damageDecrease, float minDamage,bool hitMarker = false){
 		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed,range);
@@ -21,10 +18,6 @@ public class SimpleBullet : Projectile {
 		bullet.damageDecrease = damageDecrease;
 		bullet.minDamage = minDamage;
 		bullet.hitMarker = hitMarker;
-
-		if (bullet.hitMarker) {
-			bullet.hitMarkerUI = GameObject.Find ("HitMarker").GetComponent<HitMarker> ();
-		}
 
 		return projectile;
 	}
@@ -44,7 +37,7 @@ public class SimpleBullet : Projectile {
 			return;
 		}
 
-		if (other.tag.Equals ("Player")) {
+		if (IsPlayerLayer (other.gameObject.layer)) {
 			PlayerState state = other.GetComponent<PlayerState> ();
 			if (state.side != side){
 				PlayerHealth health = other.GetComponent<PlayerHealth> ();
@@ -53,7 +46,7 @@ public class SimpleBullet : Projectile {
 					shot = true;
 				}
 			}
-		}else if (other.tag.Equals ("Creature")){
+		}else if (IsCreatureLayer (other.gameObject.layer)){
 			CreatureHealth health = other.GetComponent<CreatureHealth> ();
 			if (health != null && !health.dead) {
 				health.TakeDamage (damage, owner);

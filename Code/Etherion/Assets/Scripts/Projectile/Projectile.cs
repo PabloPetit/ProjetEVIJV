@@ -11,7 +11,19 @@ public class Projectile : MonoBehaviour {
 	protected Vector3 initialPosition;
 	protected float timer;
 
+	protected HitMarker hitMarkerUI;
+	protected bool hitMarker;
+
 	//protected Transform barrel;
+
+	public int playerMask;
+	public int creatureMask;
+
+	public void Awake(){
+		playerMask = LayerMask.GetMask ("Player");
+		creatureMask = LayerMask.GetMask ("Creature");
+		hitMarkerUI = GameObject.Find ("HitMarker").GetComponent<HitMarker> ();
+	}
 
 	public virtual void Start () {
 		timer = 0f;
@@ -44,9 +56,19 @@ public class Projectile : MonoBehaviour {
 	}
 
 	protected void Delete(float delay=0f){
+		//TODO : Delay not working
 		foreach (Transform child in transform){
-			Destroy (child.gameObject,delay);
+			Destroy (child.gameObject,t:delay);
 		}
-		Destroy (gameObject,delay);
+		Destroy (gameObject,t:delay);
 	}
+
+	public bool IsCreatureLayer(int layer){
+		return ((1 << layer) & creatureMask) != 0;
+	}
+
+	public bool IsPlayerLayer(int layer){
+		return ((1 << layer) & playerMask) != 0;
+	}
+
 }

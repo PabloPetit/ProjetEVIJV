@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Interaction : MonoBehaviour {
 
-	GameObject initiator;
+	protected GameObject initiator;
 
 	public void Interact(GameObject initiator){
 		this.initiator = initiator;

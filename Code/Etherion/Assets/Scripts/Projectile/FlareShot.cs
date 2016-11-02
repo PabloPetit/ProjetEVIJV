@@ -40,6 +40,8 @@ public class FlareShot : Projectile {
 	void FixedUpdate () {
 		if (dead)
 			return;
+		
+		base.FixedUpdate ();
 
 		if (timer < ascendingTime) {
 			speed += acceleration * Time.fixedDeltaTime;
@@ -55,7 +57,7 @@ public class FlareShot : Projectile {
 			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, gravityDeviation * Time.fixedDeltaTime);
 		}
 
-		base.FixedUpdate ();
+
 	}
 
 	protected override void OnTriggerEnter(Collider other) {
