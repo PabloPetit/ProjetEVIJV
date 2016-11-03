@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: afd7385cc0ca64272a5fc5385a2c33af
+timeCreated: 1477773892
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Ethnocentric
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9f834100d73778e479b64169ed0ead05, type: 3}
+  - {fileID: 12800000, guid: 6268e31c181b149dc97708dec2a02e1b, type: 3}
+  - {fileID: 12800000, guid: 947597ecab710124d9ae03a6eafc9991, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
