@@ -14,7 +14,7 @@ public class HitMarker : MonoBehaviour
 	void Start ()
 	{
 		hitMarker = GetComponent<RawImage> ();
-		hitMarkerListener = new UnityAction (Hit);
+
 	}
 
 	void Update ()
@@ -34,12 +34,12 @@ public class HitMarker : MonoBehaviour
 
 	void OnEnable ()
 	{
-		EventManager.StartListening ("hitMarker", hitMarkerListener); 
+		//EventManager.StartListening ("hitMarker", hitMarkerListener); 
 	}
 
 	void OnDisable ()
 	{
-		EventManager.StopListening ("hitMarker", hitMarkerListener);
+		//EventManager.StopListening ("hitMarker", hitMarkerListener);
 	}
 
 }

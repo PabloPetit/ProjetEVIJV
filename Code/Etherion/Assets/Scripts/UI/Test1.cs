@@ -9,21 +9,21 @@ public class Test1 : MonoBehaviour
 
 	void Awake ()
 	{
-		someListener = new UnityAction (SomeFunction);
+		//someListener = new UnityAction (SomeFunction);
 	}
 
 	void OnEnable ()
 	{
-		EventManager.StartListening ("test", someListener); 
+		EventManager.StartListening ("test", new System.Action<float> (SomeFunction));
 	}
 
 	void OnDisable ()
 	{
-		EventManager.StopListening ("test", someListener);
+		EventManager.StopListening ("test");
 	}
 
-	void SomeFunction ()
+	void SomeFunction (float param)
 	{
-		Debug.Log ("Some Function");
+		Debug.Log ("Some Function : " + param);
 	}
 }

@@ -2,11 +2,12 @@
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class EventManager : MonoBehaviour
 {
 
-	private Dictionary <string, UnityEvent> eventDictionary;
+	private Dictionary <string, Action<float>> eventDictionary;
 
 	private static EventManager eventManager;
 
@@ -27,45 +28,36 @@ public class EventManager : MonoBehaviour
 	void Init ()
 	{
 		if (eventDictionary == null) {
-			eventDictionary = new Dictionary<string,UnityEvent> ();
+			eventDictionary = new Dictionary<string, Action<float>> ();
 		}
 	}
 
-	public static void StartListening (string eventName, UnityAction listener)
+	public static void StartListening (string name, Action<float> action)
 	{
-		UnityEvent thisEvent = null;
-		if (instance.eventDictionary.TryGetValue (eventName, out thisEvent)) {
-			thisEvent.AddListener (listener);
+
+		if (instance.eventDictionary.ContainsKey (name)) {
+			Debug.LogError ("The action " + name + " has already been added to the dictionary");
+			return;
 		} else {
-			thisEvent = new UnityEvent ();
-			thisEvent.AddListener (listener);
-			instance.eventDictionary.Add (eventName, thisEvent);
+			instance.eventDictionary.Add (name, action);
 		}
 	}
 
-	public static void StopListening (string eventName, UnityAction listener)
+	public static void StopListening (string name)
 	{
 		if (eventManager == null) {
 			Debug.LogError ("EventManager not found");
 			return;
 		}
-
-		UnityEvent thisEvent = null;
-
-		if (instance.eventDictionary.TryGetValue (eventName, out thisEvent)) {
-			thisEvent.RemoveListener (listener);
-		} else {
-			Debug.LogError ("You are trying to stop listening an event that doesn't exist");
-		}
+		instance.eventDictionary.Remove (name);
 	}
 
-	public static void TriggerEvent (string eventName)
+	public static void TriggerAction (string action, float param)
 	{
-		UnityEvent thisEvent = null;
-		if (instance.eventDictionary.TryGetValue (eventName, out thisEvent)) {
-			thisEvent.Invoke ();
-		} else {
-			Debug.LogError ("You are trying to start listening an event that doesn't exist");
+
+		Action<float> a = null;
+		if (instance.eventDictionary.TryGetValue (action, out a)) {
+			a.Invoke (param);
 		}
 	}
 }

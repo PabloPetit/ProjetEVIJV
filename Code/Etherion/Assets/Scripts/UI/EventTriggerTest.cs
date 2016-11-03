@@ -9,7 +9,7 @@ public class EventTriggerTest : MonoBehaviour
 	{
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			Debug.Log ("Key is Down");
-			EventManager.TriggerEvent ("test");
+			EventManager.TriggerAction ("test", 3.14f);
 		}
 	}
 }
