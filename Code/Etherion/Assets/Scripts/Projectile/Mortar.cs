@@ -39,7 +39,7 @@ public class Mortar : Projectile {
 	}
 
 	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, int side, float acceleration, float ascendingTime, float damage, float damageRadius, float damageDecrease, bool friendFire, bool hitMarker){
-		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed,range,hitMarker);
+		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed);
 		Mortar mortar = projectile.GetComponent<Mortar> ();
 		mortar.acceleration = acceleration;
 		mortar.ascendingTime = ascendingTime;
@@ -124,9 +124,7 @@ public class Mortar : Projectile {
 				}
 			}
 		}
-		if (shot && hitMarker) {
-			hitMarkerUI.hit ();
-		}
+
 	}
 		
 }

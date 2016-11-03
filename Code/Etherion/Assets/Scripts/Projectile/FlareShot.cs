@@ -19,7 +19,7 @@ public class FlareShot : Projectile {
 
 
 	public static GameObject Create(GameObject owner, GameObject prefab, Transform barrel, float speed, float range, float acceleration, float ascendingTime, float descendingSpeed,float intensity, float lightRange,float deathDelay){
-		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed,range,false);
+		GameObject projectile = Projectile.Create (owner, prefab, barrel,speed);
 		FlareShot flareShot = projectile.GetComponent<FlareShot> ();
 		flareShot.acceleration = acceleration;
 		flareShot.ascendingTime = ascendingTime;
