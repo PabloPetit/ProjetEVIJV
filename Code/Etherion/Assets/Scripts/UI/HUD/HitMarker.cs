@@ -8,38 +8,33 @@ public class HitMarker : MonoBehaviour
 
 	public float fadeSpeed = 1f;
 	RawImage hitMarker;
+	private EventName hitEvent;
 
-	private UnityAction hitMarkerListener;
 
-	void Start ()
-	{
+	void Awake (){
 		hitMarker = GetComponent<RawImage> ();
-
+		hitEvent = new EventName ("hitMarker");
 	}
 
-	void Update ()
-	{
+	void Update (){
 		Color c = hitMarker.color;
 		c.a -= fadeSpeed * Time.deltaTime;
 		c.a = Mathf.Max (c.a, 0f);
 		hitMarker.color = c;
 	}
 
-	void Hit ()
-	{
+	void Hit (System.Object param = null){
 		Color c = hitMarker.color;
 		c.a = 1f;
 		hitMarker.color = c;
 	}
 
-	void OnEnable ()
-	{
-		//EventManager.StartListening ("hitMarker", hitMarkerListener); 
+	void OnEnable (){
+		EventManager.StartListening (hitEvent, new System.Action<System.Object> (Hit));
 	}
 
-	void OnDisable ()
-	{
-		//EventManager.StopListening ("hitMarker", hitMarkerListener);
+	void OnDisable (){
+		EventManager.StopListening (hitEvent);
 	}
 
 }

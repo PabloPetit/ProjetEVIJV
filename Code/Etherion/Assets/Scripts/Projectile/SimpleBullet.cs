@@ -36,22 +36,6 @@ public class SimpleBullet : Projectile {
 			return;
 		}
 
-		if (IsPlayerLayer (other.gameObject.layer)) {
-			PlayerState state = other.GetComponent<PlayerState> ();
-			if (state.side != side){
-				PlayerHealth health = other.GetComponent<PlayerHealth> ();
-				if (health != null && !health.dead) {
-					health.TakeDamage (damage,side);
-					shot = true;
-				}
-			}
-		}else if (IsCreatureLayer (other.gameObject.layer)){
-			CreatureHealth health = other.GetComponent<CreatureHealth> ();
-			if (health != null && !health.dead) {
-				health.TakeDamage (damage, owner);
-				shot = true;
-			}
-		}
 
 	
 		Delete ();

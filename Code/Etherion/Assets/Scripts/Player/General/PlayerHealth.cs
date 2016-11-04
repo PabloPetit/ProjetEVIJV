@@ -27,8 +27,7 @@ public class PlayerHealth : MonoBehaviour {
 	}
 		
 		
-	
-	// Update is called once per frame
+
 	void Update () {
 		timer += Time.deltaTime;
 
@@ -43,12 +42,11 @@ public class PlayerHealth : MonoBehaviour {
 		}
 	}
 
-	public void TakeDamage(float damage, int side){
+	public void TakeDamage(GameObject shooter, float damage){
 		if (state.indestructible || dead) {
 			return;
 		}
 			
-		
 		life = Mathf.Max (0f, life - damage);
 
 		timer = 0f;

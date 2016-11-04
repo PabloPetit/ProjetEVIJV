@@ -113,7 +113,7 @@ public class Mortar : Projectile {
 				PlayerHealth health = go.GetComponent<PlayerHealth> ();
 				PlayerState state = go.GetComponent<PlayerState> ();
 				if (health != null && !health.dead && (side != state.side || friendFire)) {
-					health.TakeDamage (adjustedDamage, side);
+//					health.TakeDamage (adjustedDamage, side);
 					shot = true;
 				}
 			} else if (IsCreatureLayer (col.gameObject.layer)) {
