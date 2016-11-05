@@ -12,8 +12,8 @@ public class PatrollAndChase : MonoBehaviour
 	public float enemyWanderSpeed = 30.0f;
 	public float wanderRange = 200.0f;
 	public float wanderDelayTimer;
-	public float distanceToCombat = 8.0f;
-	public float distanceToDropCombat = 40.0f;
+	public float distanceToCombat = 50.0f;
+	public float distanceToDropCombat = 200.0f;
 	public bool chasingPlayer = false;
 	public NavMeshAgent agent;
 	public bool isReturning = false;
@@ -59,7 +59,7 @@ public class PatrollAndChase : MonoBehaviour
 		if(wanderDelayTimer <= 0 && !chasingPlayer)
 		{
 			Wander();
-			wanderDelayTimer = Random.Range(0, 10.0f);
+			wanderDelayTimer = Random.Range(5, 10.0f);
 		}
 	}
 	void Wander()
