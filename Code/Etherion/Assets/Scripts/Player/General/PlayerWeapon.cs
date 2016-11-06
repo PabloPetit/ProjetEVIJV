@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PlayerWeapon : MonoBehaviour {
+public class PlayerWeapon : MonoBehaviour
+{
 
 
 	// Weapon Specs
@@ -61,25 +62,26 @@ public class PlayerWeapon : MonoBehaviour {
 
 
 	// Recoil on Hand rotation
-	float maxDeviationX = 5f;
-	float maxDeviationY = 1f;
+	float maxDeviationX = 4f;
+	float maxDeviationY = 1.5f;
 	float maxDeviationZ = 0f;
 	Vector3 recoilTarget;
 
 	// Recoil on Hand position
 	float backWardForce = .35f;
-	float maxBackWardDeviation = 2f;
+	float maxBackWardDeviation = 1.25f;
 
 	// Downward position
 	Vector3 downwardPosition;
 	float downwardDeviationX = -1.5f;
 
 
-	void Awake () {
+	void Awake ()
+	{
 		playerMask = LayerMask.GetMask ("Player");
 		creatureMask = LayerMask.GetMask ("Creatures");
 		environementMask = LayerMask.GetMask ("Environement");
-		barrel = transform.Find("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
+		barrel = transform.Find ("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 		playerState = GetComponent<PlayerState> ();
 		humanAim = GetComponent<HumanAim> ();
 		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
@@ -87,14 +89,15 @@ public class PlayerWeapon : MonoBehaviour {
 
 		overloadBar = GameObject.Find ("OverloadBar").GetComponent<Image> ();
 
-		recoilTarget  = new Vector3(-maxDeviationX,maxDeviationY,maxDeviationZ);
-		downwardPosition  = new Vector3(-downwardDeviationX,0f,0f);
+		recoilTarget = new Vector3 (-maxDeviationX, maxDeviationY, maxDeviationZ);
+		downwardPosition = new Vector3 (-downwardDeviationX, 0f, 0f);
 
 		overloadVal = 0f;
 		overLoaded = false;
 	}
 
-	void Update () {
+	void Update ()
+	{
 		timer += Time.deltaTime;
 
 		Recoil ();
@@ -103,13 +106,13 @@ public class PlayerWeapon : MonoBehaviour {
 
 		setOverloadBarValue ();
 
-		if(timer >= timeBetweenBullets * effectsDisplayTime)
-		{
+		if (timer >= timeBetweenBullets * effectsDisplayTime) {
 			DisableEffects ();
 		}
 	}
 
-	void setOverloadBarValue(){
+	void setOverloadBarValue ()
+	{
 
 		float val = overloadVal / overloadThreshold;
 		val *= (overloadBarMax - overloadBarMin);
@@ -123,35 +126,36 @@ public class PlayerWeapon : MonoBehaviour {
 		}
 	}
 
-	void Recoil(){
+	void Recoil ()
+	{
 
 		if (timer < recoilTime) {
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation,
-				Quaternion.Euler (recoilTarget), (humanAim.aiming ? recoilForce / aimReducer : recoilForce)*Time.deltaTime);
+			rightHand.transform.localRotation = Quaternion.Lerp (rightHand.transform.localRotation,
+				Quaternion.Euler (recoilTarget), (humanAim.aiming ? recoilForce / aimReducer : recoilForce) * Time.deltaTime);
 			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.back * maxBackWardDeviation,
 				(humanAim.aiming ? backWardForce / aimReducer : recoilForce) * Time.deltaTime);
 
-		}else if(timer < recoilTime + downwardTime){
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (downwardPosition),
-				(humanAim.aiming ? counterRecoilForce / aimReducer : counterRecoilForce)*Time.deltaTime);
+		} else if (timer < recoilTime + downwardTime) {
+			rightHand.transform.localRotation = Quaternion.Lerp (rightHand.transform.localRotation, Quaternion.Euler (downwardPosition),
+				(humanAim.aiming ? counterRecoilForce / aimReducer : counterRecoilForce) * Time.deltaTime);
 			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
-		}
-		else {
-			rightHand.transform.localRotation = Quaternion.Lerp(rightHand.transform.localRotation, Quaternion.Euler (Vector3.zero), downwardRecoverForce*Time.deltaTime);
+		} else {
+			rightHand.transform.localRotation = Quaternion.Lerp (rightHand.transform.localRotation, Quaternion.Euler (Vector3.zero), downwardRecoverForce * Time.deltaTime);
 			rightHand.transform.localPosition = Vector3.Lerp (rightHand.transform.localPosition, Vector3.zero, backWardForce * Time.deltaTime);
 		}
 
 	}
 
 
-	public void Shoot (){
+	public void Shoot ()
+	{
 
 		// TODO: Overload
-		if (timer >= timeBetweenBullets && Time.timeScale != 0  && !overLoaded) { 
+		if (timer >= timeBetweenBullets && Time.timeScale != 0 && !overLoaded) { 
 
 			timer = 0f;
 
-			EnableEffects(barrel.transform.position,barrel.transform.forward);
+			EnableEffects (barrel.transform.position, barrel.transform.forward);
 
 			Action ();
 
@@ -159,7 +163,7 @@ public class PlayerWeapon : MonoBehaviour {
 
 			IncreaseOverload ();
 
-			camera.fieldOfView += .5f;
+			camera.fieldOfView += .2f;
 
 			/*
 
@@ -182,7 +186,8 @@ public class PlayerWeapon : MonoBehaviour {
 		}
 	}
 
-	protected void DecreaseOverload(){
+	protected void DecreaseOverload ()
+	{
 		overloadVal = Mathf.Max (0f, overloadVal - overloadCoolSpeed * Time.deltaTime);
 		if (overLoaded && overloadVal == 0f) {
 			overLoaded = false;
@@ -190,7 +195,8 @@ public class PlayerWeapon : MonoBehaviour {
 
 	}
 
-	protected void IncreaseOverload(){
+	protected void IncreaseOverload ()
+	{
 		overloadVal += overloadIncrement;
 		if (overloadVal > overloadThreshold) {
 			overLoaded = true;
@@ -198,14 +204,17 @@ public class PlayerWeapon : MonoBehaviour {
 	}
 
 
-	protected virtual void Action(){
+	protected virtual void Action ()
+	{
 		
 	}
 
-	public virtual void EnableEffects(Vector3 start, Vector3 direction){
+	public virtual void EnableEffects (Vector3 start, Vector3 direction)
+	{
 	}
 
-	public virtual void DisableEffects (){
+	public virtual void DisableEffects ()
+	{
 	}
 
 }
