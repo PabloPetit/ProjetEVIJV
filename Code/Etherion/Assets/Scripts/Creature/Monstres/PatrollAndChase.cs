@@ -32,7 +32,7 @@ public class PatrollAndChase : MonoBehaviour
 		//Debug.Log(transform.position);
 
 		startWander();
-		/*float distanceFromPlayer = Vector3.Distance(transform.position, go.transform.position);
+		float distanceFromPlayer = Vector3.Distance(transform.position, go.transform.position);
 		float distanceChasedCombat = Vector3.Distance(transform.position, startPosition);
 		//Debug.Log(distanceFromPlayer);
 		if(distanceFromPlayer <= distanceToCombat && !isReturning)
@@ -43,14 +43,14 @@ public class PatrollAndChase : MonoBehaviour
 		if(distanceChasedCombat >= distanceToDropCombat)
 		{
 			chasingPlayer = false;
-			wanderDelayTimer = 0.0f;
+			//wanderDelayTimer = 0.0f;
 		}
 		if(chasingPlayer)
 		{
 			myTarget = go.transform;
 			agent.SetDestination(myTarget.transform.position);
 			agent.speed = enemySpeed;
-		}*/
+		}
 
 	}
 
