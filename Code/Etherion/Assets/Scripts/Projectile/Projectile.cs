@@ -4,14 +4,14 @@ using System.Collections;
 public class Projectile : MonoBehaviour
 {
 
-	public static float MAX_BULLET_RANGE = 6000f;
+	public static float DEFAULT_RANGE = 6000f;
 
-	public int playerMask;
-	public int creatureMask;
+
+	public AudioSource audio;
 
 	protected float speed;
 	protected float range;
-	protected GameObject owner;
+
 	protected Vector3 initialPosition;
 	protected float timer;
 
@@ -20,8 +20,7 @@ public class Projectile : MonoBehaviour
 
 	public void Awake ()
 	{
-		playerMask = LayerMask.GetMask ("Player");
-		creatureMask = LayerMask.GetMask ("Creature");
+		audio = GetComponent<AudioSource> ();
 	}
 
 	public virtual void Start ()
@@ -30,13 +29,13 @@ public class Projectile : MonoBehaviour
 	}
 
 
-	public static GameObject Create (GameObject owner, GameObject prefab, Transform barrel, float speed)
+	public static GameObject Create (GameObject prefab, Transform barrel, float speed, float dispertion)
 	{
 		GameObject projectile = (GameObject)Instantiate (prefab, barrel.position, barrel.rotation);
+		projectile.transform.Rotate (new Vector3(Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion)));
 		Projectile p = projectile.GetComponent<Projectile> ();
 		p.speed = speed;
-		p.range = MAX_BULLET_RANGE;
-		p.owner = owner;
+		p.range = DEFAULT_RANGE;
 		p.initialPosition = projectile.transform.position;
 		return projectile;
 	}
@@ -62,16 +61,6 @@ public class Projectile : MonoBehaviour
 			Destroy (child.gameObject, t: delay);
 		}
 		Destroy (gameObject, t: delay);
-	}
-
-	public bool IsCreatureLayer (int layer)
-	{
-		return ((1 << layer) & creatureMask) != 0;
-	}
-
-	public bool IsPlayerLayer (int layer)
-	{
-		return ((1 << layer) & playerMask) != 0;
 	}
 
 }
