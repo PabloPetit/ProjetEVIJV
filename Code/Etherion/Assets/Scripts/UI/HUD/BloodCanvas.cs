@@ -23,7 +23,7 @@ public class BloodCanvas : MonoBehaviour
 		float percent = (float)param [0];
 
 		Color c = hitMarker.color;
-		c.a = percent;
+		c.a = 1f - percent;
 		hitMarker.color = c;
 	}
 

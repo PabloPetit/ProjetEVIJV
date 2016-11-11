@@ -73,6 +73,8 @@ public class Health : MonoBehaviour
 		if (dead)
 			return;
 
+		timer = 0f;
+
 		float damage = (float)param [0];
 		int id = (int)param [1];
 

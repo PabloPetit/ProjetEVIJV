@@ -43,6 +43,10 @@ public class Bullet : Projectile, IDamage
 
 		if (target != null) {
 
+			if (target.id == shooter.id) {
+				return;
+			}
+
 			float damages = Mathf.Max (minDamage, initialDamage - (damageDecrease * timer));
 
 			Damage.DoDamage (shooter, target, damages, friendlyFire, hitMarker);

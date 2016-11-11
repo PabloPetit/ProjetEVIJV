@@ -7,7 +7,7 @@ public class TripodHealth : Health
 	GameObject tripod;
 	Animator anim;
 
-	float destroyDelay = 2f;
+	float destroyDelay = 4f;
 
 	public void Start ()
 	{
