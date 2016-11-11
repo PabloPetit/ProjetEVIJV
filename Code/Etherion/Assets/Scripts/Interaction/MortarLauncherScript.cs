@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MortarLauncherScript : Interaction {
+public class MortarLauncherScript : Interaction
+{
 
 
 
@@ -20,21 +21,24 @@ public class MortarLauncherScript : Interaction {
 	AudioSource audio;
 	float timer;
 
-	void Start () {
+	void Start ()
+	{
 		timer = interval;
 		audio = GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		timer += Time.deltaTime;
 	}
 
-	public override void Action(){
+	public override void Action ()
+	{
 		if (timer > interval) {
 			PlayerState state = initiator.GetComponent<PlayerState> ();
 			if (state != null) {
-				Mortar.Create (gameObject, prefab, barrel.transform, speed, range, state.side, acceleration, ascendingTime, damage, damageRadius, damageDecrease, true, initiator.tag.Equals ("Player"));
+				//Mortar.Create (gameObject, prefab, barrel.transform, speed, range, state.side, acceleration, ascendingTime, damage, damageRadius, damageDecrease, true, initiator.tag.Equals ("Player"));
 				timer = 0f;
 				audio.Play ();
 			}

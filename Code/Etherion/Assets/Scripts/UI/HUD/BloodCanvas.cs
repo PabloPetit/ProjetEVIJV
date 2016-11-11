@@ -2,19 +2,38 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class BloodCanvas : MonoBehaviour {
+public class BloodCanvas : MonoBehaviour
+{
 
-	RawImage image;
+	public static string BLOOD_CANVAS_CHANNEL = "bloodCanvas";
 
-	// Use this for initialization
-	void Start () {
-		image = GetComponent<RawImage> ();
-		//image.SetNativeSize (Screen.width,Screen.height);
+	RawImage hitMarker;
+	private EventName hitEvent;
 
+
+	void Awake ()
+	{
+		hitMarker = GetComponent<RawImage> ();
+		hitEvent = new EventName (BLOOD_CANVAS_CHANNEL);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+
+	void Set (object[] param = null)
+	{
+		float percent = (float)param [0];
+
+		Color c = hitMarker.color;
+		c.a = percent;
+		hitMarker.color = c;
+	}
+
+	void OnEnable ()
+	{
+		EventManager.StartListening (hitEvent, new System.Action<object[]> (Set));
+	}
+
+	void OnDisable ()
+	{
+		EventManager.StopListening (hitEvent);
 	}
 }

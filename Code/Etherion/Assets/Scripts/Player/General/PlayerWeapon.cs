@@ -4,10 +4,8 @@ using UnityEngine.UI;
 
 public class PlayerWeapon : MonoBehaviour
 {
-
-
 	// Weapon Specs
-	public float damagePerShot;
+	public float initialDamage;
 	public float range;
 	public float dispertion;
 	public float speed;
@@ -22,17 +20,15 @@ public class PlayerWeapon : MonoBehaviour
 	// Misc Data
 	protected float timer;
 	protected GameObject barrel;
-	protected PlayerState playerState;
+	protected Player player;
 	protected HumanAim humanAim;
 	protected Image overloadBar;
 	protected float overloadBarMax = .1f;
 	protected float overloadBarMin = .9f;
 
-	int playerMask;
-	int creatureMask;
-	int environementMask;
 
-	HitMarker hitMarker;
+
+	EventName overloadEvent;
 
 	//OverLoad
 	protected bool overLoaded;
@@ -78,22 +74,19 @@ public class PlayerWeapon : MonoBehaviour
 
 	void Awake ()
 	{
-		playerMask = LayerMask.GetMask ("Player");
-		creatureMask = LayerMask.GetMask ("Creatures");
-		environementMask = LayerMask.GetMask ("Environement");
 		barrel = transform.Find ("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
-		playerState = GetComponent<PlayerState> ();
+		player = GetComponent<Player> ();
 		humanAim = GetComponent<HumanAim> ();
 		camera = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
 		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
 
-		overloadBar = GameObject.Find ("OverloadBar").GetComponent<Image> ();
 
 		recoilTarget = new Vector3 (-maxDeviationX, maxDeviationY, maxDeviationZ);
 		downwardPosition = new Vector3 (-downwardDeviationX, 0f, 0f);
 
 		overloadVal = 0f;
 		overLoaded = false;
+		overloadEvent = new EventName (OverloadBar.OVERLOAD_BAR_CHANNEL);
 	}
 
 	void Update ()
@@ -103,7 +96,7 @@ public class PlayerWeapon : MonoBehaviour
 		Recoil ();
 
 		DecreaseOverload ();
-
+		//TODO if player.human
 		setOverloadBarValue ();
 
 		if (timer >= timeBetweenBullets * effectsDisplayTime) {
@@ -113,17 +106,12 @@ public class PlayerWeapon : MonoBehaviour
 
 	void setOverloadBarValue ()
 	{
-
 		float val = overloadVal / overloadThreshold;
 		val *= (overloadBarMax - overloadBarMin);
 		val += overloadBarMin;
-		overloadBar.fillAmount = 1f - val;
+		val = 1f - val;
+		EventManager.TriggerAction (overloadEvent, new object[]{ val, overLoaded });
 
-		if (overLoaded) {
-			overloadBar.color = Color.red;
-		} else {
-			overloadBar.color = Color.white;
-		}
 	}
 
 	void Recoil ()
@@ -165,24 +153,7 @@ public class PlayerWeapon : MonoBehaviour
 
 			camera.fieldOfView += .2f;
 
-			/*
-
-			shootRay.origin = barrel.transform.position;
-			shootRay.direction = barrel.transform.forward;
-
-			if (Physics.Raycast (shootRay, out shootHit, range, enemyMask)) {
-				// We shot an enemy
-				PlayerHealth enemyHealth = shootHit.collider.GetComponent<PlayerHealth> ();
-				//Do Damage !
-				EnableEffects (shootRay.origin,shootHit.point);
-			} else if (Physics.Raycast (shootRay, out shootHit, range, creatureMask)) {
-				//Do the same but to litle creatures
-				EnableEffects (shootRay.origin,shootHit.point);
-			} else {
-				// If it didn't hit anything
-				EnableEffects (shootRay.origin, shootRay.origin + shootRay.direction * range);
-			}
-			*/
+	
 		}
 	}
 

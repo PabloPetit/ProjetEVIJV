@@ -6,7 +6,6 @@ public class Projectile : MonoBehaviour
 
 	public static float DEFAULT_RANGE = 6000f;
 
-
 	public AudioSource audio;
 
 	protected float speed;
@@ -26,14 +25,18 @@ public class Projectile : MonoBehaviour
 	public virtual void Start ()
 	{
 		timer = 0f;
+		if (audio != null) {
+			audio.Play ();
+		}
 	}
 
 
 	public static GameObject Create (GameObject prefab, Transform barrel, float speed, float dispertion)
 	{
 		GameObject projectile = (GameObject)Instantiate (prefab, barrel.position, barrel.rotation);
-		projectile.transform.Rotate (new Vector3(Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion),Random.Range (-dispertion, dispertion)));
+		projectile.transform.Rotate (new Vector3 (Random.Range (-dispertion, dispertion), Random.Range (-dispertion, dispertion), Random.Range (-dispertion, dispertion)));
 		Projectile p = projectile.GetComponent<Projectile> ();
+		Debug.Log (p);
 		p.speed = speed;
 		p.range = DEFAULT_RANGE;
 		p.initialPosition = projectile.transform.position;

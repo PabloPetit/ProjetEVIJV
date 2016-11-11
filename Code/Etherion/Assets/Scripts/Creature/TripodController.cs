@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TripodController : MonoBehaviour {
+public class TripodController : MonoBehaviour
+{
 
 	// Tripod States
 
@@ -20,7 +21,7 @@ public class TripodController : MonoBehaviour {
 	int playerMask;
 	int environnementMask;
 
-	// Movement : 
+	// Movement :
 	public float speed;
 	public float angularSpeed;
 	public float destinationRadius;
@@ -71,12 +72,15 @@ public class TripodController : MonoBehaviour {
 	public float range;
 	public float autoGuidanceStart;
 
+	Player tripod;
 
-	void Start () {
+	void Start ()
+	{
 		playerMask = LayerMask.GetMask ("Player");
 		environnementMask = LayerMask.GetMask ("Environement");
 		nav = GetComponent<NavMeshAgent> ();
 		health = transform.Find ("hips").GetComponent<TripodHealth> ();
+		tripod = transform.Find ("hips").GetComponent<Player> ();
 		barrel = transform.Find ("hips/spine/head/Barrel").gameObject;
 		anim = transform.GetComponent<Animator> ();
 		audio = GetComponent<AudioSource> ();
@@ -87,9 +91,10 @@ public class TripodController : MonoBehaviour {
 		GoToExploration ();
 		lastFootstep = 0;
 	}
-	
 
-	void Update () {
+
+	void Update ()
+	{
 		//Debug.Log (state);
 		timer += Time.deltaTime;
 		if (!health.dead) {
@@ -97,7 +102,8 @@ public class TripodController : MonoBehaviour {
 		}
 	}
 
-	void stateSwitch(){
+	void stateSwitch ()
+	{
 
 		switch (state) {
 		case EXPLORATION:
@@ -112,7 +118,8 @@ public class TripodController : MonoBehaviour {
 		}
 	}
 
-	void Exploration(){
+	void Exploration ()
+	{
 		
 		setTarget ();
 
@@ -125,7 +132,7 @@ public class TripodController : MonoBehaviour {
 			navDestination = Vector3.zero;
 		}
 
-		if ( navDestination == Vector3.zero ){
+		if (navDestination == Vector3.zero) {
 			SetNewDestination ();
 			nav.SetDestination (navDestination);
 		}
@@ -138,9 +145,10 @@ public class TripodController : MonoBehaviour {
 		transform.rotation = Quaternion.LookRotation (direction);
 	}
 
-	void footStepSound(){
+	void footStepSound ()
+	{
 		if (timer > footstepsInterval && footsteps.Length > 0) {
-			audio.PlayOneShot (footsteps[lastFootstep]);
+			audio.PlayOneShot (footsteps [lastFootstep]);
 			lastFootstep++;
 			timer = 0f;
 			if (lastFootstep == footsteps.Length) {
@@ -149,7 +157,8 @@ public class TripodController : MonoBehaviour {
 		}
 	}
 
-	void GoToExploration(){
+	void GoToExploration ()
+	{
 		shots = 0;
 		state = EXPLORATION;
 		anim.SetTrigger ("Walking");
@@ -157,15 +166,17 @@ public class TripodController : MonoBehaviour {
 		nav.Resume ();
 	}
 
-	void SetNewDestination(){
+	void SetNewDestination ()
+	{
 		navDestination = Random.insideUnitSphere * destinationRadius;
 		navDestination += transform.position;
 		NavMeshHit hit;
-		NavMesh.SamplePosition (navDestination,out hit, destinationRadius,1);
+		NavMesh.SamplePosition (navDestination, out hit, destinationRadius, 1);
 		navDestination = hit.position;
 	}
 
-	void GoToAquisition(){
+	void GoToAquisition ()
+	{
 		nav.Resume ();
 		state = AQUISITION;
 		timer = 0f;
@@ -173,7 +184,8 @@ public class TripodController : MonoBehaviour {
 		nav.SetDestination (target.transform.position);
 	}
 
-	void Aquisition(){
+	void Aquisition ()
+	{
 
 		//nav.Stop ();
 
@@ -196,14 +208,16 @@ public class TripodController : MonoBehaviour {
 		}
 	}
 
-	void GoToFire(){
+	void GoToFire ()
+	{
 		nav.Stop ();
 		state = FIRE;
 		anim.SetTrigger ("Fire");
 		timer = 0f;
 	}
-		
-	void Fire(){
+
+	void Fire ()
+	{
 		Aim ();
 		if (timer > firstFire && shots == 0) {
 			ShootTarget ();
@@ -215,19 +229,21 @@ public class TripodController : MonoBehaviour {
 		} 
 	}
 
-	void ShootTarget(){
-		if ( Vector3.Distance (transform.position,target.transform.position) > balisticShotMinDistance && !isTargetVisible (target,maxAimingDistance)) {
+	void ShootTarget ()
+	{
+		if (Vector3.Distance (transform.position, target.transform.position) > balisticShotMinDistance && !isTargetVisible (target, maxAimingDistance)) {
 			barrel.transform.Rotate (new Vector3 (-balisticShotAngle, 0f, 0f));
-			AutoGuidedBullet.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, bulletSpeed, range, 0, 0, damage, damageDecrease, minDamage, target, autoGuidanceStart, maxDeviation);
+			AutoGuidedBullet.Create (bulletPrefab, transform.Find ("hips"), bulletSpeed, 0f, damage, minDamage, damageDecrease, true, false, tripod, target, autoGuidanceStart, maxDeviation);
 			barrel.transform.Rotate (new Vector3 (balisticShotAngle, 0f, 0f));
 		} else {
-			AutoGuidedBullet.Create (transform.Find ("hips").gameObject, bulletPrefab, barrel.transform, bulletSpeed, range, 0, 0, damage, damageDecrease, minDamage, target, autoGuidanceStart, maxDeviation);
-		}
+			AutoGuidedBullet.Create (bulletPrefab, transform.Find ("hips"), bulletSpeed, 0f, damage, minDamage, damageDecrease, true, false, tripod, target, autoGuidanceStart, maxDeviation);
+		}		
 		audio.Play ();
 		shots++;
 	}
 
-	void Aim(){
+	void Aim ()
+	{
 		// Model Aim
 		Vector3 direction = (target.transform.position - transform.position);//.normalized;
 		direction = Vector3.RotateTowards (transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
@@ -240,7 +256,8 @@ public class TripodController : MonoBehaviour {
 
 	}
 
-	void checkTargetDistance(){
+	void checkTargetDistance ()
+	{
 		// If too far, avoid 
 		if (target != null) {
 			if (Vector3.Distance (transform.position, target.transform.position) > maxAimingDistance) {
@@ -249,7 +266,8 @@ public class TripodController : MonoBehaviour {
 		} 
 	}
 
-	void setTarget(){
+	void setTarget ()
+	{
 		// List of all colliders in range detectionRadius
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, detectionRadius, playerMask);
 		GameObject closest = null;
@@ -257,10 +275,10 @@ public class TripodController : MonoBehaviour {
 		// For each one of them
 		foreach (Collider col in hitColliders) {
 			// If it is in the vision cone
-			if (Vector3.Angle ( col.gameObject.transform.position - transform.position, transform.forward) < visionAngle) {
+			if (Vector3.Angle (col.gameObject.transform.position - transform.position, transform.forward) < visionAngle) {
 				float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
 				// If it is closer than the current best one and it is not behind a wall
-				if (dist < minDistance && isTargetVisible (col.gameObject,detectionRadius)) {
+				if (dist < minDistance && isTargetVisible (col.gameObject, detectionRadius)) {
 					closest = col.gameObject;
 					minDistance = dist;
 				}
@@ -271,17 +289,18 @@ public class TripodController : MonoBehaviour {
 		}
 	}
 
-	bool isTargetVisible(GameObject rayTarget, float range){
+	bool isTargetVisible (GameObject rayTarget, float range)
+	{
 		bool res = false;
 		shootRay.origin = barrel.transform.position;
 		shootRay.direction = (rayTarget.transform.position - barrel.transform.position).normalized;
 
-		if (Physics.Raycast (shootRay, out shootHit, maxAimingDistance,playerMask | environnementMask)){
-			if (shootHit.transform.gameObject == rayTarget){
+		if (Physics.Raycast (shootRay, out shootHit, maxAimingDistance, playerMask | environnementMask)) {
+			if (shootHit.transform.gameObject == rayTarget) {
 				res = true;
 			}
 		}
-		Debug.DrawRay (shootRay.origin,shootRay.direction * maxAimingDistance,Color.red,.5f);
+		Debug.DrawRay (shootRay.origin, shootRay.direction * maxAimingDistance, Color.red, .5f);
 
 		return res;
 	}

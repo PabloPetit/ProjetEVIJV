@@ -1,24 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class TripodHealth : CreatureHealth {
+public class TripodHealth : Health
+{
 
 	GameObject tripod;
 	Animator anim;
 
-	float destroyDelay = 4f;
-	// Use this for initialization
-	void Start () {
+	float destroyDelay = 2f;
+
+	public void Start ()
+	{
 		base.Start ();
 		tripod = transform.parent.gameObject;
 		anim = transform.parent.GetComponent<Animator> ();
 	}
 
-	public override void Death(){
+	public override void Death ()
+	{
 		anim.SetTrigger ("Death");
-		foreach (Transform child in tripod.transform){
-			Destroy (child.gameObject,destroyDelay);
+		foreach (Transform child in tripod.transform) {
+			Destroy (child.gameObject, destroyDelay);
 		}
-		Destroy (tripod,destroyDelay);
+		Destroy (tripod, destroyDelay);
 	}
 }

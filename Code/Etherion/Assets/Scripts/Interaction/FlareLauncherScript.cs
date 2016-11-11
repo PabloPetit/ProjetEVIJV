@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlareLauncherScript : Interaction {
+public class FlareLauncherScript : Interaction
+{
 
 
 
@@ -21,19 +22,22 @@ public class FlareLauncherScript : Interaction {
 	AudioSource audio;
 	float timer;
 
-	void Start () {
+	void Start ()
+	{
 		timer = interval;
 		audio = GetComponent<AudioSource> ();
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		timer += Time.deltaTime;
 	}
 
-	public override void Action(){
+	public override void Action ()
+	{
 		if (timer > interval) {
-			FlareShot.Create (gameObject,prefab,barrel.transform,speed,range,acceleration,ascendingTime,descendingSpeed,intensity,lightRange,deathDelay);
+			FlareShot.Create (prefab, barrel.transform, speed, range, acceleration, ascendingTime, descendingSpeed, intensity, lightRange, deathDelay);
 			timer = 0f;
 			audio.Play ();
 		}

@@ -4,7 +4,8 @@ using UnityStandardAssets.Utility;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Characters.FirstPerson;
 
-public class HumanController : MonoBehaviour {
+public class HumanController : MonoBehaviour
+{
 
 	CharacterController characterController;
 	Camera camera;
@@ -38,12 +39,13 @@ public class HumanController : MonoBehaviour {
 	float footstepsInterval = .5f;
 	float timer;
 
-	void Awake(){
+	void Awake ()
+	{
 
 		characterController = GetComponent<CharacterController> ();
 		camera = Camera.main;
 		mouseLook = new MouseLook ();
-		mouseLook.Init(transform , camera.transform);
+		mouseLook.Init (transform, camera.transform);
 
 		weapon = gameObject.GetComponent<PlayerWeapon> ();
 		light = gameObject.GetComponent<PlayerLight> ();
@@ -55,7 +57,7 @@ public class HumanController : MonoBehaviour {
 		aim = gameObject.GetComponent<HumanAim> ();
 
 		animator = GetComponentInChildren<Animator> ();
-		audio =  GetComponentInChildren<AudioSource> ();
+		audio = GetComponentInChildren<AudioSource> ();
 
 		IsWalking = false;
 		IsRunning = false;
@@ -65,35 +67,39 @@ public class HumanController : MonoBehaviour {
 		timer = 0f;
 	}
 
-	void Update () {
+	void Update ()
+	{
 		if (health.dead) {
 			//return;
 		}
 		timer += Time.deltaTime;
-		RotateView();
-		Actions();
+		RotateView ();
+		Actions ();
 		FootSteps ();
 	}
 
-	void FixedUpdate(){
+	void FixedUpdate ()
+	{
 		if (health.dead) {
 			//return;
 		}
 		jumpTimer += Time.fixedDeltaTime;
 		Movement ();
 	}
-		
 
-	void FootSteps(){
+
+	void FootSteps ()
+	{
 		if (footsteps.Length == 0 || IsJumping || !characterController.isGrounded)
 			return;
-		if ( (IsWalking && timer > footstepsInterval) || (IsRunning && timer > footstepsInterval / 2f) ){
+		if ((IsWalking && timer > footstepsInterval) || (IsRunning && timer > footstepsInterval / 2f)) {
 			audio.PlayOneShot (footsteps [(int)Random.Range (0, footsteps.Length)]);
 			timer = 0f;
 		}
 	}
 
-	void Actions(){
+	void Actions ()
+	{
 
 
 		if (Input.GetKey (KeyMap.fire)) {
@@ -127,9 +133,10 @@ public class HumanController : MonoBehaviour {
 		}
 			
 	}
-		
 
-	void Movement(){
+
+	void Movement ()
+	{
 
 		Vector3 desiredMove = Vector3.zero;
 		Vector3 moveDir = Vector3.zero;
@@ -177,10 +184,10 @@ public class HumanController : MonoBehaviour {
 		}
 
 		RaycastHit hitInfo;
-		Physics.SphereCast(transform.position, characterController.radius, Vector3.down, out hitInfo,
-			characterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+		Physics.SphereCast (transform.position, characterController.radius, Vector3.down, out hitInfo,
+			characterController.height / 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
 		
-		desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
+		desiredMove = Vector3.ProjectOnPlane (desiredMove, hitInfo.normal).normalized;
 
 		if (IsWalking) {
 			moveDir.x = desiredMove.x * walkSpeed;
@@ -191,21 +198,21 @@ public class HumanController : MonoBehaviour {
 			moveDir.z = desiredMove.z * runSpeed;
 		}
 	
-		if (IsJumping){
+		if (IsJumping) {
 			verticalSpeed = jumpForce;
-		}else if (!characterController.isGrounded){
+		} else if (!characterController.isGrounded) {
 			verticalSpeed -= stickToGroundForce * Time.fixedDeltaTime;
-		}else{
+		} else {
 			verticalSpeed = 0f;
 		}
 
-		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce*3f);
+		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce * 3f);
 		moveDir.y = verticalSpeed;
 
-		characterController.Move(moveDir*Time.fixedDeltaTime);
+		characterController.Move (moveDir * Time.fixedDeltaTime);
 	}
 
-	private void RotateView()
+	private void RotateView ()
 	{
 		mouseLook.LookRotation (transform, camera.transform);
 	}
