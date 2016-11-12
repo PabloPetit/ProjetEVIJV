@@ -153,7 +153,6 @@ public class PlayerWeapon : MonoBehaviour
 
 			camera.fieldOfView += .2f;
 
-	
 		}
 	}
 

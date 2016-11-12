@@ -70,6 +70,8 @@ public class Health : MonoBehaviour
 
 	public void TakeDamage (object[] param)
 	{
+		
+
 		if (dead)
 			return;
 
@@ -77,6 +79,7 @@ public class Health : MonoBehaviour
 
 		float damage = (float)param [0];
 		int id = (int)param [1];
+	
 
 		life -= damage;
 

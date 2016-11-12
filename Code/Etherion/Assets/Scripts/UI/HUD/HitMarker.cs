@@ -29,7 +29,6 @@ public class HitMarker : MonoBehaviour
 
 	void Hit (object[] param)
 	{
-		Debug.Log ("Hit");
 		Color c = hitMarker.color;
 		c.a = 1f;
 		hitMarker.color = c;

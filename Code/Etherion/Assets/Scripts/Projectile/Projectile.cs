@@ -36,7 +36,6 @@ public class Projectile : MonoBehaviour
 		GameObject projectile = (GameObject)Instantiate (prefab, barrel.position, barrel.rotation);
 		projectile.transform.Rotate (new Vector3 (Random.Range (-dispertion, dispertion), Random.Range (-dispertion, dispertion), Random.Range (-dispertion, dispertion)));
 		Projectile p = projectile.GetComponent<Projectile> ();
-		Debug.Log (p);
 		p.speed = speed;
 		p.range = DEFAULT_RANGE;
 		p.initialPosition = projectile.transform.position;
