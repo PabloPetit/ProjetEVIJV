@@ -12,9 +12,10 @@ public class FlareShot : BalisticShot
 	public void Start ()
 	{
 		base.Start ();
-		flareLight.flare = null;
 		flareLight = GetComponent<Light> ();
 		flare = flareLight.flare;
+		flareLight.flare = null;
+
 	}
 
 	public static GameObject Create (GameObject prefab, Transform barrel, float speed, float dispertion, float acceleration, float ascendingTime, float maxDescendingSpeed, float deathDelay,

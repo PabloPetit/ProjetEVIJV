@@ -37,7 +37,7 @@ public class FlareLauncherScript : Interaction
 	public override void Action ()
 	{
 		if (timer > interval) {
-			FlareShot.Create (prefab, barrel.transform, speed, range, acceleration, ascendingTime, descendingSpeed, intensity, lightRange, deathDelay);
+			FlareShot.Create (prefab, barrel.transform, speed, 0f, acceleration, ascendingTime, descendingSpeed, 1f, intensity, lightRange);
 			timer = 0f;
 			audio.Play ();
 		}

@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour
 	protected virtual void FixedUpdate ()
 	{
 		timer += Time.fixedDeltaTime;
-		transform.position += transform.forward * speed * Time.deltaTime;
+		transform.position += transform.forward * speed * Time.fixedDeltaTime;
 		if (Vector3.Distance (initialPosition, transform.position) > range) {
 			Delete ();
 		}

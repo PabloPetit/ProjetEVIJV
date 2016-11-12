@@ -16,6 +16,11 @@ public class MortarLauncherScript : Interaction
 	public float damageRadius;
 	public float damageDecrease;
 
+	public float deathDelay;
+	public float minDamage;
+
+	public float dispertion;
+
 	public GameObject barrel;
 	public GameObject prefab;
 	AudioSource audio;
@@ -36,9 +41,10 @@ public class MortarLauncherScript : Interaction
 	public override void Action ()
 	{
 		if (timer > interval) {
-			PlayerState state = initiator.GetComponent<PlayerState> ();
-			if (state != null) {
-				//Mortar.Create (gameObject, prefab, barrel.transform, speed, range, state.side, acceleration, ascendingTime, damage, damageRadius, damageDecrease, true, initiator.tag.Equals ("Player"));
+			Player player = initiator.GetComponent<Player> ();
+			if (player != null) {
+				Mortar.Create (prefab, barrel.transform, speed, dispertion, acceleration, ascendingTime, 1000f, deathDelay, damage, minDamage, damageDecrease, true, player.isHuman, player, damageRadius);
+
 				timer = 0f;
 				audio.Play ();
 			}

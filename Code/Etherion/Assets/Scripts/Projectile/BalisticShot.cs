@@ -23,7 +23,7 @@ public class BalisticShot : Projectile
 		dead = false;
 		descent = false;
 		targetRotation = Quaternion.Euler (90f, 0f, 0f);
-		this.renderer = GetComponent<MeshRenderer> ();
+		this.renderer = GetComponentInChildren<MeshRenderer> ();
 		this.collider = GetComponent<Collider> ();
 	}
 
@@ -35,6 +35,7 @@ public class BalisticShot : Projectile
 		balistic.acceleration = acceleration;
 		balistic.maxDescendingSpeed = maxDescendingSpeed;
 		balistic.deathDelay = deathDelay;
+		balistic.ascendingTime = ascendingTime;
 
 		return pro;
 	}
@@ -45,6 +46,7 @@ public class BalisticShot : Projectile
 			return;
 
 		base.FixedUpdate ();
+
 
 		if (timer < ascendingTime) {
 			speed += acceleration * Time.fixedDeltaTime;
