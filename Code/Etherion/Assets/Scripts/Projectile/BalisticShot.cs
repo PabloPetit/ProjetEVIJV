@@ -22,7 +22,7 @@ public class BalisticShot : Projectile
 	{
 		dead = false;
 		descent = false;
-		targetRotation = Quaternion.Euler (90f, 0f, 0f);
+		targetRotation = Quaternion.Euler (Vector3.left);
 		this.renderer = GetComponentInChildren<MeshRenderer> ();
 		this.collider = GetComponent<Collider> ();
 	}
