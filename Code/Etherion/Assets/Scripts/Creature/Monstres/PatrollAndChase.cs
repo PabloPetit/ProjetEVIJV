@@ -13,10 +13,15 @@ public class PatrollAndChase : MonoBehaviour
 	public float wanderRange = 100.0f;
 	private float wanderDelayTimer;
 	public float distanceToCombat = 200.0f;
+	public float distanceToFight = 20.0f;
 	public float distanceToDropCombat = 500.0f;
 	private bool chasingPlayer = false;
 	private NavMeshAgent agent;
 	private bool isReturning = false;
+
+	MonsterHealth health;
+	Animator anim;
+	AudioSource audio;
 
 
 	void Awake()
@@ -25,6 +30,7 @@ public class PatrollAndChase : MonoBehaviour
 		agent = GetComponent<NavMeshAgent>();
 		agent.speed  = enemyWanderSpeed;
 		startPosition = this.transform.position;
+		anim = transform.GetComponent<Animator> ();
 	}
 
 	void Update () 
@@ -32,6 +38,7 @@ public class PatrollAndChase : MonoBehaviour
 		//Debug.Log(transform.position);
 
 		startWander();
+		anim.SetTrigger ("Walk");
 		float distanceFromPlayer = Vector3.Distance(transform.position, go.transform.position);
 		float distanceChasedCombat = Vector3.Distance(transform.position, startPosition);
 		//Debug.Log(distanceFromPlayer);
@@ -39,22 +46,28 @@ public class PatrollAndChase : MonoBehaviour
 		if((distanceFromPlayer <= distanceToCombat) && !isReturning)
 		{
 			chasingPlayer = true;
-			Debug.Log("chasing true");
+			//Debug.Log("chasing true");
 		}
 		//if it chased the player too far run back and start wandering around, by setting the wander delay timer to 0 so it runs back straight away.
 
 		if(chasingPlayer)
 		{
-			Debug.Log ("chasing");
+			//Debug.Log ("chasing");
+
 			myTarget = go.transform;
-			agent.SetDestination(myTarget.transform.position);
-			agent.speed = enemySpeed;
+			while ((distanceFromPlayer > distanceToFight) && !(distanceChasedCombat >= distanceToDropCombat))
+				agent.SetDestination(myTarget.transform.position);
+				agent.speed = enemySpeed;
+			if (distanceFromPlayer > distanceToFight) {
+				anim.SetTrigger ("Fight");
+			}
+
 
 		}
 		if((distanceChasedCombat >= distanceToDropCombat) && chasingPlayer)
 		{
 			chasingPlayer = false;
-			Debug.Log("too far");
+			//Debug.Log("too far");
 			wanderDelayTimer = 0.0f;
 			isReturning = true;
 
@@ -95,11 +108,13 @@ public class PatrollAndChase : MonoBehaviour
 
 	public void newDestination(Vector3 targetPoint)
 	{
-		Debug.Log("new destination");
+		//Debug.Log("new destination");
+
 		agent.SetDestination (targetPoint);
 
-		Debug.Log(targetPoint);
+		//Debug.Log(targetPoint);
 	}
+		
 
 
 }

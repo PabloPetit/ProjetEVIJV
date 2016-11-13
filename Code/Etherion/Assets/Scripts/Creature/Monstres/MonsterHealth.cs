@@ -1,15 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MonsterHealth : MonoBehaviour {
+public class MonsterHealth : Health
+{
 
-	// Use this for initialization
-	void Start () {
-	
+	GameObject monster;
+	Animator anim;
+
+	float destroyDelay = 4f;
+
+	public void Start ()
+	{
+		base.Start ();
+		monster = transform.parent.gameObject;
+		anim = transform.parent.GetComponent<Animator> ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	public override void Death ()
+	{
+		anim.SetTrigger ("Die");
+		foreach (Transform child in monster.transform) {
+			Destroy (child.gameObject, destroyDelay);
+		}
+		Destroy (monster, destroyDelay);
 	}
 }
