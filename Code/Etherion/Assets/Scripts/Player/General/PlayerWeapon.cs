@@ -69,7 +69,7 @@ public class PlayerWeapon : MonoBehaviour
 
 	// Downward position
 	Vector3 downwardPosition;
-	float downwardDeviationX = -1.5f;
+	float downwardDeviationX = -1f;
 
 
 	void Awake ()
@@ -150,7 +150,6 @@ public class PlayerWeapon : MonoBehaviour
 			recoilTarget.y = (Random.Range (-maxDeviationY, maxDeviationY));
 
 			IncreaseOverload ();
-
 
 		}
 	}
