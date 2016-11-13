@@ -151,7 +151,6 @@ public class PlayerWeapon : MonoBehaviour
 
 			IncreaseOverload ();
 
-			camera.fieldOfView += .2f;
 
 		}
 	}
