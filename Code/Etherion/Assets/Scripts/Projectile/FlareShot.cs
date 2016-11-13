@@ -34,6 +34,7 @@ public class FlareShot : BalisticShot
 
 	protected override void StartDescent ()
 	{
+		base.StartDescent ();
 		flareLight.flare = flare;
 		flareLight.intensity = intensity;
 		flareLight.range = lightRange;

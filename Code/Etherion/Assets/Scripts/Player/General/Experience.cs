@@ -21,7 +21,7 @@ public class Experience : MonoBehaviour
 		totalXp += xp;
 
 		if (totalXp > NextLevelStep ()) {
-			level += Mathf.Max (level + 1, MAX_LEVEL);
+			level += Mathf.Min (level + 1, MAX_LEVEL);
 		}
 		//TODO : EventManager.Trigger(xpPanel, new Object[]{xp,level});
 	}

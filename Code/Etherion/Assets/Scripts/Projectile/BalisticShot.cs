@@ -22,7 +22,8 @@ public class BalisticShot : Projectile
 	{
 		dead = false;
 		descent = false;
-		targetRotation = Quaternion.Euler (Vector3.left);
+		//targetRotation = transform.rotation;
+		targetRotation = Quaternion.Euler (90, transform.rotation.y, transform.rotation.z);
 		this.renderer = GetComponentInChildren<MeshRenderer> ();
 		this.collider = GetComponent<Collider> ();
 	}
@@ -40,7 +41,7 @@ public class BalisticShot : Projectile
 		return pro;
 	}
 
-	void FixedUpdate ()
+	protected virtual void FixedUpdate ()
 	{
 		if (dead)
 			return;
@@ -54,7 +55,6 @@ public class BalisticShot : Projectile
 			if (!descent) {
 				StartDescent ();
 			}
-
 			transform.rotation = Quaternion.Slerp (transform.rotation, targetRotation, gravityDeviation * Time.fixedDeltaTime);
 		}
 	}

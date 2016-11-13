@@ -11,11 +11,12 @@ public class HitMarker : MonoBehaviour
 	public float fadeSpeed = 1f;
 	RawImage hitMarker;
 	private EventName hitEvent;
-
+	private AudioSource audio;
 
 	void Awake ()
 	{
 		hitMarker = GetComponent<RawImage> ();
+		audio = GetComponent<AudioSource> ();
 		hitEvent = new EventName (HITMARKER_CHANNEL);
 	}
 
@@ -32,6 +33,7 @@ public class HitMarker : MonoBehaviour
 		Color c = hitMarker.color;
 		c.a = 1f;
 		hitMarker.color = c;
+		audio.Play ();
 	}
 
 	void OnEnable ()
