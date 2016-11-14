@@ -18,6 +18,7 @@ public class TripodHealth : Health
 
 	public override void Death ()
 	{
+		
 		anim.SetTrigger ("Death");
 		foreach (Transform child in tripod.transform) {
 			Destroy (child.gameObject, destroyDelay);
