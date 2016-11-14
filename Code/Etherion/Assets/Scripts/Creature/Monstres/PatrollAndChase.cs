@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PatrollAndChase : MonoBehaviour 
+public class PatrollAndChase : MonoBehaviour
 {
 	public float enemySpeed = 30.0f;
 	private Transform myTarget;
@@ -24,48 +24,46 @@ public class PatrollAndChase : MonoBehaviour
 	AudioSource audio;
 
 
-	void Awake()
+	void Awake ()
 	{
-		go = GameObject.FindGameObjectWithTag("Player");
-		agent = GetComponent<NavMeshAgent>();
-		agent.speed  = enemyWanderSpeed;
+		go = GameObject.FindGameObjectWithTag ("Player");
+		agent = GetComponent<NavMeshAgent> ();
+		agent.speed = enemyWanderSpeed;
 		startPosition = this.transform.position;
 		anim = transform.GetComponent<Animator> ();
+		anim.SetTrigger ("Walk");
 	}
 
-	void Update () 
+	void Update ()
 	{
 		//Debug.Log(transform.position);
 
-		startWander();
-		anim.SetTrigger ("Walk");
-		float distanceFromPlayer = Vector3.Distance(transform.position, go.transform.position);
-		float distanceChasedCombat = Vector3.Distance(transform.position, startPosition);
+		startWander ();
+
+		float distanceFromPlayer = Vector3.Distance (transform.position, go.transform.position);
+		float distanceChasedCombat = Vector3.Distance (transform.position, startPosition);
 		//Debug.Log(distanceFromPlayer);
 		//Debug.Log(isReturning);
-		if((distanceFromPlayer <= distanceToCombat) && !isReturning)
-		{
+		if ((distanceFromPlayer <= distanceToCombat) && !isReturning) {
 			chasingPlayer = true;
 			//Debug.Log("chasing true");
 		}
 		//if it chased the player too far run back and start wandering around, by setting the wander delay timer to 0 so it runs back straight away.
 
-		if(chasingPlayer)
-		{
+		if (chasingPlayer) {
 			//Debug.Log ("chasing");
 
 			myTarget = go.transform;
 			while ((distanceFromPlayer > distanceToFight) && !(distanceChasedCombat >= distanceToDropCombat))
-				agent.SetDestination(myTarget.transform.position);
-				agent.speed = enemySpeed;
+				agent.SetDestination (myTarget.transform.position);
+			agent.speed = enemySpeed;
 			if (distanceFromPlayer > distanceToFight) {
 				anim.SetTrigger ("Fight");
 			}
 
 
 		}
-		if((distanceChasedCombat >= distanceToDropCombat) && chasingPlayer)
-		{
+		if ((distanceChasedCombat >= distanceToDropCombat) && chasingPlayer) {
 			chasingPlayer = false;
 			//Debug.Log("too far");
 			wanderDelayTimer = 0.0f;
@@ -76,21 +74,20 @@ public class PatrollAndChase : MonoBehaviour
 
 	}
 
-	void startWander()
+	void startWander ()
 	{
 
-		wanderDelayTimer -=Time.deltaTime;
+		wanderDelayTimer -= Time.deltaTime;
 		//Debug.Log(wanderDelayTimer);
-		if(wanderDelayTimer <= 0 && !chasingPlayer)
-		{
+		if (wanderDelayTimer <= 0 && !chasingPlayer) {
 			Debug.Log (chasingPlayer);
-			Wander();
-			wanderDelayTimer = Random.Range(2.0f, 4.0f);
+			Wander ();
+			wanderDelayTimer = Random.Range (2.0f, 4.0f);
 			//Debug.Log(wanderDelayTimer);
 		}
 	}
 
-	void Wander()
+	void Wander ()
 	{
 		/*agent.speed = enemyWanderSpeed;
 		Vector3 navDestination = Random.insideUnitSphere * wanderRange;
@@ -100,13 +97,13 @@ public class PatrollAndChase : MonoBehaviour
 		navDestination = hit.position;*/
 
 		agent.speed = enemyWanderSpeed;
-		Vector3 destination = startPosition + new Vector3 (Random.Range (-wanderRange, wanderRange),0 /*transform.position.y*/, Random.Range(-wanderRange, wanderRange));
-		newDestination(destination);
+		Vector3 destination = startPosition + new Vector3 (Random.Range (-wanderRange, wanderRange), 0 /*transform.position.y*/, Random.Range (-wanderRange, wanderRange));
+		newDestination (destination);
 
 		//agent.SetDestination (navDestination);
 	}
 
-	public void newDestination(Vector3 targetPoint)
+	public void newDestination (Vector3 targetPoint)
 	{
 		//Debug.Log("new destination");
 
