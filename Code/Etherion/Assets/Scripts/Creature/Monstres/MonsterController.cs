@@ -39,6 +39,7 @@ public class MonsterController : MonoBehaviour {
 	private Player targetPlayer;
 
 	private NavMeshAgent nav;
+	private Animator animator;
 	private Player player;
 
 	private float timer;
@@ -52,6 +53,7 @@ public class MonsterController : MonoBehaviour {
 		environnementMask = LayerMask.GetMask ("Environement");
 		initialPosition = transform.position;
 		nav = GetComponent<NavMeshAgent> ();
+		animator = GetComponent<Animator> ();
 		player = GetComponent<Player> ();
 		timer = 0f;
 
@@ -93,6 +95,8 @@ public class MonsterController : MonoBehaviour {
 		target = null;
 		targetPlayer = null;
 		SetNewWanderDestination ();
+
+		animator.SetTrigger ("Walk");
 	}
 
 	void SetNewWanderDestination(){
@@ -102,6 +106,7 @@ public class MonsterController : MonoBehaviour {
 		NavMesh.SamplePosition (navDestination, out hit, WANDER_RADIUS, 1);
 		navDestination = hit.position;
 		nav.SetDestination (navDestination);
+		nav.speed = WANDER_SPEED;
 	}
 
 	void Wander(){
@@ -160,6 +165,7 @@ public class MonsterController : MonoBehaviour {
 		currentState = STATE_GO_TO_TARGET;
 		nav.speed = ATTACK_SPEED;
 		nav.SetDestination (target.transform.position);
+		animator.SetTrigger ("Run");
 	}
 
 	void GoToTarget(){
@@ -191,6 +197,7 @@ public class MonsterController : MonoBehaviour {
 		timer = 0f;
 		DoDamage ();
 		nav.Stop ();
+		animator.SetTrigger ("Attack");
 	}
 
 
@@ -224,7 +231,9 @@ public class MonsterController : MonoBehaviour {
 	void Go_GoToBase(){
 		timer = 0f;
 		currentState = STATE_GO_TO_BASE;
+		nav.speed = WANDER_SPEED;
 		nav.SetDestination (initialPosition);
+		animator.SetTrigger ("Walk");
 	}
 
 	void GoToBase(){
