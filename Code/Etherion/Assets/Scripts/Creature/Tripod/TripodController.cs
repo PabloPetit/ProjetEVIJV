@@ -4,6 +4,8 @@ using System.Collections;
 public class TripodController : MonoBehaviour
 {
 
+	public const int SEARCH_SHOOTER_TIME = 5;
+
 	// Tripod States
 
 	public const int EXPLORATION = 1;
@@ -26,6 +28,7 @@ public class TripodController : MonoBehaviour
 	public float angularSpeed;
 	public float destinationRadius;
 	Vector3 navDestination;
+	bool setLastShootDest;
 
 	// FootSteps
 	public AudioClip[] footsteps;
@@ -118,6 +121,22 @@ public class TripodController : MonoBehaviour
 		}
 	}
 
+	/*
+	 * 
+	 * EXPLORATION
+	 * 
+	 */
+
+	void GoToExploration ()
+	{
+		shots = 0;
+		state = EXPLORATION;
+		anim.SetTrigger ("Walking");
+		timer = 5f;
+		nav.Resume ();
+		setLastShootDest = false;
+	}
+
 	void Exploration ()
 	{
 		
@@ -128,43 +147,29 @@ public class TripodController : MonoBehaviour
 			return;
 		}
 
-		if (Vector3.Distance (nav.transform.position, navDestination) < 1) {
-			navDestination = Vector3.zero;
+		if (health.timer > SEARCH_SHOOTER_TIME) {
+			health.lastShooter = null;
 		}
 
-		if (navDestination == Vector3.zero) {
+		if (health.lastShooter != null && !health.lastShooter.health.dead && health.timer < SEARCH_SHOOTER_TIME) {
+			navDestination = health.lastShooterPosition;
+			nav.SetDestination (navDestination);
+		} else if (nav.remainingDistance < 5f) {
 			SetNewDestination ();
 			nav.SetDestination (navDestination);
 		}
 
 		footStepSound ();
 
-		Vector3 direction = (nav.destination - transform.position);//.normalized;
+		Vector3 direction = (nav.destination - transform.position);
 		direction = Vector3.RotateTowards (transform.forward, direction, angularSpeed * Time.fixedDeltaTime, 0.0f);
 		direction.y = 0f;
 		transform.rotation = Quaternion.LookRotation (direction);
 	}
 
-	void footStepSound ()
-	{
-		if (timer > footstepsInterval && footsteps.Length > 0) {
-			audio.PlayOneShot (footsteps [lastFootstep]);
-			lastFootstep++;
-			timer = 0f;
-			if (lastFootstep == footsteps.Length) {
-				lastFootstep = 0;
-			}
-		}
-	}
 
-	void GoToExploration ()
-	{
-		shots = 0;
-		state = EXPLORATION;
-		anim.SetTrigger ("Walking");
-		timer = 0f;
-		nav.Resume ();
-	}
+
+
 
 	void SetNewDestination ()
 	{
@@ -174,6 +179,13 @@ public class TripodController : MonoBehaviour
 		NavMesh.SamplePosition (navDestination, out hit, destinationRadius, 1);
 		navDestination = hit.position;
 	}
+
+	/*
+	 * 
+	 * 
+	 *  AQUISITION
+	 * 
+	 */
 
 	void GoToAquisition ()
 	{
@@ -303,5 +315,17 @@ public class TripodController : MonoBehaviour
 		Debug.DrawRay (shootRay.origin, shootRay.direction * maxAimingDistance, Color.red, .5f);
 
 		return res;
+	}
+
+	void footStepSound ()
+	{
+		if (timer > footstepsInterval && footsteps.Length > 0) {
+			audio.PlayOneShot (footsteps [lastFootstep]);
+			lastFootstep++;
+			timer = 0f;
+			if (lastFootstep == footsteps.Length) {
+				lastFootstep = 0;
+			}
+		}
 	}
 }

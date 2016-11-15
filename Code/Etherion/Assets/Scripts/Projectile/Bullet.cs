@@ -22,7 +22,6 @@ public class Bullet : Projectile, IDamage
 	{
 		GameObject pro = Projectile.Create (prefab, barrel, speed, dispertion);
 		Bullet bullet = pro.GetComponent<Bullet> ();
-	
 		bullet.initialDamage = initialDamage;
 		bullet.minDamage = minDamage;
 		bullet.damageDecrease = damageDecrease;

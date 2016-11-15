@@ -11,7 +11,7 @@ public class Damage
 	{
 		if (friendlyFire || shooter.side != target.side) {
 			EventName targetDamage = new EventName (Player.DAMAGE_CHANNEL, target.id);
-			EventManager.TriggerAction (targetDamage, new object[]{ damage, shooter.id });
+			EventManager.TriggerAction (targetDamage, new object[]{ damage, shooter });
 			if (hitMarker) {
 				EventName hit = new EventName (HitMarker.HITMARKER_CHANNEL);
 				EventManager.TriggerAction (hit, new object[]{ });

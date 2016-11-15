@@ -19,6 +19,10 @@ public class Health : MonoBehaviour
 	public EventName bloodCanvas;
 	public EventName lifeBar;
 
+	public Player lastShooter;
+	public Vector3 lastShooterPosition;
+	// Position of the shooter when this player was hit
+
 	// Use this for initialization
 	public void Start ()
 	{
@@ -70,7 +74,6 @@ public class Health : MonoBehaviour
 
 	public void TakeDamage (object[] param)
 	{
-		
 
 		if (dead)
 			return;
@@ -78,15 +81,15 @@ public class Health : MonoBehaviour
 		timer = 0f;
 
 		float damage = (float)param [0];
-		int id = (int)param [1];
-	
+		lastShooter = (Player)param [1];
+		lastShooterPosition = lastShooter.gameObject.transform.position;
 
 		life -= damage;
 
 		if (life <= 0f) {
 			life = 0f;
 			Death ();
-			SendXp (id);
+			SendXp (lastShooter.id);
 		}
 	}
 
