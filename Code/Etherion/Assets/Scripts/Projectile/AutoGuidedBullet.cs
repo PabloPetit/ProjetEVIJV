@@ -11,10 +11,10 @@ public class AutoGuidedBullet : Bullet
 
 
 	public static GameObject Create (GameObject prefab, Transform barrel, float speed, float dispertion,
-	                                 float initialDamage, float minDamage, float damageDecrease, bool friendlyFire, bool hitMarker, Player shooter, GameObject target, float autoGuidanceStart, float maxDeviation)
+	                                 float initialDamage, float minDamage, float damageDecrease, bool friendlyFire, Player shooter, GameObject target, float autoGuidanceStart, float maxDeviation)
 	{
 
-		GameObject pro = Bullet.Create (prefab, barrel, speed, dispertion, initialDamage, minDamage, damageDecrease, friendlyFire, hitMarker, shooter);
+		GameObject pro = Bullet.Create (prefab, barrel, speed, dispertion, initialDamage, minDamage, damageDecrease, friendlyFire, shooter);
 		AutoGuidedBullet bullet = pro.GetComponent<AutoGuidedBullet> ();
 
 		bullet.target = target;

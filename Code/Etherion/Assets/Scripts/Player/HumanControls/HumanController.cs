@@ -69,11 +69,14 @@ public class HumanController : MonoBehaviour
 
 	void Update ()
 	{
-		if (health.dead) {
-			//return;
-		}
-		timer += Time.deltaTime;
 		RotateView ();
+
+		if (health.dead) {
+			return;
+		}
+
+		timer += Time.deltaTime;
+
 		Actions ();
 		FootSteps ();
 	}
@@ -141,8 +144,7 @@ public class HumanController : MonoBehaviour
 		Vector3 desiredMove = Vector3.zero;
 		Vector3 moveDir = Vector3.zero;
 
-		IsWalking = false;
-		IsRunning = false;
+		bool IsWalkingTmp = false;
 		bool jump = false;
 
 		if (jumpTimer > jumpTime) {
@@ -151,31 +153,40 @@ public class HumanController : MonoBehaviour
 
 		if (Input.GetKey (KeyMap.forward)) {
 			desiredMove += camera.transform.forward;
-			IsWalking = true;
+			IsWalkingTmp = true;
 		}
 		if (Input.GetKey (KeyMap.backward)) {
 			desiredMove -= camera.transform.forward;
-			IsWalking = true;
+			IsWalkingTmp = true;
 		}
 		if (Input.GetKey (KeyMap.right)) {
 			desiredMove += camera.transform.right;
-			IsWalking = true;
+			IsWalkingTmp = true;
 		}
 		if (Input.GetKey (KeyMap.left)) {
 			desiredMove -= camera.transform.right;
-			IsWalking = true;
+			IsWalkingTmp = true;
 		}
 
-		if (IsWalking) {
+		if (IsWalkingTmp) {
 			if (Input.GetKey (KeyMap.run) && !Input.GetKey (KeyMap.aim)) {
+
+				if (!IsRunning) {
+					animator.SetTrigger ("Run");
+				}
 				IsWalking = false;
 				IsRunning = true;
-				animator.SetTrigger ("StartRun");
 			} else {
-				animator.SetTrigger ("StartWalk");
+				if (!IsWalking) {
+					animator.SetTrigger ("Walk");
+				}
+				IsWalking = true;
+				IsRunning = false;
 			}
-		} else {
-			animator.SetTrigger ("Stopped");
+		} else if (IsWalking || IsRunning) {
+			animator.SetTrigger ("Idle");
+			IsWalking = false;
+			IsRunning = false;
 		}
 
 		if (!IsJumping && Input.GetKey (KeyMap.jump) && characterController.isGrounded) {

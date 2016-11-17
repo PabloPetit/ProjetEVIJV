@@ -96,7 +96,7 @@ public class PlayerWeapon : MonoBehaviour
 		Recoil ();
 
 		DecreaseOverload ();
-		//TODO if player.human
+
 		setOverloadBarValue ();
 
 		if (timer >= timeBetweenBullets * effectsDisplayTime) {

@@ -38,11 +38,13 @@ public class Health : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	public void Update ()
+	public virtual void Update ()
 	{
 		timer += Time.deltaTime;
 		if (timer >= timeBeforeAutoCure && !dead && life != maxLife) {
 			life += Time.deltaTime * autoCureValue;
+			life = Mathf.Min (life, maxLife);
+
 		}
 	
 		if (player.isHuman) {
@@ -84,16 +86,22 @@ public class Health : MonoBehaviour
 		lastShooter = (Player)param [1];
 		lastShooterPosition = lastShooter.gameObject.transform.position;
 
+		if (lastShooter.isHuman) {
+			EventName hit = new EventName (HitMarker.HITMARKER_CHANNEL);
+			EventManager.TriggerAction (hit, new object[]{ });
+		}
+
 		life -= damage;
 
 		if (life <= 0f) {
 			life = 0f;
+			dead = true;
 			Death ();
 			SendXp (lastShooter.id);
 		}
 	}
 
-	public void SendXp (int id)
+	public virtual void SendXp (int id)
 	{
 		EventName xpEvent = new EventName (Player.XP_CHANNEL, id);
 		EventManager.TriggerAction (xpEvent, new object[]{ player.experience.RetrievedXp () });
@@ -107,7 +115,7 @@ public class Health : MonoBehaviour
 
 	public virtual void Death ()
 	{
-		dead = true;
+		
 	}
 
 

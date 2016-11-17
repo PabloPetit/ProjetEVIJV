@@ -5,8 +5,6 @@ public class Bullet : Projectile, IDamage
 {
 	public Player shooter { get ; set ; }
 
-	public bool hitMarker { get ; set ; }
-
 	public bool friendlyFire { get ; set ; }
 
 	public float initialDamage { get ; set ; }
@@ -15,10 +13,15 @@ public class Bullet : Projectile, IDamage
 
 	public float damageDecrease { get ; set ; }
 
+	int ignoreMask;
 
+	void Start ()
+	{
+		ignoreMask = LayerMask.GetMask ("IgnoreBulletCollision");
+	}
 
 	public static GameObject Create (GameObject prefab, Transform barrel, float speed, float dispertion,
-	                                 float initialDamage, float minDamage, float damageDecrease, bool friendlyFire, bool hitMarker, Player shooter)
+	                                 float initialDamage, float minDamage, float damageDecrease, bool friendlyFire, Player shooter)
 	{
 		GameObject pro = Projectile.Create (prefab, barrel, speed, dispertion);
 		Bullet bullet = pro.GetComponent<Bullet> ();
@@ -26,7 +29,6 @@ public class Bullet : Projectile, IDamage
 		bullet.minDamage = minDamage;
 		bullet.damageDecrease = damageDecrease;
 		bullet.friendlyFire = friendlyFire;
-		bullet.hitMarker = hitMarker;
 		bullet.shooter = shooter;
 
 		return pro;
@@ -34,11 +36,13 @@ public class Bullet : Projectile, IDamage
 
 	protected virtual void OnTriggerEnter (Collider other)
 	{
+		if (((1 << other.gameObject.layer) & ignoreMask) != 0) {
+			return;
+		}
 
 		GameObject go = other.gameObject;
 
 		Player target = go.GetComponent<Player> ();
-
 
 		if (target != null) {
 
@@ -48,7 +52,7 @@ public class Bullet : Projectile, IDamage
 
 			float damages = Mathf.Max (minDamage, initialDamage - (damageDecrease * timer));
 
-			Damage.DoDamage (shooter, target, damages, friendlyFire, hitMarker);
+			Damage.DoDamage (shooter, target, damages, friendlyFire);
 		}
 
 		Delete ();

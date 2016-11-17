@@ -7,15 +7,11 @@ public class Damage
 	public static int playerMask = LayerMask.GetMask ("Player");
 
 
-	public static void DoDamage (Player shooter, Player target, float damage, bool friendlyFire, bool hitMarker)
+	public static void DoDamage (Player shooter, Player target, float damage, bool friendlyFire)
 	{
 		if (friendlyFire || shooter.side != target.side) {
 			EventName targetDamage = new EventName (Player.DAMAGE_CHANNEL, target.id);
 			EventManager.TriggerAction (targetDamage, new object[]{ damage, shooter });
-			if (hitMarker) {
-				EventName hit = new EventName (HitMarker.HITMARKER_CHANNEL);
-				EventManager.TriggerAction (hit, new object[]{ });
-			}
 		}
 	}
 
@@ -27,7 +23,7 @@ public class Damage
 			float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
 			float adjustedDamage = Mathf.Max (damages.initialDamage - (damages.damageDecrease * dist), damages.minDamage);
 			Player target = go.GetComponent<Player> ();
-			DoDamage (shooter, target, adjustedDamage, damages.friendlyFire, damages.hitMarker);
+			DoDamage (shooter, target, adjustedDamage, damages.friendlyFire);
 		}
 	}
 

@@ -10,10 +10,7 @@ public class Player : MonoBehaviour
 	public static string XP_CHANNEL = "xp";
 
 
-	public static int redTeamSide = 1;
-	public static int blueTeamSide = 2;
-	public static int creatureSide = 3;
-
+	public Team team;
 
 	public int id;
 	public int side;
@@ -22,8 +19,10 @@ public class Player : MonoBehaviour
 	public Health health;
 	public Experience experience;
 
+	public bool isCreature;
 	public bool isHuman;
 
+	public int killCount;
 
 	void Start ()
 	{
@@ -31,6 +30,18 @@ public class Player : MonoBehaviour
 		health = GetComponent<Health> ();
 		experience = GetComponent<Experience> ();
 		OpenChannels ();
+		killCount = 0;
+		setCamLightShaft ();
+	}
+
+	void setCamLightShaft ()
+	{
+		if (isHuman) {
+			Camera cam = GetComponentInChildren<Camera> ();
+			foreach (LightShafts l in FindObjectsOfType<LightShafts> ()) {
+				l.m_Cameras = new Camera[]{ cam };
+			}
+		}
 	}
 
 	public void OpenChannels ()
@@ -44,6 +55,13 @@ public class Player : MonoBehaviour
 		health.CloseChannels ();
 		experience.CloseChannel ();
 	}
+
+	void Respawn ()
+	{
+		
+	}
+
+
 
 	public static int GetUniqueId ()
 	{

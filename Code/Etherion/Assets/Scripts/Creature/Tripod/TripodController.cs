@@ -245,10 +245,10 @@ public class TripodController : MonoBehaviour
 	{
 		if (Vector3.Distance (transform.position, target.transform.position) > balisticShotMinDistance && !isTargetVisible (target, maxAimingDistance)) {
 			barrel.transform.Rotate (new Vector3 (-balisticShotAngle, 0f, 0f));
-			AutoGuidedBullet.Create (bulletPrefab, barrel.transform, bulletSpeed, 0f, damage, minDamage, damageDecrease, true, false, tripod, target, autoGuidanceStart, maxDeviation);
+			AutoGuidedBullet.Create (bulletPrefab, barrel.transform, bulletSpeed, 0f, damage, minDamage, damageDecrease, true, tripod, target, autoGuidanceStart, maxDeviation);
 			barrel.transform.Rotate (new Vector3 (balisticShotAngle, 0f, 0f));
 		} else {
-			AutoGuidedBullet.Create (bulletPrefab, barrel.transform, bulletSpeed, 0f, damage, minDamage, damageDecrease, true, false, tripod, target, autoGuidanceStart, maxDeviation);
+			AutoGuidedBullet.Create (bulletPrefab, barrel.transform, bulletSpeed, 0f, damage, minDamage, damageDecrease, true, tripod, target, autoGuidanceStart, maxDeviation);
 		}		
 		audio.Play ();
 		shots++;
