@@ -98,6 +98,7 @@ public class Health : MonoBehaviour
 			dead = true;
 			Death ();
 			SendXp (lastShooter.id);
+
 		}
 	}
 

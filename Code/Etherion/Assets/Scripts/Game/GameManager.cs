@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
 
 	private static GameManager gameManager;
 
+	public static string[] iaLevelNames = new string[]{ "Easy", "Meduim", "Hard" };
+
+	public int iaLevel = 1;
 
 	public static int teamNumber = 2;
 	public static int playerPerTeam = 5;
@@ -46,6 +49,8 @@ public class GameManager : MonoBehaviour
 		InitTeamSlots ();
 		GenerateTeams ();
 		InitializePlayers ();
+		InitializeArtefacts ();
+
 	}
 
 	void Update ()
@@ -126,6 +131,20 @@ public class GameManager : MonoBehaviour
 				p.team = ts.team;
 				p.side = p.team.side;
 			}
+		}
+	}
+
+	void InitializeArtefacts(){
+		foreach (TeamSlot ts in teamSlots) {
+
+			GameObject artefact = Instantiate (ts.artefactPrefab);
+			artefact.transform.position = ts.artefactSpawn.transform.position;
+			Artefact art = artefact.GetComponent<Artefact> ();
+			art.team = ts.team;
+			art.spawn = ts.artefactSpawn.transform;
+
+			ArtefactReceptor receptor = ts.receptor.GetComponent<ArtefactReceptor> ();
+			receptor.team = ts.team;
 		}
 	}
 

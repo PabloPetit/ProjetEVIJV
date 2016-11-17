@@ -11,20 +11,17 @@ public class TeamSlot : MonoBehaviour
 	public Team team;
 	public PlayerSpawn[] playerSpawns;
 	public ArtefactSpawn artefactSpawn;
+	public GameObject receptor;
 
 	// Use this for initialization
 	void Awake ()
 	{
 		playerSpawns = GetComponentsInChildren<PlayerSpawn> ();
 		artefactSpawn = GetComponentInChildren<ArtefactSpawn> ();
+		receptor = GetComponentInChildren<ArtefactReceptor> ().gameObject;
 
 	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
+		
 
 	public GameObject GetRandomSpawn ()
 	{
