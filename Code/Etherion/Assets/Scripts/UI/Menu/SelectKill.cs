@@ -2,12 +2,12 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class Selector : MonoBehaviour
+public class SelectKill : MonoBehaviour
 {
 
 
-	string[] choices = new string[]{ "Easy", "Meduim", "Hard", "God Mode", "Turing" };
-	int index = 0;
+	string[] choices = new string[]{ "1", "10", "15", "20", "inf" };
+	int index = 3;
 
 	Text text;
 
