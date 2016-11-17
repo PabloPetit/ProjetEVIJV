@@ -91,6 +91,7 @@ public class GameManager : MonoBehaviour
 
 	void SendState ()
 	{
+		return;
 		int[] scores = new int[teams.Count];
 		for (int i = 0; i < teamNumber; i++) {
 			scores [i] = teams [i].score;
@@ -134,7 +135,8 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void InitializeArtefacts(){
+	void InitializeArtefacts ()
+	{
 		foreach (TeamSlot ts in teamSlots) {
 
 			GameObject artefact = Instantiate (ts.artefactPrefab);
