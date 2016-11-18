@@ -99,12 +99,21 @@ public class Health : MonoBehaviour
 			Death ();
 			SendXp ();
 			SendKillInfo ();
+			if (player.isHuman) {
+				SendPanelXpInfo ();
+			}
 		}
 	}
 
 	public virtual void SendXp ()
 	{
 		EventName xpEvent = new EventName (Player.XP_CHANNEL, lastShooter.id);
+		EventManager.TriggerAction (xpEvent, new object[]{ player.experience.RetrievedXp () });
+	}
+
+	public void SendPanelXpInfo ()
+	{
+		EventName xpEvent = new EventName (XpBar.XP_BAR_CHANNEL);
 		EventManager.TriggerAction (xpEvent, player.experience.GetXpInfo ());
 	}
 
