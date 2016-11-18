@@ -6,7 +6,7 @@ public class SelectTime : MonoBehaviour
 {
 
 
-	string[] choices = new string[]{ "15 min", "20 min", "30 min", "inf" };
+	string[] choices = new string[]{ "15", "20", "30", "60" };
 	int index = 3;
 
 	Text text;
@@ -20,7 +20,7 @@ public class SelectTime : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		//GameManager.DoStuff()
+		GameManager.maxTime = int.TryParse (choices [index]);
 	}
 
 

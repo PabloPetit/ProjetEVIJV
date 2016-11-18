@@ -20,7 +20,7 @@ public class SelectPlayer : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		//GameManager.DoStuff()
+		GameManager.playerPerTeam = index + 1;
 	}
 
 

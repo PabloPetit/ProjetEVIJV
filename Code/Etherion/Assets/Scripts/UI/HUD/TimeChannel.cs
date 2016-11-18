@@ -4,9 +4,6 @@ using UnityEngine.UI;
 
 public class TimeChannel : MonoBehaviour
 {
-	public static string TIME_CHANNEL = "timeChannel";
-
-	private EventName timeChannelEvent;
 
 	Text text;
 	public float timer = 0.0f;

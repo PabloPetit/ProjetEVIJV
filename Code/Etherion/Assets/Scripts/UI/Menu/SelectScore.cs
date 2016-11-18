@@ -6,7 +6,7 @@ public class SelectScore : MonoBehaviour
 {
 
 
-	string[] choices = new string[]{ "100", "200", "500", "1000", "inf" };
+	string[] choices = new string[]{ "1", "5", "10", "25", "inf" };
 	int index = 3;
 
 	Text text;
@@ -20,7 +20,7 @@ public class SelectScore : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		//GameManager.DoStuff()
+		GameManager.targetScore = int.TryParse(choices[index])
 	}
 
 
