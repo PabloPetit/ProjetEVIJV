@@ -114,6 +114,7 @@ public class Health : MonoBehaviour
 	public void SendPanelXpInfo ()
 	{
 		EventName xpEvent = new EventName (XpBar.XP_BAR_CHANNEL);
+
 		EventManager.TriggerAction (xpEvent, player.experience.GetXpInfo ());
 	}
 
@@ -121,9 +122,17 @@ public class Health : MonoBehaviour
 	{
 		EventName killEvent = new EventName (Player.KILL_COUNT_CHANNEL, lastShooter.id);
 		EventManager.TriggerAction (killEvent, new object[]{ player });
-
-
 	}
+
+	public virtual void SendToKillLog ()
+	{
+		EventName killLogEvent = new EventName (KillLog.KILL_LOG_CHANNEL);
+		// create string
+
+
+		EventManager.TriggerAction (killLogEvent, new object[]{ player, lastShooter,  });
+	}
+
 
 	public void ReceiveLife (object[] param)
 	{
