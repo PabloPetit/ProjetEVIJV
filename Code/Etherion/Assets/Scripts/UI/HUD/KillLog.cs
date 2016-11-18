@@ -25,8 +25,20 @@ public class KillLog : MonoBehaviour
 	{
 		text = GetComponentInChildren<Text> ();
 		queue = new LimitedQueue<string> (SizeQueue);
+
 	}
-	
+
+
+	void OnEnable ()
+	{
+		killLogEvent = new EventName (KILL_LOG_CHANNEL);
+		EventManager.StartListening (killLogEvent, new System.Action<object[]> (Set));
+	}
+
+	void OnDisable ()
+	{
+		EventManager.StopListening (KillLog);
+	}
 	// Update is called once per frame
 	void Update ()
 	{

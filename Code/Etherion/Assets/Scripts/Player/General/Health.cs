@@ -23,6 +23,9 @@ public class Health : MonoBehaviour
 	public Vector3 lastShooterPosition;
 	// Position of the shooter when this player was hit
 
+
+
+
 	// Use this for initialization
 	public void Start ()
 	{
@@ -128,9 +131,29 @@ public class Health : MonoBehaviour
 	{
 		EventName killLogEvent = new EventName (KillLog.KILL_LOG_CHANNEL);
 		// create string
+		string color1; 
+		string color2; 
+		string finalstr;
 
+		//person killed:
+		if (player.side > 0) { // player
+			color1="#0000ffff"; 
+		}
+		else {  // creature
+			color1="<color=#000000ff>";
+		}
 
-		EventManager.TriggerAction (killLogEvent, new object[]{ player, lastShooter,  });
+		//killer: 
+		if (lastShooter.side > 0) { // player
+			color2="#0000ffff"; 
+		}
+		else {  // creature 
+			color2="<color=#000000ff>";
+		}
+
+		finalstr = color1 + player.name + "</color> killed " + color2 + lastShooter.name + "</color>";
+
+		EventManager.TriggerAction (killLogEvent, new object[]{ finalstr });
 	}
 
 
