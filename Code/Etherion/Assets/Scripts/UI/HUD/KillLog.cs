@@ -3,7 +3,8 @@ using System.Collections;
 using UnityEngine.UI;
 
 
-public class KillLog : MonoBehaviour {
+public class KillLog : MonoBehaviour
+{
 
 
 	public static string KILL_LOG_CHANNEL = "killLog";
@@ -12,21 +13,23 @@ public class KillLog : MonoBehaviour {
 
 	Text text;
 
-	private float timeTillFade = 4.0f ;
+	private float timeTillFade = 4.0f;
 
 	private int SizeQueue = 6;
 
-	private LimitedQueue<string> Queue = new LimitedQueue<string>(SizeQueue);
+	private LimitedQueue<string> queue;
 
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		text = GetComponentInChildren<Text> ();
-	
+		queue = new LimitedQueue<string> (SizeQueue);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 	
 	}
 }
