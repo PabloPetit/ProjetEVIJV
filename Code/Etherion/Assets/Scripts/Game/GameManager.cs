@@ -100,6 +100,19 @@ public class GameManager : MonoBehaviour
 	}
 
 
+	void SendScore ()
+	{	EventName scoreEvent = new EventName ();
+		int[] scores = new int[teams.Count];
+		for (int i = 0; i < teamNumber; i++) {
+			scores [i] = teams [i].score;
+		}
+
+		EventManager.TriggerAction (scoreEvent, new object[]{ scores[0],scores[1] });
+	}
+
+
+
+
 	void GenerateTeams ()
 	{
 		teams = new List<Team> ();
