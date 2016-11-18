@@ -20,7 +20,11 @@ public class SelectScore : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		GameManager.targetScore = int.TryParse(choices[index])
+		if (index == choices.Length - 1) {
+			GameManager.scoreCondition = false;
+		} else {
+			GameManager.targetScore = int.Parse (choices [index]);
+		}
 	}
 
 

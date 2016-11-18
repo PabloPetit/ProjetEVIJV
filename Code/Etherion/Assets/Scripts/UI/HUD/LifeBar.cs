@@ -35,7 +35,7 @@ public class LifeBar : MonoBehaviour
 		float life = (float)param [0];
 		float maxLife = (float)param [1];
 		float percent = life / maxLife;
-		text.text = "" + life + "/" + maxLife;
+		text.text = "" + (int)life + "/" + (int)maxLife;
 		slider.value = slider.maxValue * percent;
 		if (percent < .25f) {
 			image.color = Color.red;

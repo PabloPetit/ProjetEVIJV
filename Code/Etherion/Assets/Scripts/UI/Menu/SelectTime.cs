@@ -20,7 +20,7 @@ public class SelectTime : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		GameManager.maxTime = int.TryParse (choices [index]);
+		GameManager.maxTime = int.Parse (choices [index]);
 	}
 
 

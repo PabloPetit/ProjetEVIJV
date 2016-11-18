@@ -31,6 +31,13 @@ public class FlareShot : BalisticShot
 		return pro;
 	}
 
+	protected override void FixedUpdate ()
+	{
+		if (!descent) {
+			base.FixedUpdate ();
+		}
+	}
+
 
 	protected override void StartDescent ()
 	{
@@ -38,6 +45,10 @@ public class FlareShot : BalisticShot
 		flareLight.flare = flare;
 		flareLight.intensity = intensity;
 		flareLight.range = lightRange;
+		gameObject.AddComponent<Rigidbody> ();
+		Rigidbody rb = GetComponent<Rigidbody> ();
+		rb.useGravity = true;
+		rb.isKinematic = false;
 	}
 
 }
