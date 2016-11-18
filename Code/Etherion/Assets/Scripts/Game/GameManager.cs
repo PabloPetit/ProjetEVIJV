@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour
 {
 
-	public static string GAME_MANAGER_CHANNEL;
+	public static string GAME_MANAGER_CHANNEL = "gameManager";
 
 	public static int UPDATE_SCORE = 1;
 	public static int UPDATE_KILLS = 2;
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
 		InitTeamSlots ();
 		GenerateTeams ();
-		InitializePlayers ();
+		//InitializePlayers ();
 		InitializeArtefacts ();
 
 	}
@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 	void UpdateState (object[] param)
 	{
 		int perf = (int)param [0];
-		int team = (int)param [0];
+		int team = (int)param [1];
 
 		if (perf == UPDATE_SCORE) {
 			teams [team].score += 1;
@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviour
 
 	void SendState ()
 	{
-		return;
 		int[] scores = new int[teams.Count];
 		for (int i = 0; i < teamNumber; i++) {
 			scores [i] = teams [i].score;

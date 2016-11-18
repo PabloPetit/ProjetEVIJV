@@ -97,15 +97,21 @@ public class Health : MonoBehaviour
 			life = 0f;
 			dead = true;
 			Death ();
-			SendXp (lastShooter.id);
-
+			SendXp ();
+			SendKillInfo ();
 		}
 	}
 
-	public virtual void SendXp (int id)
+	public virtual void SendXp ()
 	{
-		EventName xpEvent = new EventName (Player.XP_CHANNEL, id);
+		EventName xpEvent = new EventName (Player.XP_CHANNEL, lastShooter.id);
 		EventManager.TriggerAction (xpEvent, new object[]{ player.experience.RetrievedXp () });
+	}
+
+	public virtual void SendKillInfo ()
+	{
+		EventName xpEvent = new EventName (Player.KILL_COUNT_CHANNEL, lastShooter.id);
+		EventManager.TriggerAction (xpEvent, new object[]{ player });
 	}
 
 	public void ReceiveLife (object[] param)
