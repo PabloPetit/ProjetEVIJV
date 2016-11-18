@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
 		InitTeamSlots ();
 		GenerateTeams ();
-		//InitializePlayers ();
+		InitializePlayers ();
 		InitializeArtefacts ();
 
 	}
@@ -57,7 +57,6 @@ public class GameManager : MonoBehaviour
 	{
 		timer += Time.deltaTime;
 		CheckGameOver ();
-		SendState ();
 	}
 
 	void CheckGameOver ()
@@ -79,6 +78,7 @@ public class GameManager : MonoBehaviour
 
 		if (perf == UPDATE_SCORE) {
 			teams [team].score += 1;
+			SendScore ();
 		} else if (perf == UPDATE_KILLS) {
 			teams [team].kills += 1;
 		}
@@ -89,27 +89,17 @@ public class GameManager : MonoBehaviour
 		EventManager.StopListening (gameManagerEvent);
 	}
 
-	void SendState ()
-	{
-		int[] scores = new int[teams.Count];
-		for (int i = 0; i < teamNumber; i++) {
-			scores [i] = teams [i].score;
-		}
-
-		EventManager.TriggerAction (gameState, new object[]{ scores, targetScore, maxTime * 60 - timer });
-	}
-
 
 	void SendScore ()
-	{	EventName scoreEvent = new EventName ();
+	{	
+		EventName scoreEvent = new EventName (Score.SCORE_CHANNEL);
 		int[] scores = new int[teams.Count];
 		for (int i = 0; i < teamNumber; i++) {
 			scores [i] = teams [i].score;
 		}
 
-		EventManager.TriggerAction (scoreEvent, new object[]{ scores[0],scores[1] });
+		EventManager.TriggerAction (scoreEvent, new object[]{ scores });
 	}
-
 
 
 

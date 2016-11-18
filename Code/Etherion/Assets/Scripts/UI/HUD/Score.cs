@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Score : MonoBehaviour {
+public class Score : MonoBehaviour
+{
 
 	public static string SCORE_CHANNEL = "score";
 
@@ -12,23 +13,25 @@ public class Score : MonoBehaviour {
 	int score1;
 	int score2;
 
-	int MaxScore = GameManager.targetScore;
+	int maxScore;
 
 
 	void Start ()
 	{
+		maxScore = GameManager.targetScore;
 		text = GetComponentInChildren<Text> ();
-		text.text = score1+ " - "+score2+" ["+MaxScore+"]";
+		text.text = score1 + " - " + score2 + " [" + maxScore + "]";
 	}
 
 
-	void Set (object[] param = null)
+	void Set (object[] param)
 	{
-		int score1= param [0];
-		int score2= param [1];
-		text.text = score1+ " - "+score2+" ["+MaxScore+"]";	
+		int[] scores = (int[])param [0];
+		int score1 = scores [0];
+		int score2 = scores [1];
+		text.text = score1 + " - " + score2 + " [ " + maxScore + " ]";	
 	}
-		
+
 	void OnEnable ()
 	{
 		scoreEvent = new EventName (SCORE_CHANNEL);

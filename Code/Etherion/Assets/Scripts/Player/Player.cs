@@ -78,13 +78,16 @@ public class Player : MonoBehaviour
 
 	public void KillCount (object[] param)
 	{
+
 		Player p = (Player)param [0];
 
 		if (p.isCreature) {
 			creatureKillCount++;
 		} else {
 			playerKillCount++;
-			team.kills++;
+			if (team != null) {
+				team.kills++;
+			}
 		}
 
 		//Display victim Name

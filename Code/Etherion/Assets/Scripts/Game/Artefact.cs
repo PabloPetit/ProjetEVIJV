@@ -39,12 +39,10 @@ public class Artefact : MonoBehaviour
 	void OnTriggerEnter (Collider other)
 	{
 
-		Debug.Log (other.gameObject.name);
-
 		ArtefactReceptor receptor = other.GetComponent<ArtefactReceptor> ();
 
 		if (receptor != null && transporter != null && (receptor.team.side == transporter.team.side)) {
-			SendScore ();
+			InformScore ();
 			BackToBase ();
 		}
 
@@ -66,7 +64,7 @@ public class Artefact : MonoBehaviour
 			
 	}
 
-	void SendScore ()
+	void InformScore ()
 	{
 		EventManager.TriggerAction (gameManagerEvent, new object[]{ GameManager.UPDATE_SCORE, transporter.team.side });
 	}
