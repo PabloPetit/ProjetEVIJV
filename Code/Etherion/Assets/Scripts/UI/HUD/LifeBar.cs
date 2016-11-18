@@ -15,22 +15,32 @@ public class LifeBar : MonoBehaviour
 
 	private GameObject fillArea;
 
+	Color initialColor;
+	Text text;
+
+	// ADD text
+
 	void Start ()
 	{
 		slider = GetComponent<Slider> ();
+		text = GetComponentInChildren<Text> ();
 		image = GetComponentInChildren<Image> ();
 		fillArea = transform.Find ("Fill Area").gameObject;
+		initialColor = image.color;
 	}
 
 
 	void Set (object[] param = null)
 	{
-		float percent = (float)param [0];
+		float life = (float)param [0];
+		float maxLife = (float)param [1];
+		float percent = life / maxLife;
+		text.text = "" + life + "/" + maxLife;
 		slider.value = slider.maxValue * percent;
 		if (percent < .25f) {
 			image.color = Color.red;
 		} else {
-			image.color = Color.green;
+			image.color = initialColor;
 		}
 		if (percent <= 0f) {
 			fillArea.SetActive (false);

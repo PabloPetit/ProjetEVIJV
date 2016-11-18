@@ -12,6 +12,13 @@ public class Experience : MonoBehaviour
 	public float totalXp;
 	public int level;
 
+	public Player player;
+
+	void Start ()
+	{
+		player = GetComponent<Player> ();
+	}
+
 
 	public void ReceiveXp (object[] param)
 	{
@@ -20,13 +27,13 @@ public class Experience : MonoBehaviour
 		float xp = (float)param [0];
 		totalXp += xp;
 
-		if (totalXp > NextLevelStep ()) {
+		if (totalXp > NextLevelStep (level)) {
 			level += Mathf.Min (level + 1, MAX_LEVEL);
 		}
 		//TODO : EventManager.Trigger(xpPanel, new Object[]{xp,level});
 	}
 
-	public float NextLevelStep ()
+	public float NextLevelStep (int level)
 	{
 		return 100 + Mathf.Pow (1 + level, 3);
 	}
@@ -34,6 +41,11 @@ public class Experience : MonoBehaviour
 	public float RetrievedXp ()
 	{
 		return level + totalXp / 100;
+	}
+
+	public object[] GetXpInfo ()
+	{
+		return null;
 	}
 
 	public void OpenChannel (int id)

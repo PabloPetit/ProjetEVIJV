@@ -49,7 +49,7 @@ public class Health : MonoBehaviour
 	
 		if (player.isHuman) {
 			EventManager.TriggerAction (bloodCanvas, new object[]{ (life / maxLife) });
-			EventManager.TriggerAction (lifeBar, new object[]{ (life / maxLife) });
+			EventManager.TriggerAction (lifeBar, new object[]{ life, maxLife });
 		}
 
 	}
@@ -105,13 +105,15 @@ public class Health : MonoBehaviour
 	public virtual void SendXp ()
 	{
 		EventName xpEvent = new EventName (Player.XP_CHANNEL, lastShooter.id);
-		EventManager.TriggerAction (xpEvent, new object[]{ player.experience.RetrievedXp () });
+		EventManager.TriggerAction (xpEvent, player.experience.GetXpInfo ());
 	}
 
 	public virtual void SendKillInfo ()
 	{
-		EventName xpEvent = new EventName (Player.KILL_COUNT_CHANNEL, lastShooter.id);
-		EventManager.TriggerAction (xpEvent, new object[]{ player });
+		EventName killEvent = new EventName (Player.KILL_COUNT_CHANNEL, lastShooter.id);
+		EventManager.TriggerAction (killEvent, new object[]{ player });
+
+
 	}
 
 	public void ReceiveLife (object[] param)
