@@ -8,30 +8,37 @@ public class XpBar : MonoBehaviour
 	public static string XP_BAR_CHANNEL = "XPBar";
 
 	Slider slider;
+	Text text;
 
 	private EventName XPBarEvent;
 
-	private Image image;
-
-	private GameObject fillArea;
-
-	Text text;
-
+	float timer = 0f;
 
 	// Use this for initialization
 	void Start ()
 	{
 		slider = GetComponent<Slider> ();
 		text = GetComponentInChildren<Text> ();
-		image = GetComponentInChildren<Image> ();
-		fillArea = transform.Find ("Fill Area").gameObject;
-	
 	}
 
-	void Set (object[] param = null)
+
+	void Update ()
+	{
+		timer += Time.deltaTime;
+	}
+
+	void Set (object[] param)
 	{
 		
+		int level = (int)param [0];
+		float totalXp = (float)param [1];
+		float pastStep = (float)param [2];
+		float nextStep = (float)param [3];
 
+		text.text = "Level " + level;
+
+		float val = (totalXp - pastStep) / (nextStep - pastStep);
+		slider.value = val;
 	}
 
 	void OnEnable ()
@@ -44,7 +51,6 @@ public class XpBar : MonoBehaviour
 	{
 		EventManager.StopListening (XPBarEvent);
 	}
-	
-	// Update is called once per frame
+
 
 }
