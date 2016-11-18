@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 
 	public int id;
 	public int side;
-	public string name;
+	public string name = "DEFAULT";
 
 	public Health health;
 	public Experience experience;

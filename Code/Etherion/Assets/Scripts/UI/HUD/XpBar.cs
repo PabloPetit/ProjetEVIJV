@@ -17,7 +17,7 @@ public class XpBar : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-		slider = GetComponent<Slider> ();
+		slider = GetComponentInChildren<Slider> ();
 		text = GetComponentInChildren<Text> ();
 	}
 

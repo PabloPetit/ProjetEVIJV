@@ -102,9 +102,7 @@ public class Health : MonoBehaviour
 			Death ();
 			SendXp ();
 			SendKillInfo ();
-			if (player.isHuman) {
-				SendPanelXpInfo ();
-			}
+
 		}
 	}
 
@@ -112,13 +110,6 @@ public class Health : MonoBehaviour
 	{
 		EventName xpEvent = new EventName (Player.XP_CHANNEL, lastShooter.id);
 		EventManager.TriggerAction (xpEvent, new object[]{ player.experience.RetrievedXp () });
-	}
-
-	public void SendPanelXpInfo ()
-	{
-		EventName xpEvent = new EventName (XpBar.XP_BAR_CHANNEL);
-
-		EventManager.TriggerAction (xpEvent, player.experience.GetXpInfo ());
 	}
 
 	public virtual void SendKillInfo ()

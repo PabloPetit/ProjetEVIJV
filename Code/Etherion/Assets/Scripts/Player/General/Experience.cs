@@ -13,24 +13,37 @@ public class Experience : MonoBehaviour
 	public int level;
 
 	public Player player;
+	EventName xpEvent;
 
 	void Start ()
 	{
 		player = GetComponent<Player> ();
+		xpEvent = new EventName (XpBar.XP_BAR_CHANNEL, player.id);
+		level = 1;
+		totalXp = 0;
+		EventManager.TriggerAction (xpEvent, GetXpInfo ());
 	}
 
 
 	public void ReceiveXp (object[] param)
 	{
 
-		//TODO : might need to check if dead
+		if (player.health.dead) {
+			return;
+		}
 		float xp = (float)param [0];
+		Debug.Log (xp);
+
+
 		totalXp += xp;
 
 		if (totalXp > NextLevelStep (level)) {
 			level += Mathf.Min (level + 1, MAX_LEVEL);
 		}
-		//TODO : EventManager.Trigger(xpPanel, new Object[]{xp,level});
+
+		if (player.isHuman) {
+			EventManager.TriggerAction (xpEvent, GetXpInfo ());
+		}
 	}
 
 	public float NextLevelStep (int level)
@@ -38,14 +51,14 @@ public class Experience : MonoBehaviour
 		return 100 + Mathf.Pow (1 + level, 3);
 	}
 
-	public float RetrievedXp ()
+	public virtual float RetrievedXp ()
 	{
-		return level + totalXp / 100;
+		return level * 100 + totalXp / 10;
 	}
 
 	public object[] GetXpInfo ()
 	{
-		return null;
+		return new object[]{ level, totalXp, NextLevelStep (level - 1), NextLevelStep (level) };
 	}
 
 	public void OpenChannel (int id)
