@@ -67,7 +67,7 @@ public class Experience : MonoBehaviour
 
 	public object[] GetXpInfo ()
 	{
-		return new object[]{ level, totalXp, NextLevelStep (level - 1), NextLevelStep (level) };
+		return new object[]{ level, totalXp, NextLevelStep (level), NextLevelStep (level + 1) };
 	}
 
 	public void OpenChannel (int id)
