@@ -8,10 +8,14 @@ public class FlareShot : BalisticShot
 	protected Light flareLight;
 	protected Flare flare;
 
+	public float maxDownSpeed = 2f;
+
+	Rigidbody rb;
 
 	public void Start ()
 	{
 		base.Start ();
+		rb = GetComponent<Rigidbody> ();
 		flareLight = GetComponent<Light> ();
 		flare = flareLight.flare;
 		flareLight.flare = null;
@@ -33,8 +37,14 @@ public class FlareShot : BalisticShot
 
 	protected override void FixedUpdate ()
 	{
+		Debug.Log (rb.velocity.y);
+
 		if (!descent) {
 			base.FixedUpdate ();
+		} else {
+			
+
+			rb.velocity = new Vector3 (rb.velocity.x, Mathf.Max (rb.velocity.y, -maxDownSpeed), rb.velocity.z);
 		}
 	}
 
@@ -46,7 +56,7 @@ public class FlareShot : BalisticShot
 		flareLight.intensity = intensity;
 		flareLight.range = lightRange;
 		gameObject.AddComponent<Rigidbody> ();
-		Rigidbody rb = GetComponent<Rigidbody> ();
+
 		rb.useGravity = true;
 		rb.isKinematic = false;
 	}
