@@ -4,7 +4,9 @@ using System.Collections;
 public class Experience : MonoBehaviour
 {
 
-	public static int MAX_LEVEL = 10;
+	public static int MAX_LEVEL = 20;
+
+	public float[] levelSteps;
 
 	EventName xpChannel;
 	EventName xpPanel;
@@ -21,9 +23,17 @@ public class Experience : MonoBehaviour
 	{
 		player = GetComponent<Player> ();
 		xpEvent = new EventName (XpBar.XP_BAR_CHANNEL, player.id);
+		InitLevelSteps ();
+		totalXp = levelSteps [0] + 1f;
 		level = 1;
-		totalXp = 0;
+	}
 
+	void InitLevelSteps ()
+	{
+		levelSteps = new float[MAX_LEVEL + 1];
+		for (int i = 0; i <= MAX_LEVEL; i++) {
+			levelSteps [i] = NextLevelStep (i);
+		}
 	}
 
 	void Update ()
@@ -46,8 +56,9 @@ public class Experience : MonoBehaviour
 
 		totalXp += xp;
 
-		if (totalXp > NextLevelStep (level)) {
-			level += Mathf.Min (level + 1, MAX_LEVEL);
+		level = 0;
+		while (level < MAX_LEVEL && totalXp > levelSteps [level]) {
+			level += 1;
 		}
 
 		if (player.isHuman) {
@@ -57,7 +68,7 @@ public class Experience : MonoBehaviour
 
 	public float NextLevelStep (int level)
 	{
-		return 100 + Mathf.Pow (1 + level, 3);
+		return 100 + Mathf.Pow (3 + level, 3);
 	}
 
 	public virtual float RetrievedXp ()
@@ -67,7 +78,7 @@ public class Experience : MonoBehaviour
 
 	public object[] GetXpInfo ()
 	{
-		return new object[]{ level, totalXp, NextLevelStep (level), NextLevelStep (level + 1) };
+		return new object[]{ level, totalXp, levelSteps [level - 1], levelSteps [level] };
 	}
 
 	public void OpenChannel (int id)

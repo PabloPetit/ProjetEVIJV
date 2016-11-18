@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+using System.Collections;
 
-
-public class KillLog : MonoBehaviour
+public class PlayerLog : MonoBehaviour
 {
 
-	public static string KILL_LOG_CHANNEL = "killLog";
+	public static string PLAYER_LOG_CHANNEL = "playerLog";
 
-	private EventName killLogEvent;
+	private EventName playLogEvent;
 
 	Text text;
 	Image image;
 
-	private float timeTillFade = 4.0f;
+	private float timeTillFade = 3.0f;
 
-	private int SizeQueue = 6;
+	float timer;
+
+	private int SizeQueue = 9;
 
 	private LimitedQueue<string> queue;
 
@@ -31,11 +32,16 @@ public class KillLog : MonoBehaviour
 		textColor = text.color;
 		queue = new LimitedQueue<string> (SizeQueue);
 		text.text = "";
-	
+
 	}
 
 	void Update ()
 	{
+		if (queue.Count > 0) {
+			timer += Time.deltaTime;
+		}
+
+
 		Color c = text.color;
 		c.a -= (textColor.a / timeTillFade) * Time.deltaTime;
 		c.a = Mathf.Max (c.a, 0f);
@@ -46,35 +52,43 @@ public class KillLog : MonoBehaviour
 		c2.a = Mathf.Max (c2.a, 0f);
 		image.color = c2;
 
+		if (timer > timeTillFade * 2f) {
+			queue.Dequeue ();
+			timer = 0f;
+		}
+
+		Print ();
+
 	}
 
 
 	void OnEnable ()
 	{
-		killLogEvent = new EventName (KILL_LOG_CHANNEL);
-		EventManager.StartListening (killLogEvent, new System.Action<object[]> (Maj));
+		playLogEvent = new EventName (PLAYER_LOG_CHANNEL);
+		EventManager.StartListening (playLogEvent, new System.Action<object[]> (Maj));
 	}
 
 	void Maj (object[] param)
 	{
+
 		string txt = (string)param [0];
 		queue.Enqueue (txt);
-
-		string tmp = "";
-
-		foreach (string str in queue) {
-			tmp += str + "\n";
-		}
-
-		text.text = tmp;
-
 		text.color = textColor;
 		image.color = panelColor;
 
 	}
 
+	void Print ()
+	{
+		string tmp = "";
+		foreach (string str in queue) {
+			tmp += str + "\n";
+		}
+		text.text = tmp;
+	}
+
 	void OnDisable ()
 	{
-		EventManager.StopListening (killLogEvent);
+		EventManager.StopListening (playLogEvent);
 	}
 }

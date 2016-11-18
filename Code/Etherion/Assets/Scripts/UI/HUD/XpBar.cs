@@ -38,6 +38,7 @@ public class XpBar : MonoBehaviour
 		text.text = "Level " + level;
 
 		float val = (totalXp - pastStep) / (nextStep - pastStep);
+		val = Mathf.Max (val, 0f);
 		Debug.Log (val + " Level : " + level + " total : " + totalXp + " past : " + pastStep + " next : " + nextStep);
 		slider.value = val;
 	}
