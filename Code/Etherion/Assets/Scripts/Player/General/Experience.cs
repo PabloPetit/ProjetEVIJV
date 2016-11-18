@@ -15,15 +15,24 @@ public class Experience : MonoBehaviour
 	public Player player;
 	EventName xpEvent;
 
+	bool init = false;
+
 	void Start ()
 	{
 		player = GetComponent<Player> ();
 		xpEvent = new EventName (XpBar.XP_BAR_CHANNEL, player.id);
 		level = 1;
 		totalXp = 0;
-		EventManager.TriggerAction (xpEvent, GetXpInfo ());
+
 	}
 
+	void Update ()
+	{
+		if (player.isHuman && !init) {
+			EventManager.TriggerAction (xpEvent, GetXpInfo ());
+			init = true;
+		}
+	}
 
 	public void ReceiveXp (object[] param)
 	{
@@ -32,7 +41,7 @@ public class Experience : MonoBehaviour
 			return;
 		}
 		float xp = (float)param [0];
-		Debug.Log (xp);
+		//Debug.Log (xp);
 
 
 		totalXp += xp;
