@@ -148,10 +148,10 @@ public class TripodController : MonoBehaviour
 		}
 
 		if (health.timer > SEARCH_SHOOTER_TIME) {
-			health.lastShooter = null;
+			//health.lastShooter = null;
 		}
 
-		if (health.lastShooter != null && !health.lastShooter.health.dead && health.timer < SEARCH_SHOOTER_TIME) {
+		if (health.lastShooter != null && !health.lastShooter.health.dead /*&& health.timer < SEARCH_SHOOTER_TIME*/) {
 			navDestination = health.lastShooterPosition;
 			nav.SetDestination (navDestination);
 		} else if (nav.remainingDistance < 5f) {

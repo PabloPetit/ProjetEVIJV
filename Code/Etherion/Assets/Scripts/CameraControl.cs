@@ -5,8 +5,11 @@ using UnityStandardAssets.CrossPlatformInput;
 public class CameraControl : MonoBehaviour
 {
 
-
 	public float speed;
+
+	public float accel;
+
+	public float walkSpeed;
 	public float runSpeed;
 
 	public float XSensitivity = 2f;
@@ -25,69 +28,88 @@ public class CameraControl : MonoBehaviour
 	public bool lockCursor = true;
 
 
-	void Start(){
+	void Start ()
+	{
 
 		cam = GetComponentInChildren<Camera> ();
-		Init (gameObject.transform,cam.transform);
+		Init (gameObject.transform, cam.transform);
+
+		foreach (LightShafts l in FindObjectsOfType<LightShafts> ()) {
+			l.m_Cameras = new Camera[]{ cam };
+		}
 
 	}
 
-	public void Init(Transform character, Transform camera)
+	public void Init (Transform character, Transform camera)
 	{
 		m_CharacterTargetRot = character.localRotation;
 		m_CameraTargetRot = camera.localRotation;
 	}
 
-	void Update(){
-		LookRotation(gameObject.transform,cam.transform);
+	void Update ()
+	{
+		LookRotation (gameObject.transform, cam.transform);
 
 		Vector3 dir = Vector3.zero;
+		bool p = false;
 
-		if (Input.GetKey (KeyCode.Z)){
+		if (Input.GetKey (KeyCode.Z)) {
 			dir += cam.transform.forward;
+			p = true;
 		}
-		if (Input.GetKey (KeyCode.S)){
+		if (Input.GetKey (KeyCode.S)) {
 			dir -= cam.transform.forward;
+			p = true;
 		}
-		if (Input.GetKey (KeyCode.Q)){
-			dir += cam.transform.right;
-		}
-		if (Input.GetKey (KeyCode.D)){
+		if (Input.GetKey (KeyCode.Q)) {
 			dir -= cam.transform.right;
+			p = true;
+		}
+		if (Input.GetKey (KeyCode.D)) {
+			dir += cam.transform.right;
+			p = true;
 		}
 
+		if (p) {
+			if (Input.GetKey (KeyCode.LeftShift)) {
+				speed = Mathf.Min (speed + Time.deltaTime * accel, runSpeed);
+			} else if (dir.magnitude > .1) {
+				speed = Mathf.Max (speed - Time.deltaTime * accel, walkSpeed);
+			} 
+		} else {
+			speed = Mathf.Max (speed - Time.deltaTime * accel, 0f);
+			dir = cam.transform.forward;
+		}
+			
 		gameObject.transform.position += dir * speed * Time.deltaTime;
 
 	}
 
-	public void LookRotation(Transform character, Transform camera)
+	public void LookRotation (Transform character, Transform camera)
 	{
-		float yRot = CrossPlatformInputManager.GetAxis("Mouse X") * XSensitivity;
-		float xRot = CrossPlatformInputManager.GetAxis("Mouse Y") * YSensitivity;
+		float yRot = CrossPlatformInputManager.GetAxis ("Mouse X") * XSensitivity;
+		float xRot = CrossPlatformInputManager.GetAxis ("Mouse Y") * YSensitivity;
 
 		m_CharacterTargetRot *= Quaternion.Euler (0f, yRot, 0f);
 		m_CameraTargetRot *= Quaternion.Euler (-xRot, 0f, 0f);
 
-		if(clampVerticalRotation)
+		if (clampVerticalRotation)
 			m_CameraTargetRot = ClampRotationAroundXAxis (m_CameraTargetRot);
 
-		if(smooth)
-		{
+		if (smooth) {
 			character.localRotation = Quaternion.Slerp (character.localRotation, m_CharacterTargetRot,
 				smoothTime * Time.deltaTime);
 			camera.localRotation = Quaternion.Slerp (camera.localRotation, m_CameraTargetRot,
 				smoothTime * Time.deltaTime);
-		}
-		else
-		{
+		} else {
 			character.localRotation = m_CharacterTargetRot;
 			camera.localRotation = m_CameraTargetRot;
 		}
-		UpdateCursorLock();
+		UpdateCursorLock ();
 			
 	}
 
-	Quaternion ClampRotationAroundXAxis(Quaternion q)
+	Quaternion ClampRotationAroundXAxis (Quaternion q)
 	{
 		q.x /= q.w;
 		q.y /= q.w;
@@ -102,41 +124,35 @@ public class CameraControl : MonoBehaviour
 
 		return q;
 	}
-	public void SetCursorLock(bool value)
+
+	public void SetCursorLock (bool value)
 	{
 		lockCursor = value;
-		if(!lockCursor)
-		{//we force unlock the cursor if the user disable the cursor locking helper
+		if (!lockCursor) {//we force unlock the cursor if the user disable the cursor locking helper
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 		}
 	}
 
-	public void UpdateCursorLock()
+	public void UpdateCursorLock ()
 	{
 		//if the user set "lockCursor" we check & properly lock the cursos
 		if (lockCursor)
-			InternalLockUpdate();
+			InternalLockUpdate ();
 	}
 
-	private void InternalLockUpdate()
+	private void InternalLockUpdate ()
 	{
-		if(Input.GetKeyUp(KeyCode.Escape))
-		{
+		if (Input.GetKeyUp (KeyCode.Escape)) {
 			m_cursorIsLocked = false;
-		}
-		else if(Input.GetMouseButtonUp(0))
-		{
+		} else if (Input.GetMouseButtonUp (0)) {
 			m_cursorIsLocked = true;
 		}
 
-		if (m_cursorIsLocked)
-		{
+		if (m_cursorIsLocked) {
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
-		}
-		else if (!m_cursorIsLocked)
-		{
+		} else if (!m_cursorIsLocked) {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 		}

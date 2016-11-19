@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 	public int iaLevel = 1;
 
 	public static int teamNumber = 2;
-	public static int playerPerTeam = 5;
+	public static int playerPerTeam = 1;
 
 	public static int targetScore = 2;
 	public static int targetKills = 10;
@@ -155,6 +155,10 @@ public class GameManager : MonoBehaviour
 	void InitTeamSlots ()
 	{
 		teamSlots = (TeamSlot[])FindObjectsOfType (typeof(TeamSlot));
+		TeamSlot a = teamSlots [0];
+		TeamSlot b = teamSlots [1];
+		teamSlots [0] = b;
+		teamSlots [1] = a;
 	}
 
 	public static GameManager instance {
