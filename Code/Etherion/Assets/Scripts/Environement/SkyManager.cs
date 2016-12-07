@@ -18,16 +18,20 @@ public class SkyManager : MonoBehaviour
 	public int minutes;
 	public int seconds;
 
-	public List<EventName> nightCallBack;
-	public List<EventName> dayCallBack;
+	public List<object[]> nightCallBack;
+	public List<object[]> dayCallBack;
 
 	public bool day;
 
-	public void Awake ()
+	void Awake ()
 	{
-		nightCallBack = new List<EventName> ();
-		dayCallBack = new List<EventName> ();
+		Debug.Log ("Sky Manager Awaking");
+		nightCallBack = new List<object[]> ();
+		dayCallBack = new List<object[]> ();
+		SetHour ();
 		day = (time > MORNING && time < NIGHT);
+
+		Debug.Log (" Day : "+day);
 	}
 
 	void FixedUpdate ()
@@ -52,27 +56,31 @@ public class SkyManager : MonoBehaviour
 		seconds = (int)((time % 1f) * .6f);
 	}
 
-	public void AddNightCallBack (EventName eventName)
+	public void AddNightCallBack (object[] param)
 	{
-		nightCallBack.Add (eventName);
+		nightCallBack.Add (param);
 	}
 
-	public void AddDayCallBack (EventName eventName)
+	public void AddDayCallBack (object[] param)
 	{
-		dayCallBack.Add (eventName);
+		dayCallBack.Add (param);
 	}
 
 	void ProcessNightTransition ()
 	{
-		foreach (EventName ev in nightCallBack) {
-			EventManager.TriggerAction (ev, null);
+		Debug.Log ("NightTransition");
+		foreach (object[] ev in nightCallBack) {
+			Debug.Log (((EventName)ev[0]).name);
+			EventManager.TriggerAction ((EventName)ev[0], (object[])ev[1]);
 		}
 	}
 
 	void ProcessDayTransition ()
 	{
-		foreach (EventName ev in dayCallBack) {
-			EventManager.TriggerAction (ev, null);
+		Debug.Log ("DayTransition");
+		foreach (object[] ev in nightCallBack) {
+			Debug.Log (((EventName)ev[0]).name);
+			EventManager.TriggerAction ((EventName)ev[0],  (object[])ev[1]);
 		}
 	}
 		
