@@ -25,13 +25,10 @@ public class SkyManager : MonoBehaviour
 
 	void Awake ()
 	{
-		Debug.Log ("Sky Manager Awaking");
 		nightCallBack = new List<object[]> ();
 		dayCallBack = new List<object[]> ();
 		SetHour ();
 		day = (time > MORNING && time < NIGHT);
-
-		Debug.Log (" Day : "+day);
 	}
 
 	void FixedUpdate ()

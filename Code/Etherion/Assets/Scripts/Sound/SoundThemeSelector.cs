@@ -27,15 +27,17 @@ public class SoundThemeSelector : MonoBehaviour {
 		AddSkyCallBacks ();
 
 		if (skyManager.day){
-			Debug.Log ("DayTime ! --- On SoundSelector");
 			ChangeTheme (new object[]{0});
 		}else{
-			Debug.Log ("NightTime ! --- On SoundSelector");
 			ChangeTheme (new object[]{1});
 		}
 			
 	}
 
+
+	void FixedUpdate(){
+		//Debug.Log ("Now Playing : "+current.clip.name);
+	}
 
 	void AddSkyCallBacks ()
 	{
@@ -59,9 +61,9 @@ public class SoundThemeSelector : MonoBehaviour {
 		
 	void ChangeTheme (object[] param)
 	{
-		int choice = (int)param [0];
+		Debug.Log ("Changing Theme : ");
 
-		//Debug.Log ("Changing Theme : "+choice);
+		int choice = (int)param [0];
 
 		AudioSource next = null;
 
@@ -76,23 +78,21 @@ public class SoundThemeSelector : MonoBehaviour {
 		else if(choice == TRIPOD_DETECTED){
 			next = tripodDetected;
 		}
-		//Debug.Log ("-------");
-		//Debug.Log (current);
-		//Debug.Log (next);
-
 
 		if (current == null){
+			Debug.Log ("current is null");
 			current = next;
-			//Debug.Log (current);
 			current.Play ();
+			Debug.Log ("Current id : "+ current.clip.name);
 			return;
 		}
-
+		Debug.Log ("current is NOT null");
 		float time = current.time;
 		current.Stop ();
 		current = next;
 		current.time = time;
 		current.Play ();
+		Debug.Log ("Current id : "+ current.clip.name);
 
 	}
 
