@@ -6,7 +6,7 @@ public class SelectKill : MonoBehaviour
 {
 
 
-	string[] choices = new string[]{ "1", "10", "15", "20", "inf" };
+	string[] choices = new string[]{ "10", "25", "50", "100", "inf" };
 	int index = 3;
 
 	Text text;
@@ -20,7 +20,13 @@ public class SelectKill : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		//GameManager.DoStuff()
+		if (index = !4) {
+			GameManager.targetKills = int.TryParse (choices [index]);
+			GameManager.killsCondition = true;
+		} else {
+			GameManager.targetKills = 0;
+			GameManager.killsCondition = false;
+		}
 	}
 
 
