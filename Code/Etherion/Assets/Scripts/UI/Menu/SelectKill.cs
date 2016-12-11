@@ -19,14 +19,14 @@ public class SelectKill : MonoBehaviour
 
 	public void Maj ()
 	{
-		text.text = choices [index];
-		if (index = !4) {
+	/*	text.text = choices [index];
+		if (index =! 4) {
 			GameManager.targetKills = int.TryParse (choices [index]);
 			GameManager.killsCondition = true;
 		} else {
 			GameManager.targetKills = 0;
 			GameManager.killsCondition = false;
-		}
+		}*/
 	}
 
 
