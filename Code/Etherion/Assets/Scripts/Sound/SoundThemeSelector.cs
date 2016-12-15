@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SoundThemeSelector : MonoBehaviour {
+public class SoundThemeSelector : MonoBehaviour
+{
 
 	public static string SOUND_THEME_SELECTOR_CHANNEL = "soundThemeSelector";
 
@@ -21,31 +22,34 @@ public class SoundThemeSelector : MonoBehaviour {
 
 	EventName musicTheme;
 
-	void Start(){
+	void Start ()
+	{
 		OpenChannels ();
 		
 		AddSkyCallBacks ();
 
-		if (skyManager.day){
-			ChangeTheme (new object[]{0});
-		}else{
-			ChangeTheme (new object[]{1});
+		if (skyManager.day) {
+			ChangeTheme (new object[]{ 0 });
+		} else {
+			ChangeTheme (new object[]{ 1 });
 		}
 			
 	}
 
 
-	void FixedUpdate(){
+	void FixedUpdate ()
+	{
 		//Debug.Log ("Now Playing : "+current.clip.name);
 	}
 
 	void AddSkyCallBacks ()
 	{
-		skyManager.AddDayCallBack (new object[]{musicTheme,new object[]{0}});
-		skyManager.AddNightCallBack  (new object[]{musicTheme,new object[]{1}});
+		skyManager.AddDayCallBack (new object[]{ musicTheme, new object[]{ 0 } });
+		skyManager.AddNightCallBack (new object[]{ musicTheme, new object[]{ 1 } });
 	}
-		
-	void OnDisabled(){
+
+	void OnDisabled ()
+	{
 		CloseChannels ();
 	}
 
@@ -55,37 +59,42 @@ public class SoundThemeSelector : MonoBehaviour {
 		EventManager.StartListening (musicTheme, ChangeTheme);
 	}
 
-	void CloseChannels(){
+	void CloseChannels ()
+	{
 		EventManager.StopListening (musicTheme);
 	}
-		
+
 	void ChangeTheme (object[] param)
 	{
-		Debug.Log ("Changing Theme : ");
 
 		int choice = (int)param [0];
 
 		AudioSource next = null;
 
-		if (choice == DAY){
+		if (choice == DAY) {
 			next = day;
-		}else if(choice == NIGHT){
+		} else if (choice == NIGHT) {
 			next = night;
-		}
-		else if(choice == TRIPOD_UNDETECTED){
+		} else if (choice == TRIPOD_UNDETECTED) {
 			next = tripodUndetected;
-		}
-		else if(choice == TRIPOD_DETECTED){
+		} else if (choice == TRIPOD_DETECTED) {
 			next = tripodDetected;
 		}
 
-		if (current == null){
-			Debug.Log ("current is null");
-			current = next;
-			current.Play ();
-			Debug.Log ("Current id : "+ current.clip.name);
-			return;
+		//if (current == null){
+		//	Debug.Log ("current is null");
+		if (current != null) {
+			current.Stop ();
 		}
+		current = next;
+		current.Play ();
+		Debug.Log ("New Theme : choice : " + choice + " name : " + current.clip.name + " source : " + current.name);
+		return;
+		//}
+
+
+
+		/*
 		Debug.Log ("current is NOT null");
 		float time = current.time;
 		current.Stop ();
@@ -93,7 +102,7 @@ public class SoundThemeSelector : MonoBehaviour {
 		current.time = time;
 		current.Play ();
 		Debug.Log ("Current id : "+ current.clip.name);
-
+		*/
 	}
 
 }

@@ -67,17 +67,17 @@ public class SkyManager : MonoBehaviour
 	{
 		Debug.Log ("NightTransition");
 		foreach (object[] ev in nightCallBack) {
-			Debug.Log (((EventName)ev[0]).name);
-			EventManager.TriggerAction ((EventName)ev[0], (object[])ev[1]);
+			Debug.Log (((EventName)ev [0]).name);
+			EventManager.TriggerAction ((EventName)ev [0], (object[])ev [1]);
 		}
 	}
 
 	void ProcessDayTransition ()
 	{
 		Debug.Log ("DayTransition");
-		foreach (object[] ev in nightCallBack) {
-			Debug.Log (((EventName)ev[0]).name);
-			EventManager.TriggerAction ((EventName)ev[0],  (object[])ev[1]);
+		foreach (object[] ev in dayCallBack) {
+			Debug.Log (((EventName)ev [0]).name);
+			EventManager.TriggerAction ((EventName)ev [0], (object[])ev [1]);
 		}
 	}
 		

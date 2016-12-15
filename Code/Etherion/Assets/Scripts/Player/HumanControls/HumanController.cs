@@ -59,6 +59,7 @@ public class HumanController : MonoBehaviour
 		animator = GetComponentInChildren<Animator> ();
 		audio = GetComponentInChildren<AudioSource> ();
 
+
 		IsWalking = false;
 		IsRunning = false;
 		IsJumping = false;
@@ -96,7 +97,7 @@ public class HumanController : MonoBehaviour
 		if (footsteps.Length == 0 || IsJumping || !characterController.isGrounded)
 			return;
 		if ((IsWalking && timer > footstepsInterval) || (IsRunning && timer > footstepsInterval / 2f)) {
-			audio.PlayOneShot (footsteps [(int)Random.Range (0, footsteps.Length)]);
+			audio.PlayOneShot (footsteps [(int)Random.Range (0, footsteps.Length)], .3f);
 			timer = 0f;
 		}
 	}
