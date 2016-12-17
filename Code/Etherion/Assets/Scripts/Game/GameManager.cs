@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 	public int iaLevel = 1;
 
 	public static int teamNumber = 2;
-	public static int playerPerTeam = 1;
+	public static int playerPerTeam = 5;
 
 	public static int targetScore = 2;
 	public static int targetKills = 10;
@@ -48,8 +48,9 @@ public class GameManager : MonoBehaviour
 
 		InitTeamSlots ();
 		GenerateTeams ();
-		InitializePlayers ();
 		InitializeArtefacts ();
+		InitializePlayers ();
+
 
 	}
 
@@ -128,6 +129,7 @@ public class GameManager : MonoBehaviour
 					humanSet = true;
 				} else {
 					player = Instantiate (ts.aiPrefab);
+					EnemyController enemiController = player.GetComponent<EnemyController> ();
 				}
 				player.transform.position = ts.GetRandomSpawn ().transform.position;
 				Player p = player.GetComponent<Player> ();
@@ -146,7 +148,7 @@ public class GameManager : MonoBehaviour
 			Artefact art = artefact.GetComponent<Artefact> ();
 			art.team = ts.team;
 			art.spawn = ts.artefactSpawn.transform;
-
+			ts.artefact = art;
 			ArtefactReceptor receptor = ts.receptor.GetComponent<ArtefactReceptor> ();
 			receptor.team = ts.team;
 		}

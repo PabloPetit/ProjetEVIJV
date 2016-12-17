@@ -13,6 +13,8 @@ public class TeamSlot : MonoBehaviour
 	public ArtefactSpawn artefactSpawn;
 	public GameObject receptor;
 
+	public Artefact artefact;
+
 	// Use this for initialization
 	void Awake ()
 	{
