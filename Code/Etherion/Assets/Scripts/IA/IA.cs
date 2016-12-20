@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class IA : MonoBehaviour {
+public class IA : MonoBehaviour
+{
 	
 	int playerMask;
 	int environnementMask;
@@ -58,7 +59,7 @@ public class IA : MonoBehaviour {
 	{
 		
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, visionRadius, playerMask);
-		GameObject closest = null;
+		Player closest = null;
 		float minDistance = visionRadius + 1f;
 
 		foreach (Collider col in hitColliders) {
@@ -70,8 +71,8 @@ public class IA : MonoBehaviour {
 
 					Player player = col.gameObject.GetComponent<Player> ();
 
-					if (player =! null && player.isCreature == creature && ((enemy && this.player.side != player.side) || ((!enemy && this.player.side == player.side)) ) ){
-						closest = col.gameObject;
+					if (player != null && player.isCreature == creature && ((enemy && this.player.side != player.side) || ((!enemy && this.player.side == player.side)))) {
+						closest = player;
 						minDistance = dist;	
 					}
 				}

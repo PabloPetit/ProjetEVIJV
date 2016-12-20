@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
 	public int iaLevel = 1;
 
 	public static int teamNumber = 2;
-	public static int playerPerTeam = 5;
+	public static int playerPerTeam = 7;
 
 	public static int targetScore = 2;
 	public static int targetKills = 10;
