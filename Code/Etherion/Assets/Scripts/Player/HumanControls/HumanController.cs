@@ -7,6 +7,11 @@ using UnityStandardAssets.Characters.FirstPerson;
 public class HumanController : MonoBehaviour
 {
 
+
+	public static float footstepVolume = .05f;
+
+
+
 	CharacterController characterController;
 	Camera camera;
 	MouseLook mouseLook;
@@ -97,7 +102,7 @@ public class HumanController : MonoBehaviour
 		if (footsteps.Length == 0 || IsJumping || !characterController.isGrounded)
 			return;
 		if ((IsWalking && timer > footstepsInterval) || (IsRunning && timer > footstepsInterval / 2f)) {
-			audio.PlayOneShot (footsteps [(int)Random.Range (0, footsteps.Length)], .3f);
+			audio.PlayOneShot (footsteps [(int)Random.Range (0, footsteps.Length)], footstepVolume);
 			timer = 0f;
 		}
 	}

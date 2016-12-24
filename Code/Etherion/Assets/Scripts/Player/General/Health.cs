@@ -21,6 +21,8 @@ public class Health : MonoBehaviour
 
 	public Player lastShooter;
 	public Vector3 lastShooterPosition;
+	public float lastHitDate;
+
 	// Position of the shooter when this player was hit
 
 
@@ -34,6 +36,7 @@ public class Health : MonoBehaviour
 		life = maxLife;
 		dead = false;
 		timer = 0f;
+		lastHitDate = 0f;
 		bloodCanvas = new EventName (BloodCanvas.BLOOD_CANVAS_CHANNEL);
 		lifeBar = new EventName (LifeBar.LIFE_BAR_CHANNEL);
 
@@ -88,7 +91,8 @@ public class Health : MonoBehaviour
 		float damage = (float)param [0];
 		lastShooter = (Player)param [1];
 		lastShooterPosition = lastShooter.gameObject.transform.position;
-
+		lastHitDate = Time.time;
+	
 		if (lastShooter.isHuman) {
 			EventName hit = new EventName (HitMarker.HITMARKER_CHANNEL);
 			EventManager.TriggerAction (hit, new object[]{ });

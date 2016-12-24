@@ -4,12 +4,15 @@ using System.Collections;
 public class SkratWeapon : PlayerWeapon
 {
 
+	public static float detonationVolume = 0.75f;
+
 	public GameObject bulletPrefab;
 	AudioSource gunShot;
 
 	void Start ()
 	{
 		gunShot = barrel.GetComponent<AudioSource> ();
+		gunShot.volume = detonationVolume;
 	}
 
 	protected override void Action ()
