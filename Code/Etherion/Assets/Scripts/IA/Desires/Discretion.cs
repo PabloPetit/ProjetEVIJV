@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Discretion : MonoBehaviour {
+public class Discretion : Desire {
 
-	// Use this for initialization
-	void Start () {
-	
+	public static string NAME = "DISCRETION";
+
+	public Discretion(IA ia) : base(ia){
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

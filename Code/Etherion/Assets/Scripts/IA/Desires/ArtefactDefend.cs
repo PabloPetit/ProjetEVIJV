@@ -3,9 +3,11 @@ using System.Collections;
 
 public class ArtefactDefend : Desire {
 
+	public static string NAME = "ARTEFACT_DEFEND";
+
 	public float STD_VALUE = 50f;
 
-	public ArtefactDefend(IA ia, Player player) : base(ia, player){}
+	public ArtefactDefend(IA ia) : base(ia){}
 
 
 	public override void Update ()

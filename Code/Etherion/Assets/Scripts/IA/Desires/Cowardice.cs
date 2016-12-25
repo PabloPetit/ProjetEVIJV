@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Cowardice : Desire {
 
+	public static string NAME = "COWARDICE";
+
 
 	public static float STD_MIN_VALUE = 25f;
 
@@ -11,7 +13,7 @@ public class Cowardice : Desire {
 	public static float LOW_LIFE_MULTIPLIER = 1f;
 
 
-	public Cowardice(IA ia, Player player) : base(ia, player){
+	public Cowardice(IA ia) : base(ia){
 
 	}
 
@@ -28,7 +30,7 @@ public class Cowardice : Desire {
 	}
 
 	public void CheckLife(){
-		value += personalCoeff * (player.health.maxLife - player.health.life) * LOW_LIFE_MULTIPLIER * Time.deltaTime;
+		value += personalCoeff * (ia.player.health.maxLife - ia.player.health.life) * LOW_LIFE_MULTIPLIER * Time.deltaTime;
 	}
 
 	public void CheckCarriyingArtefact(){

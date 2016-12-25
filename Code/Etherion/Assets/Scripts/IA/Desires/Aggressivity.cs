@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Aggressivity : Desire {
 
+	public static string NAME = "AGGRESSIVITY";
+
 	public static float STD_MIN_VALUE = 25f;
 
 	public static float ENEMY_IN_SIGHT_MULTIPLIER = 1;
@@ -12,7 +14,7 @@ public class Aggressivity : Desire {
 	Player lastShooter;
 	float lastHit;
 
-	public Aggressivity(IA ia, Player player) : base(ia, player){
+	public Aggressivity(IA ia) : base(ia){
 		
 	}
 
@@ -34,16 +36,16 @@ public class Aggressivity : Desire {
 	}
 
 	public void CheckShot(){
-		if (lastShooter != player.health.lastShooter || lastHit != player.health.lastHitDate){
-			lastHit = player.health.lastHitDate;
-			lastShooter = player.health.lastShooter;
+		if (lastShooter != ia.player.health.lastShooter || lastHit != ia.player.health.lastHitDate){
+			lastHit = ia.player.health.lastHitDate;
+			lastShooter = ia.player.health.lastShooter;
 			value += personalCoeff * SHOT_VALUE;
 		}
 	}
 
 	public void CheckEnemiInSight(){
 		if (ia.closestEnemy != null){
-			float dist = Vector3.Distance (ia.closestEnemy.gameObject.transform.position, player.gameObject.transform.position);
+			float dist = Vector3.Distance (ia.closestEnemy.gameObject.transform.position, ia.player.gameObject.transform.position);
 			value += personalCoeff * (ia.maxAimingDistance / (dist + 1)) * ENEMY_IN_SIGHT_MULTIPLIER * Time.deltaTime;
 			//Some analysis must be made to compare decrease and increase values
 		}

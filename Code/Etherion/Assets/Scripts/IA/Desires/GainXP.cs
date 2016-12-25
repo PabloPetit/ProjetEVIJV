@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GainXP : MonoBehaviour {
+public class GainXP : Desire {
 
-	// Use this for initialization
-	void Start () {
-	
+	public static string NAME = "GAIN_XP";
+
+	public GainXP(IA ia) : base (ia){
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+
 }

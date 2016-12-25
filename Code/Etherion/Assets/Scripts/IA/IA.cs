@@ -14,15 +14,16 @@ public class IA : MonoBehaviour
 
 	// Layers
 
-	int playerMask;
-	int environnementMask;
+	public int playerMask;
+	public int environnementMask;
 
 	// Player Parts
 
-	Player player;
-	GameObject head;
+	public Player player;
+	public GameObject head;
+	public GameObject barrel;
 
-	NavMeshAgent nav;
+	public NavMeshAgent nav;
 
 	// Ray Shooting
 
@@ -41,9 +42,13 @@ public class IA : MonoBehaviour
 
 	// Variables 
 
+	public GameManager gameManager;
+
 	public Dictionary<string, Desire> desires;
 
-	public Vector3 navDestination;
+	public List<IABehavior> behaviors;
+
+	public IABehavior currentBehavior;
 
 	// Visibility is not checked for Allies : 
 
@@ -65,19 +70,73 @@ public class IA : MonoBehaviour
 
 		player = GetComponent<Player> ();
 		nav = GetComponent<NavMeshAgent> ();
-		navDestination = Vector3.zero;
 
 		playersAround = new List<Player>();
 		friendsAround = new List<Player>();
 		enemiesAround = new List<Player>();
 		creaturesAround = new List<Player>();
+
+		behaviors = new List<IABehavior> ();
+		desires = new Dictionary<string, Desire> ();
+
+		gameManager = FindObjectOfType<GameManager> ();
+
+		SetHeadAndBarrel ();
+		SetDesires ();
+		SetBehaviors ();
+	}
+
+	public virtual void SetHeadAndBarrel(){
+		
+	}
+
+	public virtual void SetDesires(){
+
+	}
+
+	public virtual void SetBehaviors(){
+
 	}
 
 
 	// This update will collect Data and Update Desires
-	public void Update(){
+	public void Update(){ //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  FixedUpadate ???? @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		ClearPlayersAround ();
 		GetClosestPlayers ();
+		UpdateDesires ();
+		SelectBehavior ();
+		currentBehavior.Run ();
+	}
+
+
+	public void SelectBehavior(){
+		if(currentBehavior != null && currentBehavior.endCondition ()){
+			currentBehavior.Reset ();
+			currentBehavior = null;
+		}
+
+		IABehavior tmp = null;
+		float maxPriority = 0f;
+
+		foreach (IABehavior b in behaviors){
+			float prioTmp = b.EvaluatePriority ();
+			if (prioTmp > maxPriority){
+				tmp = b;
+				maxPriority = prioTmp;
+			}
+		}
+
+		if (currentBehavior != null && currentBehavior.EvaluatePriority () < maxPriority){ 
+			currentBehavior.Reset ();
+			currentBehavior = tmp;
+		}
+
+		if (currentBehavior == null){
+			currentBehavior = tmp;
+			currentBehavior.Setup ();
+		}
+
+
 	}
 
 	public void UpdateDesires(){
@@ -87,16 +146,26 @@ public class IA : MonoBehaviour
 	}
 		
 
-	protected void SetNewRandomDestination ()
+
+	/*
+	 * 
+	 *     USEFULL
+	 * 
+	 */
+
+
+
+	public void SetNewRandomDestination ()
 	{
+		Vector3 navDestination = Vector3.zero;
 		navDestination = Random.insideUnitSphere * navDestinationRadius;
 		navDestination += transform.position;
 		NavMeshHit hit;
 		NavMesh.SamplePosition (navDestination, out hit, navDestinationRadius, 1);
-		navDestination = hit.position;
+		nav.SetDestination (hit.position);
 	}
 
-	protected bool isTargetVisible (GameObject rayTarget, float range)
+	public bool isTargetVisible (GameObject rayTarget, float range)
 	{
 		bool res = false;
 		shootRay.origin = head.transform.position;
@@ -110,7 +179,7 @@ public class IA : MonoBehaviour
 		return res;
 	}
 
-	protected void GetClosestPlayers ()
+	public void GetClosestPlayers ()
 	{
 
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, visionRadius, playerMask);
@@ -173,7 +242,7 @@ public class IA : MonoBehaviour
 			return (float)friendsAround.Count / (float)enemiesAround.Count;
 	}
 
-	protected void ClearPlayersAround(){
+	public void ClearPlayersAround(){
 		closestFriend = null;
 		closestEnemy = null;
 		closestCreature = null;

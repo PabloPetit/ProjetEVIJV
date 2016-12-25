@@ -3,58 +3,22 @@ using System.Collections;
 
 public class EnemyController : IA {
 
-
-
-	Behavior currentBehavior;
-
-	Player player;
-
-	public Artefact artefact;
-
-
-	void Start () {
-		base.Start ();
-		artefact = player.team.teamSlot.artefact;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-		MajDesires ();
-
-		EvaluateBehavior ();
-
-		currentBehavior.Run ();
+	public virtual void SetHeadAndBarrel(){
 
 	}
 
-
-
-	void EvaluateBehavior(){
-
-		if(currentBehavior.endCondition ()){
-			currentBehavior = null;
-		}
-
-		if (currentBehavior == null){
-			//SetBehavior (new GoToTarget(Behavior.EvaluatePriority(truc,truc,truc),artefact.gameObject));
-		}
-			
-		SetBehavior (new GoToPosition(0,Vector3.zero));
-
-
-
+	public override void SetDesires(){
+		desires.Add (Discretion.NAME,new Discretion(this));
+		desires.Add (Aggressivity.NAME,new Aggressivity(this));
+		desires.Add (ArtefactDefend.NAME,new ArtefactDefend(this));
+		desires.Add (ArtefactOffend.NAME,new ArtefactOffend(this));
+		desires.Add (GainXP.NAME,new GainXP(this));
+		desires.Add (Cowardice.NAME,new Cowardice(this));
 	}
 
-	void MajDesires(){
-		//Look Around
-		//Listen Communications
+	public override void SetBehaviors(){
+		behaviors.Add (new CaptureEnemyArtefact(this));
 	}
 
 
-	void SetBehavior(Behavior newBehavior){
-		if (currentBehavior == null || newBehavior.GetPriority() > currentBehavior.GetPriority()){
-			currentBehavior = newBehavior;
-		}
-	}
 }

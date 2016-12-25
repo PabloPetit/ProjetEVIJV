@@ -3,9 +3,13 @@ using System.Collections;
 
 public class ArtefactOffend : Desire {
 
+	public static string NAME = "ARTEFACT_OFFEND";
+
 	public float STD_VALUE = 50f;
 
-	public ArtefactOffend(IA ia, Player player) : base(ia, player){}
+	public ArtefactOffend(IA ia) : base(ia){
+		MIN_VALUE = STD_VALUE * personalCoeff;
+	}
 
 
 	public override void Update ()

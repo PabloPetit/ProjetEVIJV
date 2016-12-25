@@ -10,6 +10,13 @@ public class GameManager : MonoBehaviour
 	public static int UPDATE_SCORE = 1;
 	public static int UPDATE_KILLS = 2;
 
+	public static int teamNumber = 2;
+	public static int playerPerTeam = 1;
+
+	public static int targetScore = 2;
+	public static int targetKills = 10;
+	public static int maxTime = 15;
+
 
 	public static float RESPAWN_DELAY = 5f;
 
@@ -19,20 +26,14 @@ public class GameManager : MonoBehaviour
 
 	public int iaLevel = 1;
 
-	public static int teamNumber = 2;
-	public static int playerPerTeam = 7;
-
-	public static int targetScore = 2;
-	public static int targetKills = 10;
-	public static int maxTime = 15;
-	// Minutes
-
 	public static bool scoreCondition = true;
 	public static bool killsCondition = true;
 
 	public static TeamSlot[] teamSlots;
 
 	public List<Team> teams;
+
+	public List<Artefact> artefacts;
 
 	public static float timer = 0f;
 
@@ -151,6 +152,7 @@ public class GameManager : MonoBehaviour
 			ts.artefact = art;
 			ArtefactReceptor receptor = ts.receptor.GetComponent<ArtefactReceptor> ();
 			receptor.team = ts.team;
+			artefacts.Add (art);
 		}
 	}
 
