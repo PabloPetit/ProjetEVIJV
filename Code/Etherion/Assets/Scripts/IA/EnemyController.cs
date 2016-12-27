@@ -3,21 +3,29 @@ using System.Collections;
 
 public class EnemyController : IA {
 
-	public virtual void SetHeadAndBarrel(){
+	public static float RUN_SPEED = 15f;
+	public static float WALK_SPEED = 8f;
 
-	}
 
 	public override void SetDesires(){
-		desires.Add (Discretion.NAME,new Discretion(this));
-		desires.Add (Aggressivity.NAME,new Aggressivity(this));
-		desires.Add (ArtefactDefend.NAME,new ArtefactDefend(this));
-		desires.Add (ArtefactOffend.NAME,new ArtefactOffend(this));
-		desires.Add (GainXP.NAME,new GainXP(this));
-		desires.Add (Cowardice.NAME,new Cowardice(this));
+		
+		desires.Add (typeof(Discretion),new Discretion(this));
+		desires.Add (typeof(Aggressivity),new Aggressivity(this));
+		desires.Add (typeof(ArtefactDefend),new ArtefactDefend(this));
+		desires.Add (typeof(ArtefactOffend),new ArtefactOffend(this));
+		desires.Add (typeof(GainXP),new GainXP(this));
+		desires.Add (typeof(Cowardice),new Cowardice(this));
+
 	}
 
 	public override void SetBehaviors(){
-		behaviors.Add (new CaptureEnemyArtefact(this));
+		//behaviors.Add (new CaptureEnemyArtefact(this));
+		behaviors.Add (new Attack(this));
+	}
+
+	public override void SetHeadAndBarrel(){
+		head = transform.Find ("Model/Head").gameObject;
+		barrel = transform.Find ("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 	}
 
 

@@ -5,6 +5,7 @@ public class ArtefactDefend : Desire {
 
 	public static string NAME = "ARTEFACT_DEFEND";
 
+
 	public float STD_VALUE = 50f;
 
 	public ArtefactDefend(IA ia) : base(ia){}

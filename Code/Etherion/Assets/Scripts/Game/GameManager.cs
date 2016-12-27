@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
 
 	public int iaLevel = 1;
 
+
 	public static bool scoreCondition = true;
 	public static bool killsCondition = true;
 
@@ -125,6 +126,7 @@ public class GameManager : MonoBehaviour
 		foreach (TeamSlot ts in teamSlots) {
 			for (int i = 0; i < playerPerTeam; i++) {
 				GameObject player;
+
 				if (!humanSet) {
 					player = Instantiate (ts.humanPrefab);
 					humanSet = true;
@@ -132,12 +134,27 @@ public class GameManager : MonoBehaviour
 					player = Instantiate (ts.aiPrefab);
 					EnemyController enemiController = player.GetComponent<EnemyController> ();
 				}
-				player.transform.position = ts.GetRandomSpawn ().transform.position;
+
 				Player p = player.GetComponent<Player> ();
+
+				player.transform.position = ts.GetRandomSpawn ().transform.position;
+				ConfigureNaVAgent (player,p);
+				
 				p.team = ts.team;
 				p.side = p.team.side;
 			}
 		}
+	}
+
+	void ConfigureNaVAgent(GameObject player, Player p){
+		
+		if(p.isHuman){
+			return;
+		}
+
+		player.AddComponent (typeof(NavMeshAgent));
+		NavMeshAgent nav = player.GetComponent<NavMeshAgent> ();
+		nav.baseOffset = 1.5f;
 	}
 
 	void InitializeArtefacts ()

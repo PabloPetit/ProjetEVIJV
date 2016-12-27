@@ -12,9 +12,9 @@ public class PlayerWeapon : MonoBehaviour
 	public float damageDecrease;
 	public float minDamage;
 
-	//Effetcs
 
 	public float timeBetweenBullets;
+
 	public float effectsDisplayTime;
 
 	// Misc Data
@@ -138,7 +138,7 @@ public class PlayerWeapon : MonoBehaviour
 	public void Shoot ()
 	{
 
-		// TODO: Overload
+
 		if (timer >= timeBetweenBullets && Time.timeScale != 0 && !overLoaded) { 
 
 			timer = 0f;

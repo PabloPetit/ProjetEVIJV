@@ -33,18 +33,18 @@ public class IA : MonoBehaviour
 
 	// Public Constants
 
-	public float visionAngle;
-	public float visionRadius;
-	public float maxAimingDistance;
+	public float visionAngle = 60f;
+	public float visionRadius = 250f;
+	public float maxAimingDistance = 1000f;
 
-	public float navDestinationRadius;
+	public float navDestinationRadius = 100f;
 
 
 	// Variables 
 
 	public GameManager gameManager;
 
-	public Dictionary<string, Desire> desires;
+	public Dictionary<System.Type, Desire> desires;
 
 	public List<IABehavior> behaviors;
 
@@ -77,7 +77,7 @@ public class IA : MonoBehaviour
 		creaturesAround = new List<Player>();
 
 		behaviors = new List<IABehavior> ();
-		desires = new Dictionary<string, Desire> ();
+		desires = new Dictionary<System.Type, Desire> ();
 
 		gameManager = FindObjectOfType<GameManager> ();
 
@@ -101,26 +101,32 @@ public class IA : MonoBehaviour
 
 	// This update will collect Data and Update Desires
 	public void Update(){ //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  FixedUpadate ???? @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+		if(player.health.dead){
+			return;
+		}
+
 		ClearPlayersAround ();
 		GetClosestPlayers ();
 		UpdateDesires ();
 		SelectBehavior ();
 		currentBehavior.Run ();
+//		Debug.Log ("Current : "+currentBehavior.GetType ().ToString ());
 	}
 
 
 	public void SelectBehavior(){
-		if(currentBehavior != null && currentBehavior.endCondition ()){
-			currentBehavior.Reset ();
-			currentBehavior = null;
-		}
 
 		IABehavior tmp = null;
-		float maxPriority = 0f;
+		float maxPriority = -2f;
 
 		foreach (IABehavior b in behaviors){
+			if(b == currentBehavior){
+				continue;
+			}
 			float prioTmp = b.EvaluatePriority ();
-			if (prioTmp > maxPriority){
+			//Debug.Log (b.GetType ().ToString ()+" "+prioTmp);
+			if (prioTmp >= maxPriority){
 				tmp = b;
 				maxPriority = prioTmp;
 			}
@@ -129,6 +135,7 @@ public class IA : MonoBehaviour
 		if (currentBehavior != null && currentBehavior.EvaluatePriority () < maxPriority){ 
 			currentBehavior.Reset ();
 			currentBehavior = tmp;
+			currentBehavior.Setup ();
 		}
 
 		if (currentBehavior == null){
@@ -190,6 +197,8 @@ public class IA : MonoBehaviour
 
 		foreach (Collider col in hitColliders) {
 
+			//Debug.Log ("Col : "+col.name);
+
 			float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
 
 			Player player = col.gameObject.GetComponent<Player> ();
@@ -201,11 +210,14 @@ public class IA : MonoBehaviour
 			playersAround.Add (player);
 
 			if (player.side == this.player.side) {
-				friendsAround.Add (player);
+				if (player.id != this.player.id) {
 
-				if (dist < minDistFriend) {
-					minDistFriend = dist;
-					closestFriend = player;
+					friendsAround.Add (player);
+
+					if (dist < minDistFriend) {
+						minDistFriend = dist;
+						closestFriend = player;
+					}
 				}
 			} else {
 				//Now checking Angle and Visibility
@@ -252,5 +264,6 @@ public class IA : MonoBehaviour
 		enemiesAround.Clear ();
 		creaturesAround.Clear ();
 	}
+		
 
 }

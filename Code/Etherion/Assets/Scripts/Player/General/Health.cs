@@ -23,6 +23,8 @@ public class Health : MonoBehaviour
 	public Vector3 lastShooterPosition;
 	public float lastHitDate;
 
+	public NavMeshAgent nav;
+
 	// Position of the shooter when this player was hit
 
 
@@ -39,7 +41,7 @@ public class Health : MonoBehaviour
 		lastHitDate = 0f;
 		bloodCanvas = new EventName (BloodCanvas.BLOOD_CANVAS_CHANNEL);
 		lifeBar = new EventName (LifeBar.LIFE_BAR_CHANNEL);
-
+		nav = GetComponent<NavMeshAgent> (); // null if human
 
 	}
 	
@@ -103,6 +105,12 @@ public class Health : MonoBehaviour
 		if (life <= 0f) {
 			life = 0f;
 			dead = true;
+
+			if (nav != null){
+				nav.enabled = false;
+			}
+
+
 			Death ();
 
 			if (lastShooter.isHuman) {

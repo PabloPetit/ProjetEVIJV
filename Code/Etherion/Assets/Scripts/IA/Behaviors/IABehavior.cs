@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class IABehavior : MonoBehaviour {
+public class IABehavior {
 
 
-	public string name;
 	public IA ia;
-
 
 	public IABehavior(IA ia){
 		this.ia = ia;
-		this.name = "STANDARD_BEHAVIOR";
 	}
 
 	public virtual void Run(){
@@ -21,7 +18,7 @@ public class IABehavior : MonoBehaviour {
 		return true;
 	}
 
-	public float EvaluatePriority(){
+	public virtual float EvaluatePriority(){
 		return -1f;
 	}
 

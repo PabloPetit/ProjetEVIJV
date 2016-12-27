@@ -7,8 +7,6 @@ using System;
 
 public class Desire  {
 
-	public static string NAME = "DEFAULT_DESIRE_NAME";
-
 	public float MAX_VALUE = 150f;
 	public float MIN_VALUE = 1f;
 
@@ -29,7 +27,7 @@ public class Desire  {
 		Setup ();
 		SetRandomCoeff ();
 		this.value = MIN_VALUE * personalCoeff;
-		Debug.Log (NAME);
+
 	}
 		
 

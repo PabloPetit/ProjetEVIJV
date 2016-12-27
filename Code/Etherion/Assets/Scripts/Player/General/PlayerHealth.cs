@@ -4,7 +4,9 @@ using System.Collections;
 
 public class PlayerHealth : Health
 {
-	
+
+
+
 	Animator anim;
 	Collider col;
 	Renderer rend;
@@ -40,7 +42,6 @@ public class PlayerHealth : Health
 	public override void Death ()
 	{
 		anim.SetTrigger ("Die");
-
 	}
 
 	public void Respawn ()
@@ -51,6 +52,8 @@ public class PlayerHealth : Health
 		rend.enabled = true;
 		anim.SetTrigger ("Idle");
 		transform.position = player.team.teamSlot.GetRandomSpawn ().transform.position;
-
+		if (nav!=null){
+			nav.enabled = true;
+		}
 	}
 }

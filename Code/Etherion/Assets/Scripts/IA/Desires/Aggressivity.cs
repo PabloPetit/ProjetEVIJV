@@ -33,6 +33,7 @@ public class Aggressivity : Desire {
 		CheckCurrentScore ();
 
 		value = Mathf.Max (MIN_VALUE, Mathf.Min (MAX_VALUE, value));
+		value *=  Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count);
 	}
 
 	public void CheckShot(){
