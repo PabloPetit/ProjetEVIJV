@@ -66,8 +66,6 @@ public class CaptureEnemyArtefact : IABehavior {
 	}
 
 	public override float EvaluatePriority(){
-
-		Debug.Log ("Art offend : "+artOffend.value);
 		float val = artOffend.value;
 
 		if (target != null && target.transporter == ia.player){
@@ -79,8 +77,6 @@ public class CaptureEnemyArtefact : IABehavior {
 				val -= 30;
 			}
 		}
-		Debug.Log ("Val : "+val);
-
 		return val;
 
 	}

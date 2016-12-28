@@ -5,9 +5,9 @@ public class Aggressivity : Desire {
 
 	public static string NAME = "AGGRESSIVITY";
 
-	public static float STD_MIN_VALUE = 25f;
+	public static float STD_MIN_VALUE = 30f;
 
-	public static float ENEMY_IN_SIGHT_MULTIPLIER = 1;
+	public static float ENEMY_IN_SIGHT_MULTIPLIER = 1f;
 
 	public float SHOT_VALUE = 20f;
 
@@ -53,10 +53,11 @@ public class Aggressivity : Desire {
 	}
 
 	public void CheckEnemiInSight(){
-		if (ia.closestEnemy != null){
-			float dist = Vector3.Distance (ia.closestEnemy.gameObject.transform.position, ia.player.gameObject.transform.position);
-			value += personalCoeff * (ia.maxAimingDistance / (dist + 1)) * ENEMY_IN_SIGHT_MULTIPLIER * Time.deltaTime;
-			//Some analysis must be made to compare decrease and increase values
+		foreach(Player p in ia.enemiesAround){
+			float dist = Vector3.Distance (p.gameObject.transform.position, ia.player.gameObject.transform.position);
+			float val = personalCoeff * (ia.maxAimingDistance - dist + 1) * ENEMY_IN_SIGHT_MULTIPLIER * Time.deltaTime;
+			value += val;
+			//Debug.Log (val);
 		}
 	}
 
@@ -70,5 +71,11 @@ public class Aggressivity : Desire {
 			lastHit = 0f;
 		}
 	}
+
+	public void Decrease(){
+		float diff = Time.deltaTime * ( MAX_RAND - personalCoeff ) / DECREASE_TIME;
+		value = Mathf.Max (MIN_VALUE, value - diff);
+	}
+
 		
 }
