@@ -11,11 +11,15 @@ public class Aggressivity : Desire {
 
 	public float SHOT_VALUE = 20f;
 
+	public static float FORGET_DELAY = 5f;
+
 	Player lastShooter;
 	float lastHit;
 
+	float timer;
+
 	public Aggressivity(IA ia) : base(ia){
-		
+		timer = 0f;
 	}
 
 
@@ -27,13 +31,17 @@ public class Aggressivity : Desire {
 
 	//Agressivity Goes 
 	public override void Update (){
+
+		ManageLastShooter ();
+
 		Decrease ();
 		CheckShot ();
 		CheckEnemiInSight ();
 		CheckCurrentScore ();
 
-		value = Mathf.Max (MIN_VALUE, Mathf.Min (MAX_VALUE, value));
-		value *=  Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count);
+		value *=  Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count + ((lastShooter!=null)?1:0));
+		value = Mathf.Max (this.MIN_VALUE, Mathf.Min (this.MAX_VALUE, value));
+
 	}
 
 	public void CheckShot(){
@@ -53,5 +61,14 @@ public class Aggressivity : Desire {
 	}
 
 	public void CheckCurrentScore(){}
+
+	public void ManageLastShooter(){
+		timer += Time.deltaTime;
+		if(timer >= FORGET_DELAY || ia.player.health.dead){
+			timer = 0f;
+			lastShooter = null;
+			lastHit = 0f;
+		}
+	}
 		
 }

@@ -7,19 +7,22 @@ public class EnemyController : IA {
 	public static float WALK_SPEED = 8f;
 
 
+
 	public override void SetDesires(){
 		
-		desires.Add (typeof(Discretion),new Discretion(this));
 		desires.Add (typeof(Aggressivity),new Aggressivity(this));
-		desires.Add (typeof(ArtefactDefend),new ArtefactDefend(this));
-		desires.Add (typeof(ArtefactOffend),new ArtefactOffend(this));
-		desires.Add (typeof(GainXP),new GainXP(this));
 		desires.Add (typeof(Cowardice),new Cowardice(this));
+		desires.Add (typeof(ArtefactOffend),new ArtefactOffend(this));
+		desires.Add (typeof(ArtefactDefend),new ArtefactDefend(this));
+
+		//desires.Add (typeof(Discretion),new Discretion(this));
+		//desires.Add (typeof(GainXP),new GainXP(this));
+
 
 	}
 
 	public override void SetBehaviors(){
-		//behaviors.Add (new CaptureEnemyArtefact(this));
+		behaviors.Add (new CaptureEnemyArtefact(this));
 		behaviors.Add (new Attack(this));
 	}
 

@@ -144,7 +144,7 @@ public class HumanController : MonoBehaviour
 		if (Input.GetKey (KeyCode.I)) {
 			walkSpeed = 20;
 			runSpeed = 200;
-			jumpForce = 130;
+			jumpForce = 40;
 		}
 		if (Input.GetKey (KeyCode.K)) {
 			walkSpeed = 8;

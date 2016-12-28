@@ -4,6 +4,8 @@ using System.Collections;
 public class Attack : IABehavior {
 
 
+	public static float AIM_SPEED = 100f;
+
 	Aggressivity aggressivity;
 
 	Player target;
@@ -18,7 +20,8 @@ public class Attack : IABehavior {
 
 
 	public override void Run(){
-		//
+		base.Run ();
+
 		if (target != null){
 			if(target.health.dead){
 				target = null;
@@ -48,9 +51,6 @@ public class Attack : IABehavior {
 		AimTarget ();
 		ia.nav.SetDestination (target.transform.position);
 
-		Debug.Log (target);
-		Debug.Log (weapon);
-
 		if (ia.isTargetVisible (target.gameObject,weapon.range) && !weapon.overLoaded){
 			ia.nav.speed = EnemyController.WALK_SPEED;
 			if (IsTargetInSight ()){
@@ -71,7 +71,7 @@ public class Attack : IABehavior {
 
 		Vector3 tmp = target.transform.position - ia.gameObject.transform.position;
 		Quaternion newRot = Quaternion.LookRotation (tmp);
-		ia.gameObject.transform.rotation = Quaternion.Lerp (ia.gameObject.transform.rotation, newRot, 360f);
+		ia.gameObject.transform.rotation = Quaternion.Lerp (ia.gameObject.transform.rotation, newRot,360f);
 		ia.barrel.transform.rotation = Quaternion.Lerp (ia.barrel.transform.rotation, newRot, 360f);
 
 	}

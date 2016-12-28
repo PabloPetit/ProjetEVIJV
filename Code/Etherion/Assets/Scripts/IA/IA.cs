@@ -111,7 +111,6 @@ public class IA : MonoBehaviour
 		UpdateDesires ();
 		SelectBehavior ();
 		currentBehavior.Run ();
-//		Debug.Log ("Current : "+currentBehavior.GetType ().ToString ());
 	}
 
 
@@ -120,12 +119,12 @@ public class IA : MonoBehaviour
 		IABehavior tmp = null;
 		float maxPriority = -2f;
 
+
 		foreach (IABehavior b in behaviors){
 			if(b == currentBehavior){
 				continue;
 			}
 			float prioTmp = b.EvaluatePriority ();
-			//Debug.Log (b.GetType ().ToString ()+" "+prioTmp);
 			if (prioTmp >= maxPriority){
 				tmp = b;
 				maxPriority = prioTmp;
@@ -197,8 +196,6 @@ public class IA : MonoBehaviour
 
 		foreach (Collider col in hitColliders) {
 
-			//Debug.Log ("Col : "+col.name);
-
 			float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
 
 			Player player = col.gameObject.GetComponent<Player> ();
@@ -207,12 +204,16 @@ public class IA : MonoBehaviour
 				continue;
 			} 
 
-			playersAround.Add (player);
-
+			if (!playersAround.Contains (player)){
+				playersAround.Add (player);
+			}
+				
 			if (player.side == this.player.side) {
 				if (player.id != this.player.id) {
 
-					friendsAround.Add (player);
+					if (!friendsAround.Contains (player)) {
+						friendsAround.Add (player);
+					}
 
 					if (dist < minDistFriend) {
 						minDistFriend = dist;
@@ -225,7 +226,9 @@ public class IA : MonoBehaviour
 				
 					if (player.isCreature){
 
-						creaturesAround.Add (player);
+						if (!creaturesAround.Contains (player)) {
+							creaturesAround.Add (player);
+						}
 
 						if (dist < minDistCreature) {
 							minDistCreature = dist;
@@ -234,7 +237,9 @@ public class IA : MonoBehaviour
 						
 					}else{
 
-						enemiesAround.Add (player);
+						if (!enemiesAround.Contains (player)) {
+							enemiesAround.Add (player);
+						}
 
 						if (dist < minDistEnemy) {
 							minDistEnemy = dist;

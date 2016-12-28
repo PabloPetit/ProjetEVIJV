@@ -17,6 +17,8 @@ public class CaptureEnemyArtefact : IABehavior {
 		
 	public override void Run(){
 
+		base.Run ();
+
 		ia.nav.speed = EnemyController.RUN_SPEED;
 
 		SetSearching ();// If i'm carrying an Artefact, i'm not seraching for one
@@ -65,6 +67,7 @@ public class CaptureEnemyArtefact : IABehavior {
 
 	public override float EvaluatePriority(){
 
+		Debug.Log ("Art offend : "+artOffend.value);
 		float val = artOffend.value;
 
 		if (target != null && target.transporter == ia.player){
@@ -76,7 +79,7 @@ public class CaptureEnemyArtefact : IABehavior {
 				val -= 30;
 			}
 		}
-			
+		Debug.Log ("Val : "+val);
 
 		return val;
 

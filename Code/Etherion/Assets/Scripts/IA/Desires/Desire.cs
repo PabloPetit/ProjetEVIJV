@@ -24,8 +24,8 @@ public class Desire  {
 
 	public Desire(IA ia){
 		this.ia = ia;
-		Setup ();
 		SetRandomCoeff ();
+		Setup ();
 		this.value = MIN_VALUE * personalCoeff;
 
 	}
@@ -40,12 +40,12 @@ public class Desire  {
 	}
 
 	public virtual void Decrease(){
-		float diff = DECREASE_TIME * Time.deltaTime * ( MAX_RAND - personalCoeff ) ;
-	    value = Mathf.Max (MIN_VALUE, value - diff);
+		float diff = Time.deltaTime * ( MAX_RAND - personalCoeff ) / DECREASE_TIME;
+	    value = Mathf.Max (this.MIN_VALUE, value - diff);
 	}
 
 	public void SetRandomCoeff(){
-		personalCoeff = MIN_VALUE * UnityEngine.Random.Range (0f, MAX_VALUE - MIN_VALUE);
+		personalCoeff = MIN_RAND + UnityEngine.Random.Range (0f, MAX_RAND - MIN_RAND);
 	}
 
 

@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 	public static int UPDATE_KILLS = 2;
 
 	public static int teamNumber = 2;
-	public static int playerPerTeam = 1;
+	public static int playerPerTeam = 10;
 
 	public static int targetScore = 2;
 	public static int targetKills = 10;
