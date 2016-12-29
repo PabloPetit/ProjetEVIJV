@@ -4,7 +4,9 @@ using System.Collections;
 public class Attack : IABehavior {
 
 
-	public static float AIM_SPEED = 50f;
+	public static float MIN_ENEMY_DISTANCE = 50f;
+
+	public static float AIM_SPEED = 20f/360f;
 	public static float IN_SIGHT_ANGLE = 3f;
 
 	public static float FORGET_TARGET = 4f;
@@ -34,6 +36,7 @@ public class Attack : IABehavior {
 		base.Run ();
 
 		ForgetTarget ();
+		ia.nav.
 
 		if (target != null){
 			AttackTarget ();	
@@ -71,7 +74,6 @@ public class Attack : IABehavior {
 	public void AttackTarget(){
 
 		AimTarget ();
-		ia.nav.SetDestination (target.transform.position);
 
 		if (ia.isTargetVisible (target.gameObject,ia.maxAimingDistance) && !weapon.overLoaded){
 			ia.nav.speed = EnemyController.WALK_SPEED;
@@ -82,6 +84,11 @@ public class Attack : IABehavior {
 			ia.nav.speed = EnemyController.RUN_SPEED;
 		}
 
+		if (Vector3.Distance (ia.gameObject.transform.position, target.gameObject.transform.position) > MIN_ENEMY_DISTANCE / aggressivity.personalCoeff){
+			ia.nav.SetDestination (target.transform.position);
+		}else{
+			ia.nav.speed = 0f; 
+		}
 
 	}
 
@@ -93,9 +100,10 @@ public class Attack : IABehavior {
 
 		Vector3 tmp = target.transform.position - ia.gameObject.transform.position;
 		Quaternion newRot = Quaternion.LookRotation (tmp);
-		ia.gameObject.transform.rotation = Quaternion.Lerp (ia.gameObject.transform.rotation, newRot,AIM_SPEED);
 		ia.barrel.transform.rotation = Quaternion.Lerp (ia.barrel.transform.rotation, newRot, AIM_SPEED);
-
+		newRot.x = 0f;
+		newRot.z = 0f;
+		ia.gameObject.transform.rotation = Quaternion.Lerp (ia.gameObject.transform.rotation, newRot,AIM_SPEED);
 	}
 
 	public override float EvaluatePriority(){

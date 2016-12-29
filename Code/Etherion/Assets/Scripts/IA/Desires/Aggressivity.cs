@@ -39,8 +39,8 @@ public class Aggressivity : Desire {
 		CheckEnemiInSight ();
 		CheckCurrentScore ();
 
-		value *=  Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count + ((lastShooter!=null)?1:0));
 		value = Mathf.Max (this.MIN_VALUE, Mathf.Min (this.MAX_VALUE, value));
+		value *=  Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count + ((lastShooter!=null)?1:0));
 
 	}
 
