@@ -106,7 +106,7 @@ public class Health : MonoBehaviour
 			life = 0f;
 			dead = true;
 
-			if (nav != null){
+			if (nav != null) {
 				nav.enabled = false;
 			}
 
@@ -125,7 +125,7 @@ public class Health : MonoBehaviour
 
 	public virtual void SendPlayerLogInfo ()
 	{
-		string str = "ENEMY KILLED : " + player.name + "\n [ +" + player.experience.RetrievedXp () + " XP]";
+		string str = "ENEMY KILLED : " + player.name + "\n [ +" + (int)(player.experience.RetrievedXp ()) + " XP]";
 		EventName playerLogEvent = new EventName (PlayerLog.PLAYER_LOG_CHANNEL);
 		EventManager.TriggerAction (playerLogEvent, new object[]{ str });
 	}

@@ -9,7 +9,7 @@ public class IA : MonoBehaviour
 	 * 
 	 *    Constants
 	 * 
-	 */ 
+	 */
 
 
 	// Layers
@@ -37,10 +37,11 @@ public class IA : MonoBehaviour
 	public float visionRadius = 250f;
 	public float maxAimingDistance = 1000f;
 
+	public float navLongPathNoise = 25f;
 	public float navDestinationRadius = 100f;
+	public float navUpdateDelay = .2f;
 
-
-	// Variables 
+	// Variables
 
 	public GameManager gameManager;
 
@@ -50,18 +51,28 @@ public class IA : MonoBehaviour
 
 	public IABehavior currentBehavior;
 
-	// Visibility is not checked for Allies : 
+	// Visibility is not checked for Allies :
 
-	public Player closestFriend; // Not Checked
-	public Player closestEnemy; // Checked
-	public Player closestCreature; // Checked
+	public Player closestFriend;
+	// Not Checked
+	public Player closestEnemy;
+	// Checked
+	public Player closestCreature;
+	// Checked
 
-	public List<Player> playersAround; // Not Checked
+	public List<Player> playersAround;
+	// Not Checked
 
-	public List<Player> friendsAround; // Not Checked 
-	public List<Player> enemiesAround; // Checked
-	public List<Player> creaturesAround; // Checked
+	public List<Player> friendsAround;
+	// Not Checked
+	public List<Player> enemiesAround;
+	// Checked
+	public List<Player> creaturesAround;
+	// Checked
 
+	public Vector3 navTarget;
+	public float currentNavSpeed = 0f;
+	public float lastNavUpdate = 0f;
 
 	protected void Start ()
 	{
@@ -71,10 +82,10 @@ public class IA : MonoBehaviour
 		player = GetComponent<Player> ();
 		nav = GetComponent<NavMeshAgent> ();
 
-		playersAround = new List<Player>();
-		friendsAround = new List<Player>();
-		enemiesAround = new List<Player>();
-		creaturesAround = new List<Player>();
+		playersAround = new List<Player> ();
+		friendsAround = new List<Player> ();
+		enemiesAround = new List<Player> ();
+		creaturesAround = new List<Player> ();
 
 		behaviors = new List<IABehavior> ();
 		desires = new Dictionary<System.Type, Desire> ();
@@ -86,23 +97,27 @@ public class IA : MonoBehaviour
 		SetBehaviors ();
 	}
 
-	public virtual void SetHeadAndBarrel(){
+	public virtual void SetHeadAndBarrel ()
+	{
 		
 	}
 
-	public virtual void SetDesires(){
+	public virtual void SetDesires ()
+	{
 
 	}
 
-	public virtual void SetBehaviors(){
+	public virtual void SetBehaviors ()
+	{
 
 	}
 
 
 	// This update will collect Data and Update Desires
-	public void Update(){ //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  FixedUpadate ???? @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	public void Update ()
+	{ //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  FixedUpadate ???? @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-		if(player.health.dead){
+		if (player.health.dead) {
 			return;
 		}
 
@@ -111,33 +126,53 @@ public class IA : MonoBehaviour
 		UpdateDesires ();
 		SelectBehavior ();
 		currentBehavior.Run ();
+		//ManageNavDestination ();
+	}
+
+	public void ManageNavDestination ()
+	{
+
+
+		if (Time.time - lastNavUpdate <= navUpdateDelay) {
+			return;
+		}
+
+		if (Vector3.Distance (gameObject.transform.position, navTarget) > navLongPathNoise) {
+			navTarget.x = navTarget.x - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+			navTarget.y = navTarget.y - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+			navTarget.z = navTarget.z - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+		}
+
+		nav.SetDestination (navTarget);
+		lastNavUpdate = Time.time;
 	}
 
 
-	public void SelectBehavior(){
+	public void SelectBehavior ()
+	{
 
 		IABehavior tmp = null;
 		float maxPriority = -2f;
 
 
-		foreach (IABehavior b in behaviors){
-			if(b == currentBehavior){
+		foreach (IABehavior b in behaviors) {
+			if (b == currentBehavior) {
 				continue;
 			}
 			float prioTmp = b.EvaluatePriority ();
-			if (prioTmp >= maxPriority){
+			if (prioTmp >= maxPriority) {
 				tmp = b;
 				maxPriority = prioTmp;
 			}
 		}
 
-		if (currentBehavior != null && currentBehavior.EvaluatePriority () < maxPriority){ 
+		if (currentBehavior != null && currentBehavior.EvaluatePriority () < maxPriority) { 
 			currentBehavior.Reset ();
 			currentBehavior = tmp;
 			currentBehavior.Setup ();
 		}
 
-		if (currentBehavior == null){
+		if (currentBehavior == null) {
 			currentBehavior = tmp;
 			currentBehavior.Setup ();
 		}
@@ -145,21 +180,18 @@ public class IA : MonoBehaviour
 
 	}
 
-	public void UpdateDesires(){
-		foreach(Desire d in desires.Values){
+	public void UpdateDesires ()
+	{
+		foreach (Desire d in desires.Values) {
 			d.Update ();
 		}
 	}
-		
-
 
 	/*
 	 * 
 	 *     USEFULL
 	 * 
 	 */
-
-
 
 	public void SetNewRandomDestination ()
 	{
@@ -169,6 +201,12 @@ public class IA : MonoBehaviour
 		NavMeshHit hit;
 		NavMesh.SamplePosition (navDestination, out hit, navDestinationRadius, 1);
 		nav.SetDestination (hit.position);
+	}
+
+	public void SetNewNavTarget (Vector3 navTarget, float speed)
+	{
+		this.navTarget = navTarget;
+		nav.speed = speed;
 	}
 
 	public bool isTargetVisible (GameObject rayTarget, float range)
@@ -204,7 +242,7 @@ public class IA : MonoBehaviour
 				continue;
 			} 
 
-			if (!playersAround.Contains (player)){
+			if (!playersAround.Contains (player)) {
 				playersAround.Add (player);
 			}
 				
@@ -224,7 +262,7 @@ public class IA : MonoBehaviour
 				//Now checking Angle and Visibility
 				if (Vector3.Angle (col.gameObject.transform.position - transform.position, transform.forward) < visionAngle && isTargetVisible (col.gameObject, visionRadius)) {
 				
-					if (player.isCreature){
+					if (player.isCreature) {
 
 						if (!creaturesAround.Contains (player)) {
 							creaturesAround.Add (player);
@@ -235,7 +273,7 @@ public class IA : MonoBehaviour
 							closestCreature = player;
 						}
 						
-					}else{
+					} else {
 
 						if (!enemiesAround.Contains (player)) {
 							enemiesAround.Add (player);
@@ -252,14 +290,16 @@ public class IA : MonoBehaviour
 		}
 	}
 
-	public float ForcesRatio(){
+	public float ForcesRatio ()
+	{
 		if (enemiesAround.Count == 0 || friendsAround.Count == 0)
 			return 1f;
 		else
 			return (float)friendsAround.Count / (float)enemiesAround.Count;
 	}
 
-	public void ClearPlayersAround(){
+	public void ClearPlayersAround ()
+	{
 		closestFriend = null;
 		closestEnemy = null;
 		closestCreature = null;

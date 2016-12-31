@@ -50,7 +50,7 @@ public class PlayerWeapon : MonoBehaviour
 	// Force and time parameters
 	float recoilForce = 2f;
 	float counterRecoilForce = 5f;
-	float recoilTime = 0.1f;
+	float recoilTime = 0.08f;
 	float downwardTime = .3f;
 	float downwardRecoverForce = 3.8f;
 

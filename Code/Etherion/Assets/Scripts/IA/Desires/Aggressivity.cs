@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Aggressivity : Desire {
+public class Aggressivity : Desire
+{
 
 	public static string NAME = "AGGRESSIVITY";
 
@@ -18,19 +19,22 @@ public class Aggressivity : Desire {
 
 	float timer;
 
-	public Aggressivity(IA ia) : base(ia){
+	public Aggressivity (IA ia) : base (ia)
+	{
 		timer = 0f;
 	}
 
 
-	public override void Setup (){
+	public override void Setup ()
+	{
 		lastShooter = null;
 		lastHit = 0f;
 		this.MIN_VALUE = STD_MIN_VALUE * personalCoeff;
 	}
 
-	//Agressivity Goes 
-	public override void Update (){
+	//Agressivity Goes
+	public override void Update ()
+	{
 
 		ManageLastShooter ();
 
@@ -40,20 +44,22 @@ public class Aggressivity : Desire {
 		CheckCurrentScore ();
 
 		value = Mathf.Max (this.MIN_VALUE, Mathf.Min (this.MAX_VALUE, value));
-		value *=  Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count + ((lastShooter!=null)?1:0));
+		value *= Mathf.Log (1 + ia.enemiesAround.Count + ia.creaturesAround.Count + ((lastShooter != null) ? 1 : 0));
 
 	}
 
-	public void CheckShot(){
-		if (lastShooter != ia.player.health.lastShooter || lastHit != ia.player.health.lastHitDate){
+	public void CheckShot ()
+	{
+		if (lastShooter != ia.player.health.lastShooter || lastHit != ia.player.health.lastHitDate) {
 			lastHit = ia.player.health.lastHitDate;
 			lastShooter = ia.player.health.lastShooter;
 			value += personalCoeff * SHOT_VALUE;
 		}
 	}
 
-	public void CheckEnemiInSight(){
-		foreach(Player p in ia.enemiesAround){
+	public void CheckEnemiInSight ()
+	{
+		foreach (Player p in ia.enemiesAround) {
 			float dist = Vector3.Distance (p.gameObject.transform.position, ia.player.gameObject.transform.position);
 			float val = personalCoeff * (ia.maxAimingDistance - dist + 1) * ENEMY_IN_SIGHT_MULTIPLIER * Time.deltaTime;
 			value += val;
@@ -61,19 +67,24 @@ public class Aggressivity : Desire {
 		}
 	}
 
-	public void CheckCurrentScore(){}
+	public void CheckCurrentScore ()
+	{
+		
+	}
 
-	public void ManageLastShooter(){
+	public void ManageLastShooter ()
+	{
 		timer += Time.deltaTime;
-		if(timer >= FORGET_DELAY || ia.player.health.dead){
+		if (timer >= FORGET_DELAY || ia.player.health.dead) {
 			timer = 0f;
 			lastShooter = null;
 			lastHit = 0f;
 		}
 	}
 
-	public void Decrease(){
-		float diff = Time.deltaTime * ( MAX_RAND - personalCoeff ) / DECREASE_TIME;
+	public void Decrease ()
+	{
+		float diff = Time.deltaTime * (MAX_RAND - personalCoeff) / DECREASE_TIME;
 		value = Mathf.Max (MIN_VALUE, value - diff);
 	}
 

@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 	public static int maxTime = 15;
 
 
-	public static float RESPAWN_DELAY = 5f;
+	public static float RESPAWN_DELAY = 12f;
 
 	private static GameManager gameManager;
 
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 				Player p = player.GetComponent<Player> ();
 
 				player.transform.position = ts.GetRandomSpawn ().transform.position;
-				ConfigureNaVAgent (player,p);
+				ConfigureNaVAgent (player, p);
 				
 				p.team = ts.team;
 				p.side = p.team.side;
@@ -146,9 +146,10 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void ConfigureNaVAgent(GameObject player, Player p){
+	void ConfigureNaVAgent (GameObject player, Player p)
+	{
 		
-		if(p.isHuman){
+		if (p.isHuman) {
 			return;
 		}
 

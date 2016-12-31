@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class HumanAim : MonoBehaviour {
+public class HumanAim : MonoBehaviour
+{
 
 
 	public float speed = .0015f;
@@ -21,34 +22,37 @@ public class HumanAim : MonoBehaviour {
 	Camera cam;
 	GameObject rightHand;
 
-	void Awake () {
+	void Awake ()
+	{
 		
 		aiming = false;
-		rightHand = transform.Find("Model/Head/RightHand").gameObject;
-		sidePosition = transform.Find("Model/Head/SidePosition").gameObject;
-		aimPosition = transform.Find("Model/Head/AimPosition").gameObject;
+		rightHand = transform.Find ("Model/Head/RightHand").gameObject;
+		sidePosition = transform.Find ("Model/Head/SidePosition").gameObject;
+		aimPosition = transform.Find ("Model/Head/AimPosition").gameObject;
 		cam = transform.Find ("Model/Head").gameObject.GetComponent<Camera> ();
 
-		aim = aimPosition.transform.position ;
+		aim = aimPosition.transform.position;
 		side = sidePosition.transform.position;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 
-		aim = aimPosition.transform.position ;
+		aim = aimPosition.transform.position;
 		side = sidePosition.transform.position;
 
-		if (aiming){
-			rightHand.transform.position = Vector3.Lerp(rightHand.transform.position, aim,  speed);
+		if (aiming) {
+			rightHand.transform.position = Vector3.Lerp (rightHand.transform.position, aim, speed);
 			cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, aimFOV, speed);
-		}else{
-			rightHand.transform.position = Vector3.Lerp(rightHand.transform.position, side, speed);
+		} else {
+			rightHand.transform.position = Vector3.Lerp (rightHand.transform.position, side, speed);
 			cam.fieldOfView = Mathf.Lerp (cam.fieldOfView, sideFOV, speed);
 		}
 	}
 
-	public void Aim(bool pressed){
+	public void Aim (bool pressed)
+	{
 		aiming = pressed;
 	}
 }
