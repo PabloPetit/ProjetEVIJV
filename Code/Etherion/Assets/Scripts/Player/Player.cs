@@ -41,6 +41,17 @@ public class Player : MonoBehaviour
 		playerKillCount = 0;
 		creatureKillCount = 0;
 		setCamLightShaft ();
+		SetName ();
+	}
+
+
+	public void SetName ()
+	{
+		if (isHuman) {
+			name = "Human " + id;
+		} else {
+			name = "CPU " + id;
+		}
 	}
 
 	void setCamLightShaft ()

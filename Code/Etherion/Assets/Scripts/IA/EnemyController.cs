@@ -27,6 +27,7 @@ public class EnemyController : IA
 	{
 		behaviors.Add (new CaptureEnemyArtefact (this));
 		behaviors.Add (new Attack (this));
+		behaviors.Add (new DefendTeamArtefact (this));
 	}
 
 	public override void SetHeadAndBarrel ()

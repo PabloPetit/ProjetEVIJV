@@ -21,7 +21,6 @@ public class IABehavior
 	public virtual void Run ()
 	{
 		ManageOrientation ();
-
 	}
 
 

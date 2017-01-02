@@ -11,14 +11,14 @@ public class GameManager : MonoBehaviour
 	public static int UPDATE_KILLS = 2;
 
 	public static int teamNumber = 2;
-	public static int playerPerTeam = 12;
+	public static int playerPerTeam = 15;
 
 	public static int targetScore = 2;
 	public static int targetKills = 10;
 	public static int maxTime = 15;
 
 
-	public static float RESPAWN_DELAY = 12f;
+	public static float RESPAWN_DELAY = 2f;
 
 	private static GameManager gameManager;
 

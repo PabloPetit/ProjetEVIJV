@@ -125,7 +125,7 @@ public class Health : MonoBehaviour
 
 	public virtual void SendPlayerLogInfo ()
 	{
-		string str = "ENEMY KILLED : " + player.name + "\n [ +" + (int)(player.experience.RetrievedXp ()) + " XP]";
+		string str = "ENEMY KILLED : " + player.name + " [ " + player.experience.level + " ]\n [ +" + (int)(player.experience.RetrievedXp ()) + " XP]";
 		EventName playerLogEvent = new EventName (PlayerLog.PLAYER_LOG_CHANNEL);
 		EventManager.TriggerAction (playerLogEvent, new object[]{ str });
 	}
@@ -150,23 +150,6 @@ public class Health : MonoBehaviour
 		string color2; 
 		string finalstr;
 
-		/*
-		//person killed:
-		if (player.side > 0) { // player
-			color1 = "<color=#0000ffff>"; 
-		} else {  // creature
-			color1 = "<color=#000000ff>";
-		}
-
-		//killer: 
-		if (lastShooter.side > 0) { // player
-			color2 = "<color=#0000ffff>"; 
-		} else {  // creature 
-			color2 = "<color=#000000ff>";
-		}
-
-		finalstr = color1 + player.name + "</color> -> " + color2 + lastShooter.name + "</color>";
-		*/
 
 		finalstr = lastShooter.name + " -> " + player.name;
 		EventManager.TriggerAction (killLogEvent, new object[]{ finalstr });

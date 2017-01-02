@@ -30,14 +30,14 @@ public class CaptureEnemyArtefact : IABehavior
 		SetSearching ();// If i'm carrying an Artefact, i'm not seraching for one
 
 		if (!searching) {// If i'm not searching an Artefact
-			ia.nav.SetDestination (ia.player.team.teamSlot.receptor.transform.position);
+			ia.SetNavTarget (ia.player.team.teamSlot.receptor.transform.position);
 			return;
 		}
 
 		SetTarget ();
 
 		if (target != null) {
-			ia.nav.SetDestination (target.gameObject.transform.position);
+			ia.SetNavTarget (target.gameObject.transform.position);
 		}
 	}
 

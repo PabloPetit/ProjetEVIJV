@@ -38,8 +38,9 @@ public class IA : MonoBehaviour
 	public float maxAimingDistance = 1000f;
 
 	public float navLongPathNoise = 25f;
-	public float navDestinationRadius = 100f;
-	public float navUpdateDelay = .2f;
+	public float navDestinationRadius = 300f;
+	public float navUpdateDelay = 5f;
+	public float navPrecisionModeRange = 150f;
 
 	// Variables
 
@@ -71,8 +72,7 @@ public class IA : MonoBehaviour
 	// Checked
 
 	public Vector3 navTarget;
-	public float currentNavSpeed = 0f;
-	public float lastNavUpdate = 0f;
+	public float navTimer;
 
 	protected void Start ()
 	{
@@ -91,6 +91,8 @@ public class IA : MonoBehaviour
 		desires = new Dictionary<System.Type, Desire> ();
 
 		gameManager = FindObjectOfType<GameManager> ();
+
+		navTimer = navUpdateDelay + 1f;
 
 		SetHeadAndBarrel ();
 		SetDesires ();
@@ -131,20 +133,50 @@ public class IA : MonoBehaviour
 
 	public void ManageNavDestination ()
 	{
+		//Check if the target is reached
+		//Check if new temporary Destination is needed
+		//In this case, caculate new temporary point, set navDestionation to it
+		//
 
+		navTimer += Time.deltaTime;
 
-		if (Time.time - lastNavUpdate <= navUpdateDelay) {
+		if (navTimer > navUpdateDelay) {
+			nav.SetDestination (navTarget);
+			navTimer = 0f;
 			return;
 		}
 
-		if (Vector3.Distance (gameObject.transform.position, navTarget) > navLongPathNoise) {
-			navTarget.x = navTarget.x - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
-			navTarget.y = navTarget.y - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
-			navTarget.z = navTarget.z - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+		if (Vector3.Distance (gameObject.transform.position, navTarget) < navPrecisionModeRange) { //Close to target, switch to precision mode
+			nav.SetDestination (navTarget);
+			return;
+		}
+			
+		if (navTimer >= navUpdateDelay || nav.remainingDistance < 20f) {
+			SetNewTemporaryDestination ();
 		}
 
-		nav.SetDestination (navTarget);
-		lastNavUpdate = Time.time;
+	}
+
+	public void SetNewTemporaryDestination ()
+	{
+		Vector3 dir = navTarget - gameObject.transform.position;
+		dir.Normalize ();
+		Vector3 dest = gameObject.transform.position + dir * navDestinationRadius;
+		/*
+		dest.x = dest.x - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+		dest.y = dest.y - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+		dest.z = dest.z - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
+		*/
+
+		NavMeshHit hit;
+		NavMesh.SamplePosition (dest, out hit, 50, 1);
+		nav.SetDestination (hit.position);
+	}
+
+	public void SetNavTarget (Vector3 navTarget)
+	{
+		this.navTarget = navTarget;
+		nav.SetDestination (navTarget);//To remove
 	}
 
 
@@ -201,12 +233,6 @@ public class IA : MonoBehaviour
 		NavMeshHit hit;
 		NavMesh.SamplePosition (navDestination, out hit, navDestinationRadius, 1);
 		nav.SetDestination (hit.position);
-	}
-
-	public void SetNewNavTarget (Vector3 navTarget, float speed)
-	{
-		this.navTarget = navTarget;
-		nav.speed = speed;
 	}
 
 	public bool isTargetVisible (GameObject rayTarget, float range)
@@ -309,6 +335,36 @@ public class IA : MonoBehaviour
 		enemiesAround.Clear ();
 		creaturesAround.Clear ();
 	}
-		
+
+	public float ScoreRatio ()
+	{
+
+		float ownScore = player.team.score;
+		float maxEnemyScore = 0f;
+
+		foreach (Team t in gameManager.teams) {
+			if (t != player.team && t.score > maxEnemyScore) {
+				maxEnemyScore = t.score;
+			}
+		}
+		if (maxEnemyScore == 0) {
+			return ownScore;
+		}
+		return ownScore / maxEnemyScore;
+	}
+
+	public float ScoreDifference ()
+	{
+
+		float ownScore = player.team.score;
+		float maxEnemyScore = 0f;
+
+		foreach (Team t in gameManager.teams) {
+			if (t != player.team && t.score > maxEnemyScore) {
+				maxEnemyScore = t.score;
+			}
+		}
+		return ownScore - maxEnemyScore;
+	}
 
 }

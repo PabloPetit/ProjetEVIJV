@@ -4,6 +4,7 @@ using System.Collections;
 public class Attack : IABehavior
 {
 
+	public float ARTEFACT_TRANSPORTER_IN_SIGHT = 100f;
 
 	public static float MIN_ENEMY_DISTANCE = 50f;
 
@@ -19,6 +20,8 @@ public class Attack : IABehavior
 	Cowardice cowardice;
 
 	Player target;
+	Artefact art;
+
 
 	public StdIAWeapon weapon;
 
@@ -26,6 +29,7 @@ public class Attack : IABehavior
 	{
 		aggressivity = (Aggressivity)ia.desires [typeof(Aggressivity)];
 		cowardice = (Cowardice)ia.desires [typeof(Cowardice)];
+		art = ia.player.team.teamSlot.artefact;
 
 		weapon = ia.GetComponent<StdIAWeapon> ();
 		weapon.barrel = ia.barrel;
@@ -65,7 +69,11 @@ public class Attack : IABehavior
 
 	public void FindTarget ()
 	{
-		//TODO :  Fix artefact
+		if (art.transporter != null) {
+			target = art.transporter;
+			return;
+		}
+
 		if (ia.closestEnemy != null) {
 			target = ia.closestEnemy;
 			return;
@@ -91,7 +99,7 @@ public class Attack : IABehavior
 		}
 
 		if (Vector3.Distance (ia.gameObject.transform.position, target.gameObject.transform.position) > MIN_ENEMY_DISTANCE / aggressivity.personalCoeff) {
-			ia.nav.SetDestination (target.transform.position);
+			ia.SetNavTarget (target.transform.position);
 		} else {
 			ia.nav.speed = 0f; 
 		}
@@ -116,7 +124,9 @@ public class Attack : IABehavior
 
 	public override float EvaluatePriority ()
 	{
-		return Mathf.Max (0f, aggressivity.value - cowardice.value / 2);
+		float artCarrierValue = ((art.transporter != null && ia.isTargetVisible (art.transporter.gameObject, ia.visionRadius)) ? ARTEFACT_TRANSPORTER_IN_SIGHT : 0f);
+
+		return Mathf.Max (0f, aggressivity.value - cowardice.value / 2) + artCarrierValue;
 	}
 
 	public override void Setup ()
