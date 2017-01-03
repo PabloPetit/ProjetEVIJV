@@ -6,7 +6,8 @@ public class Antenna : MonoBehaviour
 
 	public int MAX_LEVEL = 10;
 
-	public float CAPTURE_TIME = 14f;
+	public float CAPTURE_POINTS = 100f;
+	public float POINTS_PER_PLAYER = 8f;
 
 	public float SEND_DELAY = 10f;
 	public float STD_XP = 500f;
@@ -15,6 +16,8 @@ public class Antenna : MonoBehaviour
 
 	float timer;
 	int count = 0;
+
+
 
 	Team owners;
 
@@ -32,9 +35,8 @@ public class Antenna : MonoBehaviour
 	
 	}
 
-	void RetrieveExperience ()
+	void SendExperience ()
 	{
-
 
 		float xp = STD_XP * level * 1.742f;
 
@@ -46,4 +48,6 @@ public class Antenna : MonoBehaviour
 			}
 		}
 	}
+
+
 }
