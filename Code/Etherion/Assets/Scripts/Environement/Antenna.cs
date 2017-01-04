@@ -66,7 +66,7 @@ public class Antenna : MonoBehaviour
 	void ManageCapture ()
 	{
 		//Clear
-		foreach (Team t in playersInside) {
+		foreach (Team t in playersInside.Keys) {
 			playersInside [t] = 0;
 		}
 
