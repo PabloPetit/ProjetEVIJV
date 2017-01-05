@@ -142,6 +142,7 @@ public class GameManager : MonoBehaviour
 				
 				p.team = ts.team;
 				p.side = p.team.side;
+				p.team.players.Add (p);
 			}
 		}
 	}

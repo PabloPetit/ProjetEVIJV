@@ -5,49 +5,56 @@ using System.Collections.Generic;
 public class Antenna : MonoBehaviour
 {
 
+	public static int STATE_NEUTRAL = 1;
+	public static int STATE_CAPTURED = 2;
+
 	public static int MAX_LEVEL = 10;
 
 	public static float CAPTURE_POINTS_TARGET = 100f;
-	public static float POINTS_PER_PLAYER = 8f;
+	public static float POINTS_PER_PLAYER = 2.5f;
 
-	public static float SEND_DELAY = 10f;
+	public static float SEND_DELAY = 25f;
 	public static float STD_XP = 500f;
+	public static float CAPTURE_XP = 1000f;
+
+	EventName playerLogEvent;
 
 	public string name = "ANTENNA";
 	public int level;
 
 	float timer;
-	int count = 0;
+	int sendXPCount = 0;
 
 	int playerMask;
 
 	SphereCollider sphCol;
 
-	Dictionary<Team, float> capturePoints;
 	Dictionary<Team, int> playersInside;
 
 	Team owners;
 
+	public float capturePoints = 0f;
+	public int state;
+
 	void Start ()
 	{
 		sphCol = GetComponent<SphereCollider> ();
+		playerLogEvent = new EventName (PlayerLog.PLAYER_LOG_CHANNEL);
 		playerMask = LayerMask.GetMask ("Player");
 		level = 1;
-
+		state = STATE_NEUTRAL;
 	}
 
 	void SetDicts ()
 	{
-		if (capturePoints != null) {
+		if (playersInside != null) {
 			return;
 		}
-
-		capturePoints = new Dictionary<Team, float> ();
+			
 		playersInside = new Dictionary<Team, int> ();
 		GameManager manager = (GameManager)FindObjectOfType (typeof(GameManager));
 
 		foreach (Team t in manager.teams) {
-			capturePoints.Add (t, 0f);
 			playersInside.Add (t, 0);
 		}
 	}
@@ -59,53 +66,132 @@ public class Antenna : MonoBehaviour
 
 		timer += Time.deltaTime;
 
+		ManageCapture ();
+		ManageExperience ();
+	}
 
-	
+	public void OnTriggerEnter (Collider other)
+	{
+		Player p = other.gameObject.GetComponent<Player> ();
+		if (p == null)
+			return;
+		Debug.Log (p.name + " enterred the capture zone");
+		playersInside [p.team]++;
+		
+	}
+
+	public void OnTriggerExit (Collider other) // Will that work when players die inside of the collider ?
+	{
+		Player p = other.gameObject.GetComponent<Player> ();
+		if (p == null)
+			return;
+		Debug.Log (p.name + " left the capture zone");
+		playersInside [p.team]--;
 	}
 
 	void ManageCapture ()
 	{
+		/*
+		Debug.Log ("-----");
 		//Clear
-		foreach (Team t in playersInside.Keys) {
+		List<Team> temp = new List<Team> (playersInside.Keys);
+		foreach (Team t in temp) {
 			playersInside [t] = 0;
 		}
-
+		//Scan
 		Collider[] hitColliders = Physics.OverlapSphere (transform.position, sphCol.radius, playerMask);
-
+		Debug.Log ("Cols length : " + hitColliders.Length);
 		foreach (Collider col in hitColliders) {
 			Player p = col.gameObject.GetComponent<Player> ();
 			if (p == null)
 				continue;
 
 			playersInside [p.team]++;
+			Debug.Log ("ptaem" + p.team.side + " nb : " + playersInside [p.team]);
+		}*/
+
+
+		//Manage
+		if (state == STATE_NEUTRAL) {
+			int count = 0;
+			Team tmp = null;
+
+			foreach (Team t in playersInside.Keys) {
+				if (playersInside [t] > 0) {
+					count++;
+					tmp = t;
+				}
+			}
+
+			if (count == 1) {
+				capturePoints += Time.deltaTime * POINTS_PER_PLAYER * (playersInside [tmp]);
+				if (capturePoints >= CAPTURE_POINTS_TARGET) {
+					state = STATE_CAPTURED;
+					owners = tmp;
+					timer = 0f;
+					SendExperience ("Capture", CAPTURE_XP);
+				}
+			} else {
+				capturePoints = 0f;
+			}
+
+		} else if (state == STATE_CAPTURED) {
+			
+			foreach (Team t in playersInside.Keys) {
+				if (t == owners) {
+					capturePoints += Time.deltaTime * POINTS_PER_PLAYER * playersInside [t];
+				} else {
+					capturePoints -= Time.deltaTime * POINTS_PER_PLAYER * playersInside [t];
+				}		
+			}
+	
+			if (capturePoints <= 0f) {
+				state = STATE_NEUTRAL;
+				owners = null;
+				sendXPCount = 0;
+			}
+
 		}
-
-		// Get max
-
-		// if already capture capture and max != owners : decrease capture points
-		// if points == 0 owners = null
-
-		// else if no owners and max is unique : icrease capture points
-
-
-
+		capturePoints = Mathf.Max (0f, Mathf.Min (CAPTURE_POINTS_TARGET, capturePoints));
 	}
 
 	void ManageExperience ()
 	{
-		
+		if (state != STATE_CAPTURED) {
+			return;
+		}
+
+		if (timer > SEND_DELAY) {
+			timer = 0f;
+			sendXPCount += 1;
+			if (sendXPCount > NextLevel ()) {
+				level++;
+			}
+			SendExperience ("", XpValue ());
+		}
+
 	}
 
-	void SendExperience ()
+	public int NextLevel ()
+	{
+		return 5 + level * 2;
+	}
+
+	public float XpValue ()
+	{
+		return STD_XP + STD_XP / 2 * level / 3;
+	}
+
+	void SendExperience (string mess, float xp)
 	{
 
-		float xp = STD_XP * level * 1.742f;
-
+		string title = name + " [ " + level + " ] " + mess + " - [ +" + (int)(xp) + " XP]";
+		Debug.Log ("Sending xp to : side : " + owners.side + " count : " + owners.players.Count);
 		foreach (Player p in owners.players) {
 			EventName xpEvent = new EventName (Player.XP_CHANNEL, p.id);
 			EventManager.TriggerAction (xpEvent, new object[]{ xp });
 			if (p.isHuman) {
-				
+				EventManager.TriggerAction (playerLogEvent, new object[]{ title });
 			}
 		}
 	}

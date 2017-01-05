@@ -14,7 +14,7 @@ public class Projectile : MonoBehaviour
 	protected Vector3 initialPosition;
 	protected float timer;
 
-
+	protected int ignoreCollisionLayer;
 
 
 	public void Awake ()
@@ -28,6 +28,7 @@ public class Projectile : MonoBehaviour
 		if (audio != null) {
 			audio.Play ();
 		}
+		ignoreCollisionLayer = LayerMask.GetMask ("IgnoreBulletCollision");
 	}
 
 
@@ -54,6 +55,10 @@ public class Projectile : MonoBehaviour
 
 	protected virtual void OnTriggerEnter (Collider other)
 	{
+		if (((ignoreCollisionLayer) & (1 << other.gameObject.layer)) > 0) {
+			return;
+		}
+
 		Delete ();
 	}
 
@@ -64,5 +69,7 @@ public class Projectile : MonoBehaviour
 		}
 		Destroy (gameObject, t: delay);
 	}
+
+
 
 }

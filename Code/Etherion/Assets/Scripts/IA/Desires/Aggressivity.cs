@@ -22,6 +22,7 @@ public class Aggressivity : Desire
 	public Aggressivity (IA ia) : base (ia)
 	{
 		timer = 0f;
+		this.MIN_VALUE = STD_MIN_VALUE * personalCoeff;
 	}
 
 
@@ -29,7 +30,7 @@ public class Aggressivity : Desire
 	{
 		lastShooter = null;
 		lastHit = 0f;
-		this.MIN_VALUE = STD_MIN_VALUE * personalCoeff;
+
 	}
 
 	//Agressivity Goes
