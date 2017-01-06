@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 	public List<Team> teams;
 
 	public List<Artefact> artefacts;
+	public List<Antenna> antennas;
 
 	public static float timer = 0f;
 
@@ -43,10 +44,13 @@ public class GameManager : MonoBehaviour
 	EventName gameManagerEvent;
 	EventName gameState;
 
+
 	void Start ()
 	{
 		humanSet = false;
 		gameState = new EventName (GameState.GAME_STATE_CHANNEL);
+
+
 
 		InitTeamSlots ();
 		GenerateTeams ();
@@ -66,7 +70,6 @@ public class GameManager : MonoBehaviour
 	{
 		
 	}
-
 
 	void OnEnable ()
 	{
@@ -119,6 +122,15 @@ public class GameManager : MonoBehaviour
 		Team a = new Team (i, teamSlots [i]);
 		teamSlots [i].team = a;
 		teams.Add (a);
+	}
+
+	void InitializeAntennas (){
+		antennas = new List<Antenna> ();
+
+		foreach(Antenna a in FindObjectsOfType<Antenna> ()){
+			antennas.Add (a);
+		}
+
 	}
 
 	void InitializePlayers ()

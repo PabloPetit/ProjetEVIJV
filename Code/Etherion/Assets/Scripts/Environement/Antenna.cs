@@ -27,11 +27,11 @@ public class Antenna : MonoBehaviour
 
 	int playerMask;
 
-	SphereCollider sphCol;
+	public SphereCollider sphCol;
 
-	Dictionary<Team, int> playersInside;
+	public Dictionary<Team, int> playersInside;
 
-	Team owners;
+	public Team owners;
 
 	public float capturePoints = 0f;
 	public int state;
@@ -91,26 +91,6 @@ public class Antenna : MonoBehaviour
 
 	void ManageCapture ()
 	{
-		/*
-		Debug.Log ("-----");
-		//Clear
-		List<Team> temp = new List<Team> (playersInside.Keys);
-		foreach (Team t in temp) {
-			playersInside [t] = 0;
-		}
-		//Scan
-		Collider[] hitColliders = Physics.OverlapSphere (transform.position, sphCol.radius, playerMask);
-		Debug.Log ("Cols length : " + hitColliders.Length);
-		foreach (Collider col in hitColliders) {
-			Player p = col.gameObject.GetComponent<Player> ();
-			if (p == null)
-				continue;
-
-			playersInside [p.team]++;
-			Debug.Log ("ptaem" + p.team.side + " nb : " + playersInside [p.team]);
-		}*/
-
-
 		//Manage
 		if (state == STATE_NEUTRAL) {
 			int count = 0;

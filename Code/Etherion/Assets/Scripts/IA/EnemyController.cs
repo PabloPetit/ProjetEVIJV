@@ -11,15 +11,14 @@ public class EnemyController : IA
 
 	public override void SetDesires ()
 	{
-		
 		desires.Add (typeof(Aggressivity), new Aggressivity (this));
 		desires.Add (typeof(Cowardice), new Cowardice (this));
+
 		desires.Add (typeof(ArtefactOffend), new ArtefactOffend (this));
 		desires.Add (typeof(ArtefactDefend), new ArtefactDefend (this));
 
-		//desires.Add (typeof(Discretion),new Discretion(this));
-		//desires.Add (typeof(GainXP),new GainXP(this));
-
+		desires.Add (typeof(GainXP),new GainXP(this));
+		desires.Add (typeof(AntennaPossesion),new AntennaPossesion(this));
 
 	}
 
@@ -28,6 +27,7 @@ public class EnemyController : IA
 		behaviors.Add (new CaptureEnemyArtefact (this));
 		behaviors.Add (new Attack (this));
 		behaviors.Add (new DefendTeamArtefact (this));
+		behaviors.Add (new CaptureAntenna(this));
 	}
 
 	public override void SetHeadAndBarrel ()
