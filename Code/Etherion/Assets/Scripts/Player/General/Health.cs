@@ -28,7 +28,7 @@ public class Health : MonoBehaviour
 	// Position of the shooter when this player was hit
 
 
-
+	float maxLifeInit;
 
 	// Use this for initialization
 	public void Start ()
@@ -43,11 +43,15 @@ public class Health : MonoBehaviour
 		lifeBar = new EventName (LifeBar.LIFE_BAR_CHANNEL);
 		nav = GetComponent<NavMeshAgent> (); // null if human
 
+		maxLifeInit = maxLife;
 	}
 	
 	// Update is called once per frame
 	public virtual void Update ()
 	{
+
+		maxLife = maxLifeInit * (1 + Mathf.Log10 (.5f + player.experience.level / 2f));
+
 		timer += Time.deltaTime;
 		if (timer >= timeBeforeAutoCure && !dead && life != maxLife) {
 			life += Time.deltaTime * autoCureValue;
@@ -110,7 +114,7 @@ public class Health : MonoBehaviour
 				nav.enabled = false;
 			}
 
-
+			this.player.deathCount++;
 			Death ();
 
 			if (lastShooter.isHuman) {
@@ -120,6 +124,7 @@ public class Health : MonoBehaviour
 			SendXp ();
 			SendKillInfo ();
 			SendToKillLog ();
+
 		}
 	}
 

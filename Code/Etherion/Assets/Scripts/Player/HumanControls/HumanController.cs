@@ -177,11 +177,11 @@ public class HumanController : MonoBehaviour
 			IsWalkingTmp = true;
 		}
 		if (Input.GetKey (KeyMap.right)) {
-			desiredMove += camera.transform.right;
+			desiredMove += camera.transform.right / 2f;
 			IsWalkingTmp = true;
 		}
 		if (Input.GetKey (KeyMap.left)) {
-			desiredMove -= camera.transform.right;
+			desiredMove -= camera.transform.right / 2f;
 			IsWalkingTmp = true;
 		}
 

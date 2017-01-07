@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 	public int playerKillCount;
 	public int creatureKillCount;
 
+	public int deathCount;
 
 	void Start ()
 	{
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
 		OpenChannels ();
 		playerKillCount = 0;
 		creatureKillCount = 0;
+		deathCount = 0;
 		setCamLightShaft ();
 		SetName ();
 	}

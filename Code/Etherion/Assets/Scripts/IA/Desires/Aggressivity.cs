@@ -8,7 +8,7 @@ public class Aggressivity : Desire
 
 	public static float STD_MIN_VALUE = 30f;
 
-	public static float ENEMY_IN_SIGHT_MULTIPLIER = 1f;
+	public static float ENEMY_IN_SIGHT_MULTIPLIER = .5f;
 
 	public float SHOT_VALUE = 20f;
 

@@ -26,7 +26,7 @@ public class AIMonitor : MonoBehaviour
 
 			string str = "IA MONITOR : " + ia.name + " \n\n";
 
-			if (ia.nav.isActiveAndEnabled) {
+			if (ia.nav.isActiveAndEnabled && false) {
 
 				str += "Nav : Dest " + ia.navTarget.ToString () + "\nTemp " + ia.nav.destination +
 				"\nSpeed : " + ia.nav.speed + "  Remaining : " + ia.nav.remainingDistance + "\n\n";

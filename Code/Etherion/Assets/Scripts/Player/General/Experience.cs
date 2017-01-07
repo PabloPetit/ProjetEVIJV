@@ -73,7 +73,7 @@ public class Experience : MonoBehaviour
 
 	public virtual float RetrievedXp ()
 	{
-		return level * 100 + totalXp / 10;
+		return level * 100 + Mathf.Log (totalXp);
 	}
 
 	public object[] GetXpInfo ()

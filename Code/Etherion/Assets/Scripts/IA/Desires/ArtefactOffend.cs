@@ -6,7 +6,7 @@ public class ArtefactOffend : Desire
 
 	public static string NAME = "ARTEFACT_OFFEND";
 
-	public float STD_VALUE = 50f;
+	public float STD_VALUE = 60f;
 
 	public ArtefactOffend (IA ia) : base (ia)
 	{

@@ -13,8 +13,8 @@ public class GameManager : MonoBehaviour
 	public static int teamNumber = 2;
 	public static int playerPerTeam = 15;
 
-	public static int targetScore = 2;
-	public static int targetKills = 10;
+	public static int targetScore = 3;
+	public static int targetKills = 250;
 	public static int maxTime = 15;
 
 
@@ -50,8 +50,7 @@ public class GameManager : MonoBehaviour
 		humanSet = false;
 		gameState = new EventName (GameState.GAME_STATE_CHANNEL);
 
-
-
+		InitializeAntennas ();
 		InitTeamSlots ();
 		GenerateTeams ();
 		InitializeArtefacts ();
@@ -124,10 +123,11 @@ public class GameManager : MonoBehaviour
 		teams.Add (a);
 	}
 
-	void InitializeAntennas (){
+	void InitializeAntennas ()
+	{
 		antennas = new List<Antenna> ();
 
-		foreach(Antenna a in FindObjectsOfType<Antenna> ()){
+		foreach (Antenna a in FindObjectsOfType<Antenna> ()) {
 			antennas.Add (a);
 		}
 
