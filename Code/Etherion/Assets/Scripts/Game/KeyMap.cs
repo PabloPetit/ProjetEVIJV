@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class KeyMap {
+public class KeyMap
+{
 
 	public static KeyCode fire = KeyCode.Mouse0;
-	public static KeyCode aim = KeyCode.Mouse1; //Mouse1
+	public static KeyCode aim = KeyCode.Mouse1;
+	//Mouse1
 	public static KeyCode light = KeyCode.T;
 	public static KeyCode interact = KeyCode.E;
 
@@ -23,4 +25,9 @@ public class KeyMap {
 
 	public static KeyCode run = KeyCode.LeftShift;
 	public static KeyCode jump = KeyCode.Space;
+
+	public static KeyCode jetPack = KeyCode.LeftAlt;
+
+	public static KeyCode leftDash = KeyCode.A;
+	public static KeyCode rightDash = KeyCode.E;
 }

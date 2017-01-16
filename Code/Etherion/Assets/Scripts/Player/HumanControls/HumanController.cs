@@ -9,7 +9,7 @@ public class HumanController : MonoBehaviour
 
 
 	public static float footstepVolume = .05f;
-
+	public static float JET_PACK_MULMTIPLIER = 60f;
 
 
 	CharacterController characterController;
@@ -31,11 +31,25 @@ public class HumanController : MonoBehaviour
 	public float jumpTime;
 	public float stickToGroundForce;
 
+	public float jetPackImpulse;
+	public float jetPackTime;
+	public float jetPackCoolDown;
+
+	float jetPackTimer;
+	bool jetPacking;
+
+	public float dashImpulse;
+	public float dashCoolDown;
+	public float dashTime;
+	float dashTimer;
+	Vector3 dashDirection;
+
 	Animator animator;
 
 	public bool IsWalking;
 	public bool IsRunning;
 	public bool IsJumping;
+	Vector3 airDirection;
 	float verticalSpeed;
 	float jumpTimer;
 
@@ -71,6 +85,7 @@ public class HumanController : MonoBehaviour
 
 		verticalSpeed = 0f;
 		timer = 0f;
+		jetPackTimer = jetPackTime;
 	}
 
 	void Update ()
@@ -82,18 +97,59 @@ public class HumanController : MonoBehaviour
 		}
 
 		timer += Time.deltaTime;
-
 		Actions ();
 		FootSteps ();
+		jetPackManagement ();
+		dashManagement ();
 	}
+
 
 	void FixedUpdate ()
 	{
 		if (health.dead) {
-			//return;
+			return;
 		}
 		jumpTimer += Time.fixedDeltaTime;
 		Movement ();
+	}
+
+	void jetPackManagement ()
+	{
+		jetPackTimer += Time.deltaTime;
+
+		if (Input.GetKeyDown (KeyMap.jetPack) && jetPackTimer > jetPackCoolDown && !jetPacking && !IsJumping) {
+			jetPacking = true;
+			jetPackTimer = 0f;
+			Vector3 v = characterController.velocity;
+			v.y = 0f;
+			airDirection += v * 2f;
+			timer = 0f;
+
+		} else if (jetPacking && jetPackTimer >= jetPackTime) {
+			jetPacking = false;
+			jetPackTimer = 0f;
+		}
+	}
+
+	void dashManagement ()
+	{
+
+		dashTimer += Time.deltaTime;
+
+		if (dashDirection.Equals (Vector3.zero)) {
+			if (dashTimer > dashCoolDown) {
+				if (Input.GetKeyDown (KeyMap.leftDash)) {
+					dashTimer = 0f;
+					dashDirection = -camera.transform.right * dashImpulse;
+				} else if (Input.GetKeyDown (KeyMap.rightDash)) {
+					dashTimer = 0f;
+					dashDirection = camera.transform.right * dashImpulse;
+				}
+			}
+		} else if (dashTimer > dashTime) {
+			dashDirection = Vector3.zero;
+		}
+	
 	}
 
 
@@ -166,6 +222,7 @@ public class HumanController : MonoBehaviour
 
 		if (jumpTimer > jumpTime) {
 			IsJumping = false;
+			airDirection = Vector3.zero;
 		}
 
 		if (Input.GetKey (KeyMap.forward)) {
@@ -209,6 +266,9 @@ public class HumanController : MonoBehaviour
 		if (!IsJumping && Input.GetKey (KeyMap.jump) && characterController.isGrounded) {
 			IsJumping = true;
 			jumpTimer = 0;
+			airDirection = characterController.velocity;
+			airDirection.y = 0f;
+
 		}
 
 		RaycastHit hitInfo;
@@ -228,6 +288,11 @@ public class HumanController : MonoBehaviour
 	
 		if (IsJumping) {
 			verticalSpeed = jumpForce;
+			moveDir += camera.transform.forward;
+
+		} else if (jetPacking) {
+			verticalSpeed = jetPackImpulse;
+			moveDir += camera.transform.forward * JET_PACK_MULMTIPLIER;
 		} else if (!characterController.isGrounded) {
 			verticalSpeed -= stickToGroundForce * Time.fixedDeltaTime;
 		} else {
@@ -236,6 +301,8 @@ public class HumanController : MonoBehaviour
 
 		verticalSpeed = Mathf.Max (verticalSpeed, -stickToGroundForce * 3f);
 		moveDir.y = verticalSpeed;
+
+		moveDir += dashDirection;
 
 		characterController.Move (moveDir * Time.fixedDeltaTime);
 	}

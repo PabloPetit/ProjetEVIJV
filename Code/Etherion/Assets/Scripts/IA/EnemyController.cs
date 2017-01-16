@@ -4,8 +4,8 @@ using System.Collections;
 public class EnemyController : IA
 {
 
-	public static float RUN_SPEED = 15f;
-	public static float WALK_SPEED = 8f;
+	public static float RUN_SPEED = 25f;
+	public static float WALK_SPEED = 15f;
 
 
 
@@ -17,8 +17,8 @@ public class EnemyController : IA
 		desires.Add (typeof(ArtefactOffend), new ArtefactOffend (this));
 		desires.Add (typeof(ArtefactDefend), new ArtefactDefend (this));
 
-		desires.Add (typeof(GainXP),new GainXP(this));
-		desires.Add (typeof(AntennaPossesion),new AntennaPossesion(this));
+		desires.Add (typeof(GainXP), new GainXP (this));
+		desires.Add (typeof(AntennaPossesion), new AntennaPossesion (this));
 
 	}
 
@@ -27,7 +27,7 @@ public class EnemyController : IA
 		behaviors.Add (new CaptureEnemyArtefact (this));
 		behaviors.Add (new Attack (this));
 		behaviors.Add (new DefendTeamArtefact (this));
-		behaviors.Add (new CaptureAntenna(this));
+		behaviors.Add (new CaptureAntenna (this));
 	}
 
 	public override void SetHeadAndBarrel ()
