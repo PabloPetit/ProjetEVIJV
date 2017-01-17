@@ -68,12 +68,12 @@ public class Experience : MonoBehaviour
 
 	public float NextLevelStep (int level)
 	{
-		return level * 800 + Mathf.Pow (4 + level, 4);
+		return 2500f + level * 1500 + Mathf.Pow (4 + level, 4);
 	}
 
 	public virtual float RetrievedXp ()
 	{
-		return level * 100 + Mathf.Log (totalXp);
+		return  level * 100f + Mathf.Log (totalXp);
 	}
 
 	public object[] GetXpInfo ()

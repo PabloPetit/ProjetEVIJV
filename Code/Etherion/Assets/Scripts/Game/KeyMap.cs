@@ -30,4 +30,6 @@ public class KeyMap
 
 	public static KeyCode leftDash = KeyCode.A;
 	public static KeyCode rightDash = KeyCode.E;
+
+	public static KeyCode grenade = KeyCode.G;
 }

@@ -58,11 +58,17 @@ public class HumanController : MonoBehaviour
 	float footstepsInterval = .5f;
 	float timer;
 
+
+	// GRENADES [ NOT FINISHED ]
+	Player player;
+	public GameObject grenadePrefab;
+
 	void Awake ()
 	{
 
 		characterController = GetComponent<CharacterController> ();
 		camera = Camera.main;
+		player = GetComponent<Player> ();
 		mouseLook = new MouseLook ();
 		mouseLook.Init (transform, camera.transform);
 
@@ -166,7 +172,6 @@ public class HumanController : MonoBehaviour
 	void Actions ()
 	{
 
-
 		if (Input.GetKey (KeyMap.fire)) {
 			weapon.Shoot ();
 		}
@@ -197,6 +202,10 @@ public class HumanController : MonoBehaviour
 
 		}
 
+		if (Input.GetKeyDown (KeyMap.grenade)) {
+			ThrowGrenade ();
+		}
+
 		if (Input.GetKey (KeyCode.I)) {
 			walkSpeed = 20;
 			runSpeed = 200;
@@ -208,6 +217,15 @@ public class HumanController : MonoBehaviour
 			jumpForce = 12;
 		}
 			
+	}
+
+	void ThrowGrenade ()
+	{
+
+		Vector3 pos = camera.transform.position + camera.transform.forward * 2f;
+		Vector3 velocity = characterController.velocity + camera.transform.forward * 50f;
+		PlasmaGrenade.Create (grenadePrefab, pos, velocity, player);
+
 	}
 
 
