@@ -6,14 +6,14 @@ public class ControlerFooIA : MonoBehaviour
 
 	public GameObject dest;
 
-	NavMeshAgent nav;
+	UnityEngine.AI.NavMeshAgent nav;
 
 	Animator anim;
 
 	void Start ()
 	{
 	
-		nav = GetComponentInChildren<NavMeshAgent> ();
+		nav = GetComponentInChildren<UnityEngine.AI.NavMeshAgent> ();
 		nav.SetDestination (dest.transform.position);
 		anim = GetComponentInChildren<Animator> ();
 		anim.SetTrigger ("Run");

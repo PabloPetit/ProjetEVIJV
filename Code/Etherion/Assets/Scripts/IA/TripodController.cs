@@ -14,7 +14,7 @@ public class TripodController : MonoBehaviour
 
 	// Misc data
 
-	NavMeshAgent nav;
+	UnityEngine.AI.NavMeshAgent nav;
 	TripodHealth health;
 	Animator anim;
 	AudioSource audio;
@@ -80,7 +80,7 @@ public class TripodController : MonoBehaviour
 	void Start ()
 	{
 		
-		nav = GetComponent<NavMeshAgent> ();
+		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 		health = transform.Find ("hips").GetComponent<TripodHealth> ();
 		tripod = transform.Find ("hips").GetComponent<Player> ();
 		barrel = transform.Find ("hips/spine/head/Barrel").gameObject;
@@ -174,8 +174,8 @@ public class TripodController : MonoBehaviour
 	{
 		navDestination = Random.insideUnitSphere * destinationRadius;
 		navDestination += transform.position;
-		NavMeshHit hit;
-		NavMesh.SamplePosition (navDestination, out hit, destinationRadius, 1);
+		UnityEngine.AI.NavMeshHit hit;
+		UnityEngine.AI.NavMesh.SamplePosition (navDestination, out hit, destinationRadius, 1);
 		navDestination = hit.position;
 	}
 

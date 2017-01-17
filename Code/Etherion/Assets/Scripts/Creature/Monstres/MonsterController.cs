@@ -38,7 +38,7 @@ public class MonsterController : MonoBehaviour {
 	private GameObject target;
 	private Player targetPlayer;
 
-	private NavMeshAgent nav;
+	private UnityEngine.AI.NavMeshAgent nav;
 	private Animator animator;
 	private Player player;
 
@@ -52,7 +52,7 @@ public class MonsterController : MonoBehaviour {
 		playerMask = LayerMask.GetMask ("Player");
 		environnementMask = LayerMask.GetMask ("Environement");
 		initialPosition = transform.position;
-		nav = GetComponent<NavMeshAgent> ();
+		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 		animator = GetComponent<Animator> ();
 		player = GetComponent<Player> ();
 		timer = 0f;
@@ -102,8 +102,8 @@ public class MonsterController : MonoBehaviour {
 	void SetNewWanderDestination(){
 		navDestination = Random.insideUnitSphere * WANDER_RADIUS;
 		navDestination += initialPosition;
-		NavMeshHit hit;
-		NavMesh.SamplePosition (navDestination, out hit, WANDER_RADIUS, 1);
+		UnityEngine.AI.NavMeshHit hit;
+		UnityEngine.AI.NavMesh.SamplePosition (navDestination, out hit, WANDER_RADIUS, 1);
 		navDestination = hit.position;
 		nav.SetDestination (navDestination);
 		nav.speed = WANDER_SPEED;

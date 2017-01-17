@@ -23,7 +23,7 @@ public class Health : MonoBehaviour
 	public Vector3 lastShooterPosition;
 	public float lastHitDate;
 
-	public NavMeshAgent nav;
+	public UnityEngine.AI.NavMeshAgent nav;
 
 	// Position of the shooter when this player was hit
 
@@ -41,7 +41,7 @@ public class Health : MonoBehaviour
 		lastHitDate = 0f;
 		bloodCanvas = new EventName (BloodCanvas.BLOOD_CANVAS_CHANNEL);
 		lifeBar = new EventName (LifeBar.LIFE_BAR_CHANNEL);
-		nav = GetComponent<NavMeshAgent> (); // null if human
+		nav = GetComponent<UnityEngine.AI.NavMeshAgent> (); // null if human
 
 		maxLifeInit = maxLife;
 	}

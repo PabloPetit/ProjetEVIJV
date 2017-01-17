@@ -166,8 +166,8 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
-		player.AddComponent (typeof(NavMeshAgent));
-		NavMeshAgent nav = player.GetComponent<NavMeshAgent> ();
+		player.AddComponent (typeof(UnityEngine.AI.NavMeshAgent));
+		UnityEngine.AI.NavMeshAgent nav = player.GetComponent<UnityEngine.AI.NavMeshAgent> ();
 		nav.baseOffset = 1.5f;
 		nav.acceleration = 1000f;
 	}

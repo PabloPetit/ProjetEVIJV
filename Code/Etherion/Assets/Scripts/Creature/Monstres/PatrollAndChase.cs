@@ -16,7 +16,7 @@ public class PatrollAndChase : MonoBehaviour
 	public float distanceToFight = 20.0f;
 	public float distanceToDropCombat = 500.0f;
 	private bool chasingPlayer = false;
-	private NavMeshAgent agent;
+	private UnityEngine.AI.NavMeshAgent agent;
 	private bool isReturning = false;
 
 	MonsterHealth health;
@@ -27,7 +27,7 @@ public class PatrollAndChase : MonoBehaviour
 	void Awake ()
 	{
 		go = GameObject.FindGameObjectWithTag ("Player");
-		agent = GetComponent<NavMeshAgent> ();
+		agent = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 		agent.speed = enemyWanderSpeed;
 		startPosition = this.transform.position;
 		anim = transform.GetComponent<Animator> ();

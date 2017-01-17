@@ -11,7 +11,7 @@ public class PatrollingEnemy : MonoBehaviour {
 	public float wanderRange = 10.0f;
 	public float velocityanim = 1;
 	public float dampTime = 3;
-	public NavMeshAgent agent;
+	public UnityEngine.AI.NavMeshAgent agent;
 	Animator anim;   
 	//AudioSource enemyAudio;
 	int walk = Animator.StringToHash("monster1Walk");
@@ -28,7 +28,7 @@ public class PatrollingEnemy : MonoBehaviour {
 		//Get the NavMeshAgent so we can send it directions and set start position to the initial location
 		anim = GetComponent <Animator> ();
 		//enemyAudio = GetComponent <AudioSource> ();
-		agent = GetComponent("NavMeshAgent") as NavMeshAgent;
+		agent = GetComponent("NavMeshAgent") as UnityEngine.AI.NavMeshAgent;
 		agent.speed = wanderSpeed;  
 		startPosition = this.transform.position;
 		//Start Wandering

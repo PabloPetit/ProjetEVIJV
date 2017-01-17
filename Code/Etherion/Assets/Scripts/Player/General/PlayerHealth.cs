@@ -22,6 +22,7 @@ public class PlayerHealth : Health
 		col = GetComponent<Collider> ();
 		rend = GetComponentsInChildren<Renderer> ();
 		spawnTeleport = false;
+		anim.SetTrigger ("Run");
 	}
 
 	public override void Update ()
@@ -70,7 +71,7 @@ public class PlayerHealth : Health
 			r.enabled = true;
 		}
 
-		anim.SetTrigger ("Idle");
+		anim.SetTrigger ("Run");
 
 		if (nav != null) {
 			nav.enabled = true;

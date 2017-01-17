@@ -23,7 +23,7 @@ public class IA : MonoBehaviour
 	public GameObject head;
 	public GameObject barrel;
 
-	public NavMeshAgent nav;
+	public UnityEngine.AI.NavMeshAgent nav;
 
 	// Ray Shooting
 
@@ -80,7 +80,7 @@ public class IA : MonoBehaviour
 		environnementMask = LayerMask.GetMask ("Environement");
 
 		player = GetComponent<Player> ();
-		nav = GetComponent<NavMeshAgent> ();
+		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 
 		playersAround = new List<Player> ();
 		friendsAround = new List<Player> ();
@@ -168,8 +168,8 @@ public class IA : MonoBehaviour
 		dest.z = dest.z - navLongPathNoise / 2 + Random.Range (0f, navLongPathNoise);
 		*/
 
-		NavMeshHit hit;
-		NavMesh.SamplePosition (dest, out hit, 50, 1);
+		UnityEngine.AI.NavMeshHit hit;
+		UnityEngine.AI.NavMesh.SamplePosition (dest, out hit, 50, 1);
 		nav.SetDestination (hit.position);
 	}
 
@@ -230,8 +230,8 @@ public class IA : MonoBehaviour
 		Vector3 navDestination = Vector3.zero;
 		navDestination = Random.insideUnitSphere * navDestinationRadius;
 		navDestination += transform.position;
-		NavMeshHit hit;
-		NavMesh.SamplePosition (navDestination, out hit, navDestinationRadius, 1);
+		UnityEngine.AI.NavMeshHit hit;
+		UnityEngine.AI.NavMesh.SamplePosition (navDestination, out hit, navDestinationRadius, 1);
 		nav.SetDestination (hit.position);
 	}
 

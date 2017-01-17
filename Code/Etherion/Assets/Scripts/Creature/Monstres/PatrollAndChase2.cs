@@ -15,14 +15,14 @@ public class PatrollAndChase2 : MonoBehaviour
 	public float distanceToCombat = 200.0f;
 	public float distanceToDropCombat = 100000.0f;
 	public bool chasingPlayer = false;
-	public NavMeshAgent agent;
+	public UnityEngine.AI.NavMeshAgent agent;
 	public bool isReturning = false;
 
 
 	void Awake()
 	{
 		go = GameObject.FindGameObjectWithTag("Player");
-		agent = GetComponent<NavMeshAgent>();
+		agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 		agent.speed  = enemyWanderSpeed;
 		startPosition = this.transform.position;
 	}

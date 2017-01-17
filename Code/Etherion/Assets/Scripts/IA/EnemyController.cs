@@ -8,7 +8,6 @@ public class EnemyController : IA
 	public static float WALK_SPEED = 15f;
 
 
-
 	public override void SetDesires ()
 	{
 		desires.Add (typeof(Aggressivity), new Aggressivity (this));
