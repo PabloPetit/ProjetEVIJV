@@ -51,7 +51,11 @@ public class Experience : MonoBehaviour
 			return;
 		}
 		float xp = (float)param [0];
-		//Debug.Log (xp);
+
+
+		if (player.isHuman) {
+			Debug.Log (xp);
+		}
 
 
 		totalXp += xp;

@@ -62,6 +62,7 @@ public class Player : MonoBehaviour
 			Camera[] cams = GetComponentsInChildren<Camera> ();
 			foreach (LightShafts l in FindObjectsOfType<LightShafts> ()) {
 				l.m_Cameras = new Camera[]{ cams [0] };
+				l.enabled = true;
 			}
 			/*
 			Canvas canvas = FindObjectOfType<Canvas> ();

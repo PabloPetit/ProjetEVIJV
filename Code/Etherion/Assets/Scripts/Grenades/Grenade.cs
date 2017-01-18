@@ -17,6 +17,8 @@ public class Grenade : MonoBehaviour, IDamage
 
 	public float radius;
 
+	public float gravityEnforcement;
+
 	protected float deathDelay;
 
 	int ignoreMask;
@@ -25,16 +27,25 @@ public class Grenade : MonoBehaviour, IDamage
 
 	protected bool hasCollide;
 
-	public AudioSource audio;
+	protected AudioSource audio;
+
+	protected Rigidbody rb;
 
 	public virtual void Start ()
 	{
 		ignoreMask = LayerMask.GetMask ("IgnoreBulletCollision");
 		hasCollide = false;
 		audio = GetComponent<AudioSource> ();
+		rb = GetComponent<Rigidbody> ();
 	}
 
-	public static GameObject Create (GameObject prefab, Vector3 position, Vector3 velocity, Player shooter)
+	public void FixedUpdate ()
+	{
+		rb.velocity = rb.velocity + Vector3.down * Time.fixedTime * gravityEnforcement;
+	}
+
+	public static GameObject Create (GameObject prefab, Vector3 position, Vector3 velocity, Player shooter,
+	                                 bool friendlyFire, float initialDamage, float minDamage, float damageDecrease)
 	{
 
 		GameObject gre = Instantiate (prefab);
@@ -43,8 +54,14 @@ public class Grenade : MonoBehaviour, IDamage
 		Rigidbody rb = gre.GetComponent<Rigidbody> ();
 		rb.velocity = velocity;
 
+		rb.AddTorque (Random.onUnitSphere.normalized * 10f);
+
 		Grenade grenade = gre.GetComponent<Grenade> ();
 		grenade.shooter = shooter;
+		grenade.friendlyFire = friendlyFire;
+		grenade.initialDamage = initialDamage;
+		grenade.minDamage = minDamage;
+		grenade.damageDecrease = damageDecrease;
 		return gre;
 	}
 
@@ -57,7 +74,7 @@ public class Grenade : MonoBehaviour, IDamage
 		audio.Play ();
 		EnableEffects ();
 		Damage.DoZoneDamage (shooter, transform, radius, this);
-		GetComponent<Rigidbody> ().velocity = Vector3.zero;
+		rb.velocity = Vector3.zero;
 		Delete (deathDelay);
 	}
 

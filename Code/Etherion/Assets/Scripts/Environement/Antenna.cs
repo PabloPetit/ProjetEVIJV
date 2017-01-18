@@ -75,7 +75,7 @@ public class Antenna : MonoBehaviour
 		Player p = other.gameObject.GetComponent<Player> ();
 		if (p == null)
 			return;
-		Debug.Log (p.name + " enterred the capture zone");
+		//Debug.Log (p.name + " enterred the capture zone");
 		playersInside [p.team]++;
 		
 	}
@@ -85,7 +85,7 @@ public class Antenna : MonoBehaviour
 		Player p = other.gameObject.GetComponent<Player> ();
 		if (p == null)
 			return;
-		Debug.Log (p.name + " left the capture zone");
+		//Debug.Log (p.name + " left the capture zone");
 		playersInside [p.team]--;
 	}
 
