@@ -11,6 +11,8 @@ public class HumanController : MonoBehaviour
 	public static float footstepVolume = .05f;
 	public static float JET_PACK_MULMTIPLIER = 60f;
 
+	public static float MAX_JUMP_ANGLE = 50f;
+
 
 	CharacterController characterController;
 	Camera camera;
@@ -58,6 +60,8 @@ public class HumanController : MonoBehaviour
 	AudioSource audio;
 	float footstepsInterval = .5f;
 	float timer;
+
+	float groundAngle = 0f;
 
 	void Awake ()
 	{
@@ -215,6 +219,12 @@ public class HumanController : MonoBehaviour
 			
 	}
 
+	void OnControllerColliderHit (ControllerColliderHit hit)
+	{
+		groundAngle = Vector3.Angle (Vector3.up, hit.normal);
+	}
+
+
 
 	void Movement ()
 	{
@@ -268,7 +278,7 @@ public class HumanController : MonoBehaviour
 			IsRunning = false;
 		}
 
-		if (!IsJumping && Input.GetKey (KeyMap.jump) && characterController.isGrounded) {
+		if (!IsJumping && Input.GetKey (KeyMap.jump) && characterController.isGrounded && groundAngle < MAX_JUMP_ANGLE) {
 			IsJumping = true;
 			jumpTimer = 0;
 			airDirection = characterController.velocity;
