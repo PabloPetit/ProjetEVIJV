@@ -21,7 +21,7 @@ public class TripodController : IA
 
 	public override void SetHeadAndBarrel ()
 	{
-		head = transform.Find ("Model/Head").gameObject;
-		barrel = transform.Find ("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
+		head = transform.Find ("hips/spine/head/HeadRaycast").gameObject;
+		barrel = transform.Find ("hips/spine/head/Barrel").gameObject;
 	}
 }

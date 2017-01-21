@@ -187,7 +187,7 @@ public class HumanController : MonoBehaviour
 			interact.Interact ();
 		}
 		if (Input.GetKey (KeyMap.buffLife)) {
-
+			
 		}
 		if (Input.GetKey (KeyMap.buffSpeed)) {
 

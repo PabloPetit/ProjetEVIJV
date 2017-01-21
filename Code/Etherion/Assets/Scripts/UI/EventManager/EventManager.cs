@@ -60,4 +60,9 @@ public class EventManager : MonoBehaviour
 			a.Invoke (param);
 		}
 	}
+
+	public static Dictionary <EventName, Action<object[]>>.KeyCollection GetDictKeys ()
+	{
+		return instance.eventDictionary.Keys;
+	}
 }

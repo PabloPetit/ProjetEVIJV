@@ -30,7 +30,7 @@ public class XpBar : MonoBehaviour
 	void Set (object[] param)
 	{
 
-		Debug.Log ("Experience receiveed");
+		Debug.Log ("Experience received");
 		
 		int level = (int)param [0];
 		float totalXp = (float)param [1];
@@ -52,7 +52,7 @@ public class XpBar : MonoBehaviour
 
 	void OnDisable ()
 	{
-		EventManager.StopListening (XPBarEvent);
+		//EventManager.StopListening (XPBarEvent);
 	}
 
 

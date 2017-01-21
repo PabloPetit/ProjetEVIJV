@@ -22,7 +22,7 @@ public class Experience : MonoBehaviour
 	void Start ()
 	{
 		player = GetComponent<Player> ();
-		xpEvent = new EventName (XpBar.XP_BAR_CHANNEL, player.id);
+		xpEvent = new EventName (XpBar.XP_BAR_CHANNEL);
 		InitLevelSteps ();
 		totalXp = levelSteps [0] + 1f;
 		level = 1;
@@ -66,14 +66,13 @@ public class Experience : MonoBehaviour
 		}
 
 		if (player.isHuman) {
-			Debug.Log (xpEvent.name);
 			EventManager.TriggerAction (xpEvent, GetXpInfo ());
 		}
 	}
 
 	public float NextLevelStep (int level)
 	{
-		return 2500f + level * 1500 + Mathf.Pow (4 + level, 4);
+		return 2500f + level * 1200 + Mathf.Pow (4 + level, 3);
 	}
 
 	public virtual float RetrievedXp ()
@@ -88,9 +87,9 @@ public class Experience : MonoBehaviour
 
 	public void OpenChannel (int id)
 	{
-		//if (xpChannel == null) {
-		xpChannel = new EventName (Player.XP_CHANNEL, id);
-		//}
+		if (xpChannel == null) {
+			xpChannel = new EventName (Player.XP_CHANNEL, id);
+		}
 
 		EventManager.StartListening (xpChannel, ReceiveXp);
 	}
