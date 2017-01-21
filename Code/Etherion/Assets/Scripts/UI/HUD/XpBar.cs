@@ -29,6 +29,8 @@ public class XpBar : MonoBehaviour
 
 	void Set (object[] param)
 	{
+
+		Debug.Log ("Experience receiveed");
 		
 		int level = (int)param [0];
 		float totalXp = (float)param [1];

@@ -2,15 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TripodController : MonoBehaviour {
+public class TripodController : IA
+{
 
-	// Use this for initialization
-	void Start () {
+	public override void SetDesires ()
+	{
 		
+
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public override void SetBehaviors ()
+	{
+		behaviors.Add (new TripodCloseRange (this));
+		behaviors.Add (new TripodLaserAttack (this));
+		behaviors.Add (new TripodSubAmmoAttack (this));
+		behaviors.Add (new TripodExploration (this));
+	}
+
+	public override void SetHeadAndBarrel ()
+	{
+		head = transform.Find ("Model/Head").gameObject;
+		barrel = transform.Find ("Model/Head/RightHand/Gun/BarrelEnd").gameObject;
 	}
 }
