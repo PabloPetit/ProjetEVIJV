@@ -15,7 +15,8 @@ public class AIMonitor : MonoBehaviour
 	void Start ()
 	{
 		text = GetComponentInChildren<Text> ();
-		ia = FindObjectOfType<EnemyController> ();
+		//ia = FindObjectOfType<EnemyController> ();
+		ia = FindObjectOfType<TripodController> ();
 	}
 	
 	// Update is called once per frame

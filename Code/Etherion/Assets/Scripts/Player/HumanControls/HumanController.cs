@@ -26,6 +26,7 @@ public class HumanController : MonoBehaviour
 	PlayerAbility1 ability1;
 	PlayerHealth health;
 	PlayerGrenade grenade;
+	Player player;
 	HumanAim aim;
 
 	public float walkSpeed;
@@ -63,6 +64,8 @@ public class HumanController : MonoBehaviour
 
 	float groundAngle = 0f;
 
+	GameManager gameManager;
+
 	void Awake ()
 	{
 
@@ -80,10 +83,12 @@ public class HumanController : MonoBehaviour
 		health = gameObject.GetComponent<PlayerHealth> ();
 		aim = gameObject.GetComponent<HumanAim> ();
 		grenade = GetComponent<PlayerGrenade> ();
+		player = GetComponent<Player> ();
 
 		animator = GetComponentInChildren<Animator> ();
 		audio = GetComponentInChildren<AudioSource> ();
 
+		gameManager = FindObjectOfType<GameManager> ();
 
 		IsWalking = false;
 		IsRunning = false;
@@ -96,11 +101,13 @@ public class HumanController : MonoBehaviour
 
 	void Update ()
 	{
-		RotateView ();
 
-		if (health.dead) {
+		if (!gameManager.gameIsON || health.dead) {
 			return;
 		}
+
+		RotateView ();
+
 
 		timer += Time.deltaTime;
 		Actions ();
@@ -112,9 +119,11 @@ public class HumanController : MonoBehaviour
 
 	void FixedUpdate ()
 	{
-		if (health.dead) {
+
+		if (!gameManager.gameIsON || health.dead) {
 			return;
 		}
+
 		jumpTimer += Time.fixedDeltaTime;
 		Movement ();
 	}
@@ -123,7 +132,7 @@ public class HumanController : MonoBehaviour
 	{
 		jetPackTimer += Time.deltaTime;
 
-		if (Input.GetKeyDown (KeyMap.jetPack) && jetPackTimer > jetPackCoolDown && !jetPacking && !IsJumping) {
+		if (Input.GetKeyDown (KeyMap.jetPack) && jetPackTimer > jetPackCoolDown && !jetPacking && !IsJumping && player.experience.level >= 7) {
 			jetPacking = true;
 			jetPackTimer = 0f;
 			Vector3 v = characterController.velocity;
@@ -143,7 +152,7 @@ public class HumanController : MonoBehaviour
 		dashTimer += Time.deltaTime;
 
 		if (dashDirection.Equals (Vector3.zero)) {
-			if (dashTimer > dashCoolDown) {
+			if (dashTimer > dashCoolDown && player.experience.level >= 3) {
 				if (Input.GetKeyDown (KeyMap.leftDash)) {
 					dashTimer = 0f;
 					dashDirection = -camera.transform.right * dashImpulse;

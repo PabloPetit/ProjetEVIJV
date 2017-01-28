@@ -69,6 +69,12 @@ public class Attack : IABehavior
 
 	public void FindTarget ()
 	{
+
+		if (ia.closestCreature != null) {
+			target = ia.closestCreature;
+			return;
+		}
+
 		if (art.transporter != null) {
 			target = art.transporter;
 			return;
@@ -78,10 +84,7 @@ public class Attack : IABehavior
 			target = ia.closestEnemy;
 			return;
 		}
-		if (ia.closestCreature != null) {
-			target = ia.closestCreature;
-			return;
-		}
+
 	}
 
 	public void AttackTarget ()

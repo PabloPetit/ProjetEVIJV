@@ -111,7 +111,8 @@ public class Health : MonoBehaviour
 			dead = true;
 
 			if (nav != null) {
-				nav.enabled = false;
+				nav.Stop ();
+				nav.enabled = false;//For Teleportation purposes
 			}
 
 			this.player.deathCount++;

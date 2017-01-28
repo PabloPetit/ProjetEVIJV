@@ -4,8 +4,8 @@ using System.Collections;
 public class EnemyController : IA
 {
 
-	public static float RUN_SPEED = 25f;
-	public static float WALK_SPEED = 15f;
+	public static float RUN_SPEED = 17f;
+	public static float WALK_SPEED = 12f;
 
 
 	public override void SetDesires ()

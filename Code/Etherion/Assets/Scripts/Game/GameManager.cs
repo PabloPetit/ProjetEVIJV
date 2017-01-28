@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
 	public static int UPDATE_KILLS = 2;
 
 	public static int teamNumber = 2;
-	public static int playerPerTeam = 15;
+	public static int playerPerTeam = 16;
 
 	public static int targetScore = 3;
 	public static int targetKills = 250;
@@ -24,7 +25,7 @@ public class GameManager : MonoBehaviour
 
 	public static string[] iaLevelNames = new string[]{ "Easy", "Meduim", "Hard" };
 
-	public int iaLevel = 1;
+	public static int iaLevel = 1;
 
 
 	public static bool scoreCondition = true;
@@ -39,11 +40,15 @@ public class GameManager : MonoBehaviour
 
 	public static float timer = 0f;
 
-	public bool humanSet;
+	bool humanSet;
 
 	EventName gameManagerEvent;
 	EventName gameState;
 
+	public bool gameIsON;
+
+	public GameObject endGamePanel;
+	Team winners;
 
 	void Start ()
 	{
@@ -55,19 +60,99 @@ public class GameManager : MonoBehaviour
 		GenerateTeams ();
 		InitializeArtefacts ();
 		InitializePlayers ();
-
+		gameIsON = true;
 
 	}
 
 	void Update ()
 	{
+		if (!gameIsON)
+			return;
+
 		timer += Time.deltaTime;
 		CheckGameOver ();
 	}
 
 	void CheckGameOver ()
 	{
-		
+
+		bool finished = timer / 60f > maxTime;
+
+		Team tScore = null, tKills = null; 
+		int maxScore = 0;
+		int maxKill = 0;
+
+		foreach (Team t in teams) {
+
+
+			if (t.score >= maxScore) {
+				maxScore = t.score;
+				tScore = t;
+			}
+
+			if (t.kills > maxKill) {
+				maxKill = t.kills;
+				tKills = t;
+			}
+		}
+			
+
+		if (killsCondition && maxKill >= targetKills) {
+			winners = tKills;
+			EndGame ();
+		} else if (scoreCondition && maxScore >= targetScore) {
+			winners = tScore;
+			EndGame ();
+		} else if (finished) { //time's out
+			if (killsCondition && !scoreCondition) {
+				winners = tKills;
+			} else {
+				winners = tScore;
+			}
+
+			EndGame ();
+		} else {
+			Time.timeScale = 1f;
+		}
+
+	}
+
+	void EndGame ()
+	{
+		gameIsON = false;
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+		Time.timeScale = 0.1f;
+
+		endGamePanel.SetActive (true);
+
+		Text txt = endGamePanel.GetComponentInChildren<Text> ();
+		txt.text = endGameString ();
+	}
+
+	string endGameString () // All the following is wrong because it assume that there is always only two teams
+	{
+		string str = "GAME OVER\n\n";
+		str += "WINNERS : TEAM " + (winners.side + 1) + "\n\n";
+	
+		Team losers = null;
+
+
+		foreach (Team t in teams) {
+			if (t != winners)
+				losers = t;
+		}
+			
+		str += winners.score + " : " + losers.score + "\n\n";
+
+		for (int i = 0; i < playerPerTeam; i++) {
+			Player p1 = winners.players [i], p2 = losers.players [i];
+
+			str += p1.name + " " + p1.playerKillCount + "  [ " + p1.deathCount + " ]               " + p2.name + " " + p2.playerKillCount + "  [ " + p2.deathCount + " ]\n";
+
+		}
+
+		return str;
 	}
 
 	void OnEnable ()

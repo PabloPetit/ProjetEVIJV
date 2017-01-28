@@ -13,7 +13,7 @@ public class Antenna : MonoBehaviour
 	public static float CAPTURE_POINTS_TARGET = 100f;
 	public static float POINTS_PER_PLAYER = 2.5f;
 
-	public static float SEND_DELAY = 25f;
+	public static float SEND_DELAY = 30f;
 	public static float STD_XP = 500f;
 	public static float CAPTURE_XP = 1000f;
 
@@ -166,7 +166,7 @@ public class Antenna : MonoBehaviour
 	{
 
 		string title = name + " [ " + level + " ] " + mess + " - [ +" + (int)(xp) + " XP]";
-		Debug.Log ("Sending xp to : side : " + owners.side + " count : " + owners.players.Count);
+		//Debug.Log ("Sending xp to : side : " + owners.side + " count : " + owners.players.Count);
 		foreach (Player p in owners.players) {
 			EventName xpEvent = new EventName (Player.XP_CHANNEL, p.id);
 			EventManager.TriggerAction (xpEvent, new object[]{ xp });

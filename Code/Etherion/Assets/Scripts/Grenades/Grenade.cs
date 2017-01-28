@@ -41,7 +41,7 @@ public class Grenade : MonoBehaviour, IDamage
 
 	public void FixedUpdate ()
 	{
-		rb.velocity = rb.velocity + Vector3.down * Time.fixedTime * gravityEnforcement;
+		rb.AddForce (Physics.gravity * gravityEnforcement);
 	}
 
 	public static GameObject Create (GameObject prefab, Vector3 position, Vector3 velocity, Player shooter,
@@ -71,9 +71,11 @@ public class Grenade : MonoBehaviour, IDamage
 			return;
 		}
 		hasCollide = true;
-		audio.Play ();
+		if (audio != null)
+			audio.Play ();
 		EnableEffects ();
-		Damage.DoZoneDamage (shooter, transform, radius, this);
+		Vector3 position = transform.position + Vector3.up * 5;
+		Damage.DoZoneDamage (shooter, position, radius, this);
 		rb.velocity = Vector3.zero;
 		Delete (deathDelay);
 	}

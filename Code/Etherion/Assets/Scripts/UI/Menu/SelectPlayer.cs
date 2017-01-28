@@ -6,8 +6,8 @@ public class SelectPlayer : MonoBehaviour
 {
 
 
-	string[] choices = new string[]{ "1", "2", "3", "4", "5" };
-	int index = 3;
+	string[] choices = new string[]{ "1", "2", "5", "10", "15" };
+	int index = 4;
 
 	Text text;
 
@@ -20,7 +20,7 @@ public class SelectPlayer : MonoBehaviour
 	public void Maj ()
 	{
 		text.text = choices [index];
-		GameManager.playerPerTeam = index + 1;
+		GameManager.playerPerTeam = int.Parse (choices [index]);
 	}
 
 

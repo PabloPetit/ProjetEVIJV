@@ -30,6 +30,7 @@ public class PlayerGrenade : MonoBehaviour
 		player = GetComponent<Player> ();
 		characterController = GetComponent<CharacterController> ();
 		camera = Camera.main;
+
 	}
 
 	void Update ()
@@ -39,9 +40,9 @@ public class PlayerGrenade : MonoBehaviour
 
 	public void ThrowGrenade ()
 	{
-		if (timer > coolDown) {
+		if (timer > coolDown && player.experience.level > 4) {
 			Vector3 pos = camera.transform.position + camera.transform.forward * 2f;
-			Vector3 velocity = characterController.velocity + camera.transform.forward * 70f;
+			Vector3 velocity = characterController.velocity + camera.transform.forward * 50f;
 			PlasmaGrenade.Create (grenadePrefab, pos, velocity, player, friendlyFire, initialDamage, minDamage, damageDecrease);
 			timer = 0f;
 		}

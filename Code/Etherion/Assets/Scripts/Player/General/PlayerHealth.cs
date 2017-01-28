@@ -75,6 +75,7 @@ public class PlayerHealth : Health
 
 		if (nav != null) {
 			nav.enabled = true;
+			nav.Resume ();
 		}
 	}
 }

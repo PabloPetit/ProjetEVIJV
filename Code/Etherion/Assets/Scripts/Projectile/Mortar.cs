@@ -61,7 +61,7 @@ public class Mortar : BalisticShot, IDamage
 			go.SetActive (true);
 		}
 
-		Damage.DoZoneDamage (shooter, transform, radius, this);
+		Damage.DoZoneDamage (shooter, transform.position + Vector3.up, radius, this);
 	}
 
 		

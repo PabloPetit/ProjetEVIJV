@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class TripodController : IA
 {
+	[HideInInspector]
+	public TripodWeaponSystem weaponSystem;
+
+
+	protected override void Start ()
+	{
+		base.Start ();
+		weaponSystem = GetComponent<TripodWeaponSystem> ();
+	}
 
 	public override void SetDesires ()
 	{
@@ -16,7 +25,7 @@ public class TripodController : IA
 		behaviors.Add (new TripodCloseRange (this));
 		behaviors.Add (new TripodLaserAttack (this));
 		behaviors.Add (new TripodSubAmmoAttack (this));
-		behaviors.Add (new TripodExploration (this));
+		//behaviors.Add (new TripodExploration (this));
 	}
 
 	public override void SetHeadAndBarrel ()

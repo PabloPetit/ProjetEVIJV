@@ -14,16 +14,16 @@ public class IA : MonoBehaviour
 
 	// Layers
 
-	public int playerMask;
-	public int environnementMask;
+	[HideInInspector] public int playerMask;
+	[HideInInspector] public int environnementMask;
 
 	// Player Parts
 
-	public Player player;
-	public GameObject head;
-	public GameObject barrel;
+	[HideInInspector] public Player player;
+	[HideInInspector] public GameObject head;
+	[HideInInspector] public GameObject barrel;
 
-	public UnityEngine.AI.NavMeshAgent nav;
+	[HideInInspector] public UnityEngine.AI.NavMeshAgent nav;
 
 	// Ray Shooting
 
@@ -44,7 +44,7 @@ public class IA : MonoBehaviour
 
 	// Variables
 
-	public GameManager gameManager;
+	[HideInInspector] public GameManager gameManager;
 
 	public Dictionary<System.Type, Desire> desires;
 
@@ -74,12 +74,17 @@ public class IA : MonoBehaviour
 	public Vector3 navTarget;
 	public float navTimer;
 
-	protected void Start ()
+	protected virtual void Start ()
 	{
 		playerMask = LayerMask.GetMask ("Player");
 		environnementMask = LayerMask.GetMask ("Environement");
 
 		player = GetComponent<Player> ();
+
+		if (player == null) {
+			player = GetComponentInChildren<Player> ();
+		}
+
 		nav = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 
 		playersAround = new List<Player> ();
@@ -119,16 +124,16 @@ public class IA : MonoBehaviour
 	public void Update ()
 	{ //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  FixedUpadate ???? @@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-		if (player.health.dead) {
+		if (player.health.dead || !gameManager.gameIsON)
 			return;
-		}
+		
 
 		ClearPlayersAround ();
 		GetClosestPlayers ();
 		UpdateDesires ();
 		SelectBehavior ();
 		currentBehavior.Run ();
-		//ManageNavDestination ();
+		ManageNavDestination ();
 	}
 
 	public void ManageNavDestination ()
@@ -140,20 +145,16 @@ public class IA : MonoBehaviour
 
 		navTimer += Time.deltaTime;
 
-		if (navTimer > navUpdateDelay) {
+		if (navTimer > navUpdateDelay || Vector3.Distance (gameObject.transform.position, navTarget) < navPrecisionModeRange) { //Close to target, switch to precision mode
 			nav.SetDestination (navTarget);
 			navTimer = 0f;
 			return;
 		}
-
-		if (Vector3.Distance (gameObject.transform.position, navTarget) < navPrecisionModeRange) { //Close to target, switch to precision mode
-			nav.SetDestination (navTarget);
-			return;
-		}
-			
+		/*
 		if (navTimer >= navUpdateDelay || nav.remainingDistance < 20f) {
 			SetNewTemporaryDestination ();
-		}
+			navTimer = 0f;
+		}*/
 
 	}
 
@@ -175,8 +176,13 @@ public class IA : MonoBehaviour
 
 	public void SetNavTarget (Vector3 navTarget)
 	{
+
+		if (navTarget == null || !this.navTarget.Equals (navTarget)) {
+			nav.SetDestination (navTarget);
+			navTimer = 0f;
+		} //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& TODO : Fix needed here
+		nav.SetDestination (navTarget);
 		this.navTarget = navTarget;
-		nav.SetDestination (navTarget);//To remove
 	}
 
 
@@ -307,7 +313,7 @@ public class IA : MonoBehaviour
 
 						if (dist < minDistEnemy) {
 							minDistEnemy = dist;
-							closestCreature = player;
+							closestEnemy = player;
 						}
 						
 					}

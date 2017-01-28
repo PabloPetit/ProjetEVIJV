@@ -9,6 +9,8 @@ public class SkratWeapon : PlayerWeapon
 	public GameObject bulletPrefab;
 	AudioSource gunShot;
 
+	public GameObject effects;
+
 	void Start ()
 	{
 		gunShot = barrel.GetComponent<AudioSource> ();
@@ -20,6 +22,11 @@ public class SkratWeapon : PlayerWeapon
 		
 		Bullet.Create (bulletPrefab, barrel.transform, speed, dispertion, initialDamage, minDamage, damageDecrease, false, player);
 		gunShot.Play ();
+		/*
+		GameObject effect = Instantiate (effects);
+		effect.transform.position = barrel.transform.position;
+		effect.transform.rotation = barrel.transform.rotation;
+		*/
 	}
 
 	public override void EnableEffects (Vector3 start, Vector3 end)

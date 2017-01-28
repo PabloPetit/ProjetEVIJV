@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class StdIAWeapon : MonoBehaviour {
+public class StdIAWeapon : MonoBehaviour
+{
 
 
 	public float initialDamage;
@@ -28,15 +29,20 @@ public class StdIAWeapon : MonoBehaviour {
 
 	AudioSource gunShot;
 
-	public void Start(){
+	float mult = 1f;
+
+	public void Start ()
+	{
 		this.player = GetComponent<Player> ();
 		gunShot = GetComponent<AudioSource> ();
+
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		timer += Time.deltaTime;
-
+		mult = 1 + Mathf.Log10 (.5f + player.experience.level / 2f);
 		DecreaseOverload ();
 	}
 
@@ -44,25 +50,27 @@ public class StdIAWeapon : MonoBehaviour {
 	{
 
 		// TODO: Overload
-		if (timer >= timeBetweenBullets && Time.timeScale != 0 && !overLoaded) { 
+		if (timer >= timeBetweenBullets * 1 / mult && Time.timeScale != 0 && !overLoaded) { 
 
 			timer = 0f;
 
 			Action ();
-
 			IncreaseOverload ();
 
 		}
 	}
 
-	public void Action(){
-		Bullet.Create (bulletPrefab, barrel.transform, speed, dispertion, initialDamage, minDamage, damageDecrease, false, player);
+	public void Action ()
+	{
+		float mult = 1 + Mathf.Log10 (.5f + player.experience.level / 2f);
+		int plus = GameManager.iaLevel * 2;
+		Bullet.Create (bulletPrefab, barrel.transform, speed, dispertion, plus + initialDamage * mult, minDamage * mult, damageDecrease, false, player);
 		gunShot.Play ();
 	}
 
 	public void IncreaseOverload ()
 	{
-		overloadVal += overloadIncrement;
+		overloadVal += overloadIncrement / mult;
 		if (overloadVal > overloadThreshold) {
 			overLoaded = true;
 		}

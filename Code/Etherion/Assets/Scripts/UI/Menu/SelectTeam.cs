@@ -6,7 +6,7 @@ public class SelectTeam : MonoBehaviour
 {
 
 
-	string[] choices = new string[]{ "1", "2", "3", "4", "5" };
+	string[] choices = new string[]{ "1", "2", "3" };
 	int index = 1;
 
 	Text text;

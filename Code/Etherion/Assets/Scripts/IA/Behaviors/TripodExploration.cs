@@ -7,25 +7,32 @@ public class TripodExploration : IABehavior
 {
 
 	public static float MIN_DEST_DIST = 5f;
-	public static float MAX_DEST_TIME = 5f;
+	public static float MAX_DEST_TIME = 7f;
 
 	float lastUpdate;
 
 	float destinationRadius = 50f;
 
-
-	public void Start ()
-	{
-		
-	}
+	TripodController trip;
 
 	public TripodExploration (IA ia) : base (ia)
 	{
-		if (ia.nav.remainingDistance < 5f || Time.time - lastUpdate > MAX_DEST_TIME) {
+		trip = (TripodController)ia;
+	}
+
+	public override void Run ()
+	{
+		if (Time.time - lastUpdate > MAX_DEST_TIME || (ia.nav.remainingDistance < 5f && Time.time - lastUpdate > MAX_DEST_TIME / 3f)) {
 			ia.SetNewRandomDestination ();
+			lastUpdate = Time.time;
+	
 		}
 	}
 
+	public virtual void Setup ()
+	{
+		trip.weaponSystem.target = null;
+	}
 
 
 

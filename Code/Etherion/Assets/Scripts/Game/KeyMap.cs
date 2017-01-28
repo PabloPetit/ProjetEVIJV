@@ -8,7 +8,7 @@ public class KeyMap
 	public static KeyCode aim = KeyCode.Mouse1;
 	//Mouse1
 	public static KeyCode light = KeyCode.T;
-	public static KeyCode interact = KeyCode.E;
+	public static KeyCode interact = KeyCode.R;
 
 	public static KeyCode buffLife = KeyCode.Alpha1;
 	public static KeyCode buffSpeed = KeyCode.Alpha2;

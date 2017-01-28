@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AntennaPossesion : Desire
 {
-	public static float DISTANCE_DIVIDER = 25f;
+	public static float DISTANCE_DIVIDER = 40f;
 
 	public static float MAX_DISTANCE = 1000f;
 

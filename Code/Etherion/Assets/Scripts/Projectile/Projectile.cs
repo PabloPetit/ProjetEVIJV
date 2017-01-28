@@ -16,6 +16,7 @@ public class Projectile : MonoBehaviour
 
 	protected int ignoreCollisionLayer;
 
+	public bool playAudio = true;
 
 	public void Awake ()
 	{
@@ -25,7 +26,7 @@ public class Projectile : MonoBehaviour
 	public virtual void Start ()
 	{
 		timer = 0f;
-		if (audio != null) {
+		if (audio != null && playAudio) {
 			audio.Play ();
 		}
 		ignoreCollisionLayer = LayerMask.GetMask ("IgnoreBulletCollision");

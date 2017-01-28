@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
 	public bool isCreature;
 	public bool isHuman;
 
-	public EventName killCount;
+	EventName killCount;
 
 	public int playerKillCount;
 	public int creatureKillCount;

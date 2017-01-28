@@ -6,7 +6,7 @@ public class Aggressivity : Desire
 
 	public static string NAME = "AGGRESSIVITY";
 
-	public static float STD_MIN_VALUE = 30f;
+	public static float STD_MIN_VALUE = 60f;
 
 	public static float ENEMY_IN_SIGHT_MULTIPLIER = .5f;
 
@@ -40,7 +40,7 @@ public class Aggressivity : Desire
 		ManageLastShooter ();
 
 		Decrease ();
-		CheckShot ();
+		//CheckShot ();
 		CheckEnemiInSight ();
 		CheckCurrentScore ();
 

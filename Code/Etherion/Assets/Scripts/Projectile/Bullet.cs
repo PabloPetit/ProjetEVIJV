@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Bullet : Projectile, IDamage
 {
+	[HideInInspector]
 	public Player shooter { get ; set ; }
 
 	public bool friendlyFire { get ; set ; }

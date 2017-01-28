@@ -52,12 +52,6 @@ public class Experience : MonoBehaviour
 		}
 		float xp = (float)param [0];
 
-
-		if (player.isHuman) {
-			Debug.Log (xp);
-		}
-
-
 		totalXp += xp;
 
 		level = 0;
@@ -66,6 +60,7 @@ public class Experience : MonoBehaviour
 		}
 
 		if (player.isHuman) {
+			//Debug.Log (xp);
 			EventManager.TriggerAction (xpEvent, GetXpInfo ());
 		}
 	}

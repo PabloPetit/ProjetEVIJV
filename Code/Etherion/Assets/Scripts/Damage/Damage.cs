@@ -15,12 +15,12 @@ public class Damage
 		}
 	}
 
-	public static void DoZoneDamage (Player shooter, Transform transform, float radius, IDamage damages)
+	public static void DoZoneDamage (Player shooter, Vector3 position, float radius, IDamage damages)
 	{
-		Collider[] hitColliders = Physics.OverlapSphere (transform.position, radius, playerMask);
+		Collider[] hitColliders = Physics.OverlapSphere (position, radius, playerMask);
 		foreach (Collider col in hitColliders) {
 			GameObject go = col.gameObject;
-			float dist = Vector3.Distance (transform.position, col.gameObject.transform.position);
+			float dist = Vector3.Distance (position, col.gameObject.transform.position);
 			float adjustedDamage = Mathf.Max (damages.initialDamage - (damages.damageDecrease * dist), damages.minDamage);
 			Player target = go.GetComponent<Player> ();
 			DoDamage (shooter, target, adjustedDamage, damages.friendlyFire);

@@ -31,7 +31,7 @@ public class CaptureAntenna : IABehavior
 		}
 
 		if (target == null) {
-
+			 
 			float prox = 50000f;
 
 			foreach (Antenna a in ia.gameManager.antennas) {
